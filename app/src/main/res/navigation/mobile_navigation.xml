@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home"> //一開始APP畫面從nav_home(停車場訂位APP)開始
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.myapplication_mapnavigationdrawer.ui.home.HomeFragment"
+        android:label="停車場訂位APP"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_personalinfo"
+        android:name="com.example.myapplication_mapnavigationdrawer.ui.slideshow.SlideshowFragment"
+        android:label="個人資料"
+        tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_historical"
+        android:name="com.example.myapplication_mapnavigationdrawer.ui.gallery.GalleryFragment"
+        android:label="歷史紀錄"
+        tools:layout="@layout/fragment_gallery" />
+
+    <fragment
+        android:id="@+id/nav_favorite"
+        android:name="com.example.myapplication_mapnavigationdrawer.ui.tools.ToolsFragment"
+        android:label="我的最愛"
+        tools:layout="@layout/fragment_tools" />
+
+    <fragment
+        android:id="@+id/nav_help"
+        android:name="com.example.myapplication_mapnavigationdrawer.ui.share.ShareFragment"
+        android:label="Help"
+        tools:layout="@layout/fragment_share" />
+
+    <fragment
+        android:id="@+id/nav_about"
+        android:name="com.example.myapplication_mapnavigationdrawer.ui.send.SendFragment"
+        android:label="About"
+        tools:layout="@layout/fragment_send" />
+</navigation>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_personalinfo"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:title="個人檔案" />
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_local_parking_black_24dp"
+            android:title="尋找停車場" />
+        <item
+            android:id="@+id/nav_historical"
+            android:icon="@drawable/ic_receipt_black_24dp"
+            android:title="查詢紀錄" />
+        <item
+            android:id="@+id/nav_favorite"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:title="我的最愛" />
+    </group>
+
+    <item android:title="Contact us">
+        <menu>
+            <item
+                android:id="@+id/nav_help"
+                android:icon="@drawable/ic_live_help_black_24dp"
+                android:title="Help" />
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_sentiment_satisfied_black_24dp"
+                android:title="About" />
+        </menu>
+    </item>
+
+</menu>

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "64461505491",
+    "firebase_url": "https://parkinglot-bbc48.firebaseio.com",
+    "project_id": "parkinglot-bbc48",
+    "storage_bucket": "parkinglot-bbc48.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:64461505491:android:5a489831a0b2e1f7ffe526",
+        "android_client_info": {
+          "package_name": "com.example.myapplication_mapnavigationdrawer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "64461505491-vcab3mkguvk0o52e86og3olkgjt7esoo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-8kOWdDqVC-LKge2ayQDb_xcB5j9DWNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "64461505491-vcab3mkguvk0o52e86og3olkgjt7esoo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
