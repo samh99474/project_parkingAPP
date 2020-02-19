@@ -28,6 +28,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -44,8 +45,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class HomeFragment extends Fragment implements
-        OnMapReadyCallback
+public class HomeFragment extends Fragment implements OnMapReadyCallback
 {
 
     private HomeViewModel homeViewModel;
@@ -77,7 +77,7 @@ public class HomeFragment extends Fragment implements
             MyGsonData mygsondata = new Gson().fromJson(intent.getExtras().getString("json"), MyGsonData.class);
 
             for (int i=0; i<mygsondata.data.parkinglots.length-1; i++) {
-                Log.e("res", mygsondata.data.parkinglots[i].id+"");
+                //Log.e("res", mygsondata.data.parkinglots[i].id+"");
 
                 MarkerOptions m1 = new MarkerOptions ();
 
@@ -141,11 +141,15 @@ public class HomeFragment extends Fragment implements
         return root;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
-        Request req = new Request.Builder().url("https://api.parkinglotapp.com/v2/pois/nearest?lat=25.047924%20&lng=121.517081").build();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState,Double lat,Double lng) {
+        super.onActivityCreated(savedInstanceState);
+        String str = null;
+        Log.e("GET",lat.toString());
+        Log.e("GET", lng.toString());
+
+        str = String.format("https://api.parkinglotapp.com/v2/pois/nearest?lat=%s&lng=%s",lat,lng);
+        Request req = new Request.Builder().url(str).build();
         new OkHttpClient().newCall(req).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -175,6 +179,8 @@ public class HomeFragment extends Fragment implements
                         Manifest.permission.ACCESS_COARSE_LOCATION)!=
                         PackageManager.PERMISSION_GRANTED)
             return;
+        Marker mCenterMarker = null;
+
         mymap = map;
         mymap.setMyLocationEnabled ( true );
         MarkerOptions m1 = new MarkerOptions ();
@@ -208,7 +214,16 @@ public class HomeFragment extends Fragment implements
             @Override
             public boolean onMarkerClick(final Marker marker) {
                 Toast.makeText(getActivity(),"這裡的緯度是:"+marker.getPosition().latitude+"",Toast.LENGTH_SHORT).show();
+
                 return false;
+            }
+        });
+
+        mymap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                CameraPosition test = mymap.getCameraPosition();
+                onActivityCreated(null,test.target.latitude,test.target.longitude);
             }
         });
 
