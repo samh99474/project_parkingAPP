@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/loticon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.bar_action"></activity>
+        <activity android:name=".ui.home.MarkerWindowAdapter"></activity>
+        <activity android:name=".ui.bar_action" />
         <activity android:name=".FirebaseActivity" />
 
         <uses-library
@@ -27,7 +28,7 @@
         <activity android:name=".ui.home.infowindow" />
         <activity
             android:name=".MainActivity"
-            android:label="停場場訂位APP"
+            android:label="停車場訂位APP"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -11,8 +11,7 @@
         android:id="@+id/parkinglot_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginLeft="60dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="28dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -20,11 +19,10 @@
 
     <TextView
         android:id="@+id/parkinglot_name"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:text="SamH停車場"
+        android:text="TextView專題相信可以的加油喔好不好"
         android:textColor="@android:color/black"
         android:textSize="25dp"
         app:layout_constraintBottom_toBottomOf="@+id/parkinglot_image"
@@ -32,70 +30,232 @@
         app:layout_constraintTop_toTopOf="@+id/parkinglot_image" />
 
     <TextView
-        android:id="@+id/remain"
+        android:id="@+id/parkinglot_is_opening"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="96dp"
-        android:text="剩餘車位: "
-        android:textSize="22dp"
-        app:layout_constraintEnd_toEndOf="@+id/parkinglot_image"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/holo_green_light"
+        android:text="是否營業?"
+        android:textColor="@android:color/white"
+        android:textSize="16dp"
         app:layout_constraintStart_toStartOf="@+id/parkinglot_image"
         app:layout_constraintTop_toBottomOf="@+id/parkinglot_image" />
 
     <TextView
-        android:id="@+id/remain_show"
+        android:id="@+id/parkinglot_lot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="22dp"
-        app:layout_constraintBottom_toBottomOf="@+id/remain"
-        app:layout_constraintStart_toEndOf="@+id/remain"
-        app:layout_constraintTop_toTopOf="@+id/remain" />
-
-    <TextView
-        android:id="@+id/price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="價        格:"
-        android:textSize="22dp"
-        app:layout_constraintEnd_toEndOf="@+id/remain"
-        app:layout_constraintStart_toStartOf="@+id/remain"
-        app:layout_constraintTop_toBottomOf="@+id/remain" />
-
-    <TextView
-        android:id="@+id/price_show"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="22dp"
-        app:layout_constraintBottom_toBottomOf="@+id/price"
-        app:layout_constraintStart_toStartOf="@+id/remain_show"
-        app:layout_constraintTop_toTopOf="@+id/price" />
-
-    <Button
-        android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="返回"
+        android:layout_marginTop="16dp"
+        android:text="車位哈哈哈哈哈哈哈哈"
         android:textColor="@android:color/black"
+        android:textSize="22dp"
+        app:layout_constraintStart_toEndOf="@+id/textView12"
+        app:layout_constraintTop_toBottomOf="@+id/parkinglot_is_opening" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:drawableLeft="@drawable/ic_directions_car_black_24dp"
+        android:text=" 總車位："
+        android:textColor="@android:color/black"
+        android:textSize="22dp"
+        app:layout_constraintStart_toStartOf="@+id/parkinglot_is_opening"
+        app:layout_constraintTop_toBottomOf="@+id/parkinglot_is_opening" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:drawableLeft="@drawable/ic_access_time_black_24dp"
+        android:text=" 營業時間："
+        android:textColor="@android:color/black"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="@+id/textView12"
+        app:layout_constraintTop_toBottomOf="@+id/parkinglot_lot" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:drawableLeft="@drawable/ic_location_on_black_24dp"
+        android:text=" 地址："
+        android:textColor="@android:color/black"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="@+id/textView13"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:drawableLeft="@drawable/ic_local_phone_black_24dp"
+        android:text=" 電話："
+        android:textColor="@android:color/black"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="@+id/textView14"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:drawableLeft="@drawable/ic_textsms_black_24dp"
+        android:text=" 備註："
+        android:textColor="@android:color/black"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="@+id/textView15"
+        app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+    <TextView
+        android:id="@+id/parkinglot_today_service_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="24H?"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:drawableLeft="@drawable/ic_monetization_on_black_24dp"
+        android:text=" 費率："
+        android:textColor="@android:color/black"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/parkinglot_simple_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="每小時 60 元simple_description"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView13"
+        app:layout_constraintStart_toEndOf="@+id/textView13"
+        app:layout_constraintTop_toTopOf="@+id/textView13" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.088"
-        app:layout_constraintStart_toEndOf="@+id/reservation"
-        app:layout_constraintTop_toTopOf="@+id/reservation" />
+        app:layout_constraintStart_toStartOf="parent">
 
-    <Button
-        android:id="@+id/reservation"
+        <Button
+            android:id="@+id/reservation"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
+            android:drawableTop="@drawable/ic_add_shopping_cart_black_24dp"
+            android:text="預約"
+            android:textColor="#A0806F" />
+
+        <Button
+            android:id="@+id/parkinglot_street_view_image_url"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
+            android:drawableTop="@drawable/ic_insert_photo_black_24dp"
+            android:text="街景"
+            android:textColor="#A0806F" />
+
+        <Button
+            android:id="@+id/btn_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
+            android:drawableTop="@drawable/ic_favorite_border_black_24dp"
+            android:text="最愛"
+            android:textColor="#A0806F" />
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
+            android:drawableTop="@drawable/ic_arrow_back_black_24dp"
+            android:text="返回"
+            android:textColor="#A0806F" />
+
+    </RadioGroup>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="347dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="30dp"
+        app:layout_constraintStart_toStartOf="@+id/textView13"
+        app:layout_constraintTop_toBottomOf="@+id/textView13">
+
+        <TextView
+            android:id="@+id/detail_price"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="parkinglot_full_description\n平日 09:00-21:00 每小時 60 元；21:00-09:00 每小時 40 元\n例假日 24 小時營業 每小時80"
+            android:textSize="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="276dp"
-        android:text="預約"
-        android:textColor="@android:color/black"
-        app:layout_constraintStart_toStartOf="@+id/price"
-        app:layout_constraintTop_toBottomOf="@+id/price" />
+        app:layout_constraintStart_toEndOf="@+id/textView14"
+        app:layout_constraintTop_toTopOf="@+id/textView14">
+
+        <TextView
+            android:id="@+id/parkinglot_address"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="承德路1段1號\n哈哈c8 "
+            android:textSize="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/parkinglot_tel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="無資訊"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView15"
+        app:layout_constraintStart_toEndOf="@+id/textView14"
+        app:layout_constraintTop_toTopOf="@+id/textView15"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="343dp"
+        android:layout_height="142dp"
+        android:layout_marginStart="30dp"
+        app:layout_constraintStart_toStartOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+        <TextView
+            android:id="@+id/parkinglot_detail_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="無資訊"
+            android:textSize="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

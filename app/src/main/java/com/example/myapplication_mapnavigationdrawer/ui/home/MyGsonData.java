@@ -1,5 +1,7 @@
 package com.example.myapplication_mapnavigationdrawer.ui.home;
 
+import android.net.http.SslCertificate;
+
 import com.google.android.gms.common.api.Result;
 
 public class MyGsonData {
@@ -11,8 +13,31 @@ public class MyGsonData {
         public class Results{
             String id;
             String name;
-            Double lat;
-            Double lng;
+            String address;
+            String tel;
+            int total_lots;
+            int available_lots;
+            String today_service_time;
+            Boolean is_opening;
+
+            Boolean has_motor;
+            String motor_total_lots;
+            String motor_available_lots;
+
+            Boolean has_heavy_motor;
+            double lat;
+            double lng;
+
+            Resultss current_price_text;
+            public class Resultss {
+                String simple_description;
+                String full_description;
+            }
+            Resultsss street_view;
+            public class Resultsss{
+                String street_view_url;
+                String street_view_image_url;
+            }
         }
     }
 }
