@@ -46,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordLayout.setErrorEnabled(true);
         accoutLayout.setErrorEnabled(true);
         loginBtn = (Button) findViewById(R.id.signup_button);
+
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

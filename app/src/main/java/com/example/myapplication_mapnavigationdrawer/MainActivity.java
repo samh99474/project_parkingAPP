@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);//懸浮按鈕(收尋功能)
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

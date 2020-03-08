@@ -40,4 +40,9 @@
         android:name="com.example.myapplication_mapnavigationdrawer.ui.send.SendFragment"
         android:label="About"
         tools:layout="@layout/fragment_send" />
+    <fragment
+        android:id="@+id/nav_reservation"
+        android:name="com.example.myapplication_mapnavigationdrawer.ui.reservate.ReservateFragment"
+        android:label="Car_Reservation"
+        tools:layout="@layout/fragment_send" />
 </navigation>
