@@ -11,25 +11,39 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.myapplication_mapnavigationdrawer.ui.bar_action;
+import com.example.myapplication_mapnavigationdrawer.viewmodel.MainActivityViewModel;
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+    private static final String TAG = "MainActivity";
     private Button logout;
     private  NavigationView nav_view;
+    private static final int RC_SIGN_IN = 9001;
+    private MainActivityViewModel mViewModel;
+    private FirebaseFirestore mFirestore;
+    private Query mQuery;
+    private static final int LIMIT = 50;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //logout = (Button) findViewById(R.id.logout);
 
         nav_view = (NavigationView) findViewById(R.id.nav_view);
         View v = nav_view.getHeaderView(0);
@@ -37,16 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         Log.e("view", ""+(nav_view.getHeaderCount()));
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent();
-                intent.setClass(MainActivity.this, FirebaseActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+
         Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);//懸浮按鈕(收尋功能)
@@ -79,6 +84,15 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        FirebaseFirestore.setLoggingEnabled(true);
+        // View model
+        mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+        // Initialize Firestore and the main RecyclerView
+        initFirestore();
+        initRecyclerView();
+
+
     }
 
     @Override
@@ -96,6 +110,51 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void initFirestore() {
+        // TODO(developer): Implement
+        mFirestore = FirebaseFirestore.getInstance();
+
+        // Get the 50 highest rated restaurants
+        mQuery = mFirestore.collection("restaurants")
+                .orderBy("avgRating", Query.Direction.DESCENDING)
+                .limit(LIMIT);
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Start sign in if necessary
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!shouldStartSignIn()) {
+                    startSignIn();
+                    Log.e("jaja","haha");
+                    return;
+                }
+            }
+        });
+
+    }
+    private void initRecyclerView() {
+        if (mQuery == null) {
+            Log.w(TAG, "No query, not initializing RecyclerView");
+        }
+    }
+
+    private boolean shouldStartSignIn() {
+        return (!mViewModel.getIsSigningIn() && FirebaseAuth.getInstance().getCurrentUser() == null);
+    }
+    private void startSignIn() {
+        // Sign in with FirebaseUI
+        Intent intent = AuthUI.getInstance().createSignInIntentBuilder()
+                .setAvailableProviders(Collections.singletonList(
+                        new AuthUI.IdpConfig.EmailBuilder().build()))
+                .setIsSmartLockEnabled(false)
+                .build();
+
+        startActivityForResult(intent, RC_SIGN_IN);
+        mViewModel.setIsSigningIn(true);//設定成已登入
+    }
 
 }
 

@@ -52,6 +52,8 @@
     <string name="hint_review">How was your experience?</string>
     <string name="submit">Submit</string>
     <string name="filter_add_review">Add review</string>
+    <string name="my_hint">my_hint</string>
+    <string name="login">log_in</string>
 
     <!-- Types of food I could think of in 5 minutes -->
     <string-array name="categories">

@@ -136,7 +136,8 @@ public class FirebaseActivity extends AppCompatActivity implements
         // Start sign in if necessary
         if (shouldStartSignIn()) {
             startSignIn();
-            return;
+
+
         }
 
         // Apply filters
