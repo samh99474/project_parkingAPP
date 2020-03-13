@@ -91,7 +91,17 @@ public class MainActivity extends AppCompatActivity {
         // Initialize Firestore and the main RecyclerView
         initFirestore();
         initRecyclerView();
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("ddddddddddddddd","ddddddddddddd");
+                if (shouldStartSignIn()) {
+                    startSignIn();
+                    Log.e("jaja","haha");return;
 
+                }
+            }
+        });
 
     }
 
@@ -122,17 +132,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        Log.e("jaja","haha");
         // Start sign in if necessary
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!shouldStartSignIn()) {
-                    startSignIn();
-                    Log.e("jaja","haha");
-                    return;
-                }
-            }
-        });
+
 
     }
     private void initRecyclerView() {

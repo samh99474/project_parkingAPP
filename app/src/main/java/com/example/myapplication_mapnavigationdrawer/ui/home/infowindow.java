@@ -1,7 +1,5 @@
 package com.example.myapplication_mapnavigationdrawer.ui.home;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,9 +8,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.myapplication_mapnavigationdrawer.R;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
-import org.jetbrains.annotations.Nullable;
+import com.example.myapplication_mapnavigationdrawer.R;
 
 public class infowindow extends AppCompatActivity {
 
@@ -29,6 +28,7 @@ public class infowindow extends AppCompatActivity {
     private TextView parkinglot_address;
     private TextView parkinglot_tel;
     private TextView parkinglot_detail_info;
+    private RecyclerView mParkinggrid;
 
 
     @Override
@@ -98,12 +98,7 @@ public class infowindow extends AppCompatActivity {
         });
 
 
-        reservation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(infowindow.this,"您已成功預約",Toast.LENGTH_SHORT).show();
-            }
-        });
+
 
         if(split_string_parkinglot_snippet[10].matches("false")){
             btn_favorite.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.drawable.ic_favorite_border_black_24dp),null,null);
@@ -129,10 +124,6 @@ public class infowindow extends AppCompatActivity {
 
         }
 
-
-
-
-
         parkinglot_street_view_image_url = findViewById(R.id.parkinglot_street_view_image_url);
 
         //街景URL
@@ -150,5 +141,19 @@ public class infowindow extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        reservation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent();
+                startActivity(new Intent(infowindow.this,CustomDialogActivity.class));
+            }
+        });
     }
 }

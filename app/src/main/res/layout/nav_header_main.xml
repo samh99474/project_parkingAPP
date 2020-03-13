@@ -35,8 +35,8 @@
 
     <Button
         android:id="@+id/signin"
-        android:layout_width="133dp"
-        android:layout_height="22dp"
+        android:layout_width="204dp"
+        android:layout_height="24dp"
         android:background="#3F51B5"
         android:backgroundTint="@color/fui_bgPhone"
         android:text="登入" />

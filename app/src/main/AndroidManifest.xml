@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/loticon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.home.MarkerWindowAdapter"></activity>
+        <activity android:name=".ui.home.CustomDialogActivity"></activity>
+        <activity android:name=".ui.home.MarkerWindowAdapter" />
         <activity android:name=".ui.bar_action" />
         <activity android:name=".FirebaseActivity" />
 
@@ -37,7 +38,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".LoginActivity" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".RestaurantDetailActivity" />
