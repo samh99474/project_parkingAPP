@@ -3,15 +3,24 @@ package com.example.myapplication_mapnavigationdrawer.ui.home;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication_mapnavigationdrawer.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 public class infowindow extends AppCompatActivity {
 
@@ -29,7 +38,11 @@ public class infowindow extends AppCompatActivity {
     private TextView parkinglot_tel;
     private TextView parkinglot_detail_info;
     private RecyclerView mParkinggrid;
-
+    private FirebaseFirestore mFirestore;
+    private Query mQuery;
+    private static final int LIMIT = 50;
+    private static final String TAG = "infowindow";
+    private CollectionReference mParkingGrid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +153,13 @@ public class infowindow extends AppCompatActivity {
             }
         });
 
+        // Initialize Firestore
+        mFirestore = FirebaseFirestore.getInstance();
+
+        mParkingGrid = mFirestore.collection("parking grid");
+
+        getParkingGridData();
+
 
     }
 
@@ -150,10 +170,37 @@ public class infowindow extends AppCompatActivity {
         reservation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent();
                 startActivity(new Intent(infowindow.this,CustomDialogActivity.class));
+
             }
         });
+    }
+
+    /**
+    讀取停車格資料用的函式
+   */
+    private void getParkingGridData()  {
+
+        final DocumentReference parkingGrid= mParkingGrid.document("A1");
+
+        parkingGrid.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()){
+                    DocumentSnapshot document =  task.getResult();
+                    if (document.exists()){
+                        Log.e(TAG, "DocumentSnapshot data: " + document.getData());
+                    }else{
+                        Log.e(TAG, "No such document");
+                    }
+                }else {
+                    Log.e(TAG, "get failed with ", task.getException());
+
+                }
+            }
+        });
+
     }
 }

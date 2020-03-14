@@ -3,6 +3,7 @@ package com.example.myapplication_mapnavigationdrawer.ui.home;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,7 +14,7 @@ import com.example.myapplication_mapnavigationdrawer.R;
 public class CustomDialogActivity extends AppCompatActivity {
     private Button btn_confirm;
     private Button btn_cancel;
-    private TextView text_content;
+    private ListView text_content;
     private TextView text_title;
     private TextView text_close;
     @Override
@@ -25,7 +26,7 @@ public class CustomDialogActivity extends AppCompatActivity {
         btn_cancel = (Button)findViewById(R.id.btn_cancel);
         text_close = (TextView)findViewById(R.id.text_close);
         text_title  = (TextView)findViewById(R.id.text_title);
-        text_content = (TextView)findViewById(R.id.text_content);
+        text_content = (ListView)findViewById(R.id.text_content);
 
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override            public void onClick(View v) {
