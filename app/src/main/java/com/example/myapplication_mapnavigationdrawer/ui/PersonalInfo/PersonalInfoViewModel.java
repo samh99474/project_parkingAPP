@@ -1,14 +1,14 @@
-package com.example.myapplication_mapnavigationdrawer.ui.slideshow;
+package com.example.myapplication_mapnavigationdrawer.ui.PersonalInfo;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class SlideshowViewModel extends ViewModel {
+public class PersonalInfoViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public SlideshowViewModel() {
+    public PersonalInfoViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is personal infomation fragment");
     }

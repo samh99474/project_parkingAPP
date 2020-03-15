@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/nav_personalinfo"
-        android:name="com.example.myapplication_mapnavigationdrawer.ui.slideshow.SlideshowFragment"
+        android:name="com.example.myapplication_mapnavigationdrawer.ui.PersonalInfo.PersonalInfoFragment"
         android:label="個人資料"
         tools:layout="@layout/fragment_slideshow" />
 

@@ -6,28 +6,43 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="164dp"
-        android:layout_height="139dp"
-        android:layout_marginTop="8dp"
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="編輯個人資料"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.119"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/profile_headshot_teacher" />
+        app:layout_constraintVertical_bias="0.081" />
+
+    <Button
+        android:id="@+id/btn_eidt_personalinfo"
+        android:layout_width="87dp"
+        android:layout_height="41dp"
+        android:text="編輯"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toEndOf="@+id/textView8"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.082" />
 
     <TextView
         android:id="@+id/personalinfo_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="72dp"
         android:text="姓名 :"
-        android:textSize="22dp"
         android:textColor="@android:color/black"
+        android:textSize="22dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <TextView
         android:id="@+id/show_name"
@@ -35,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
-        android:text="黃釋迦"
+        android:text="user"
         android:textSize="22dp"
         app:layout_constraintBottom_toBottomOf="@+id/personalinfo_name"
         app:layout_constraintStart_toEndOf="@+id/personalinfo_name"
@@ -46,19 +61,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="等級 :"
-        android:textSize="22dp"
+        android:text="連絡電話:"
         android:textColor="@android:color/black"
+        android:textSize="22dp"
         app:layout_constraintStart_toStartOf="@+id/personalinfo_name"
         app:layout_constraintTop_toBottomOf="@+id/personalinfo_name" />
 
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/show_phone_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
-        android:text="黃金會員"
+        android:text="09-"
         android:textSize="22dp"
         app:layout_constraintBottom_toBottomOf="@+id/membergrade"
         app:layout_constraintStart_toEndOf="@+id/membergrade"
@@ -69,23 +84,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="個簽 :"
+        android:text="車牌號碼"
         android:textColor="@android:color/black"
         android:textSize="22dp"
         app:layout_constraintStart_toStartOf="@+id/membergrade"
         app:layout_constraintTop_toBottomOf="@+id/membergrade" />
 
     <TextView
-        android:id="@+id/introduce_show"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=" 學　歷：	國立台灣大學電機博士\n\n
-專　長：	智慧型多媒體系統，影像處理和視訊編碼，\n雲端運算和大資料分析，手機程式設計\n\n
-經　歷：	本校助理教授、計網中心系統組組長、\n教務處課務組組長、副教授、教授\n\n
-研究室：	綜科館 405\n\n
-電　話：	(02) 2771-2171 Ext.2232\n
-E-mail：	schuang@ntut.edu.tw\n\n"
-        app:layout_constraintStart_toStartOf="@+id/introduce"
-        app:layout_constraintTop_toBottomOf="@+id/introduce" />
+        android:id="@+id/show_plate"
+        android:layout_width="52dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:text="NH1958"
+        app:layout_constraintBottom_toBottomOf="@+id/introduce"
+        app:layout_constraintStart_toEndOf="@+id/introduce" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

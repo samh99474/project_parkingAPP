@@ -21,6 +21,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class infowindow extends AppCompatActivity {
 
@@ -158,6 +163,8 @@ public class infowindow extends AppCompatActivity {
 
         mParkingGrid = mFirestore.collection("parking grid");
 
+        getParkingGrid(mParkingGrid);
+
         getParkingGridData();
 
 
@@ -182,9 +189,9 @@ public class infowindow extends AppCompatActivity {
    */
     private void getParkingGridData()  {
 
-        final DocumentReference parkingGrid= mParkingGrid.document("A1");
+        final DocumentReference parkingGridData= mParkingGrid.document("A1");
 
-        parkingGrid.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        parkingGridData.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
@@ -201,6 +208,30 @@ public class infowindow extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    /**
+     * 透過尋找ID來找到停車格的ID
+     */
+    private void getParkingGrid(CollectionReference mParkingGrid){
+
+       mParkingGrid.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+           @Override
+           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+               if (task.isSuccessful()){
+                   List<String> list = new ArrayList<>();
+                   for (QueryDocumentSnapshot document : task.getResult()) {
+                       list.add(document.getId());
+                   }
+                   Log.e(TAG, list.toString());
+               }else{
+                   Log.e(TAG, "Error getting documents: ", task.getException());
+               }
+           }
+       });
+    }
+    private void getAvailableParkingGrid (CollectionReference mAvailableParkingGrid) {
 
     }
+
 }

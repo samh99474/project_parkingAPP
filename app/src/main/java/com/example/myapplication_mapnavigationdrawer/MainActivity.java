@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         return (!mViewModel.getIsSigningIn() && FirebaseAuth.getInstance().getCurrentUser() == null);
     }
     private void startSignIn() {
-        // Sign in with FirebaseUI
+        // 登入FirebaseUI，若該帳號第一次登入就會執行註冊
         Intent intent = AuthUI.getInstance().createSignInIntentBuilder()
                 .setAvailableProviders(Collections.singletonList(
                         new AuthUI.IdpConfig.EmailBuilder().build()))
