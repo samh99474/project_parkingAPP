@@ -73,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
-        android:text="09-"
+        android:text="未輸入手機號碼"
         android:textSize="22dp"
         app:layout_constraintBottom_toBottomOf="@+id/membergrade"
         app:layout_constraintStart_toEndOf="@+id/membergrade"
@@ -92,11 +92,11 @@
 
     <TextView
         android:id="@+id/show_plate"
-        android:layout_width="52dp"
-        android:layout_height="27dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:text="NH1958"
+        android:text="未輸入車牌"
         app:layout_constraintBottom_toBottomOf="@+id/introduce"
         app:layout_constraintStart_toEndOf="@+id/introduce" />
 
