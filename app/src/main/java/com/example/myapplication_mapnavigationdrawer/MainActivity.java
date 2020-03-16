@@ -1,5 +1,6 @@
 package com.example.myapplication_mapnavigationdrawer;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -23,6 +26,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -91,18 +95,61 @@ public class MainActivity extends AppCompatActivity {
         // Initialize Firestore and the main RecyclerView
         initFirestore();
         initRecyclerView();
+
+        if(!mViewModel.getIsSigningIn() && FirebaseAuth.getInstance().getCurrentUser() == null){
+            logout.setText("登入");
+        }else{
+            logout.setText("登出");
+        }
+
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.e("ddddddddddddddd","ddddddddddddd");
-                if (shouldStartSignIn()) {
+                if (shouldStartSignIn()) {      //未登入狀態，應該要登入
                     startSignIn();
+
+                    if(mViewModel.getIsSigningIn()){
+                        logout.setText("登出");
+                        Log.e("signin_OK","signin_OK");return;
+                    }
+
                     Log.e("jaja","haha");return;
 
+                }else{      //登入狀態，應該要登入
+                    AlertDialog.Builder dialog_isSignout = new AlertDialog.Builder(MainActivity.this);
+                    dialog_isSignout.setTitle("登出");
+                    dialog_isSignout.setMessage("您是否要登出呢?");
+                    dialog_isSignout.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(MainActivity.this,"登出失敗", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    dialog_isSignout.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            AuthUI.getInstance().signOut(MainActivity.this);
+                            if(!mViewModel.getIsSigningIn()){
+                                logout.setText("登入");
+                                Toast.makeText(MainActivity.this,"您已登出，請重新登入", Toast.LENGTH_SHORT).show();
+                                Log.e("signout_OK","signout_OK");return;
+                            }
+                        }
+                    });
+
+                    dialog_isSignout.setNeutralButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(MainActivity.this,"您已取消", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    dialog_isSignout.show();
                 }
             }
         });
-
     }
 
     @Override
@@ -110,6 +157,19 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            mViewModel.setIsSigningIn(false);
+
+            if (resultCode != RESULT_OK && shouldStartSignIn()) {
+                startSignIn();
+            }
+        }
     }
 
     @Override
@@ -157,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, RC_SIGN_IN);
         mViewModel.setIsSigningIn(true);//設定成已登入
     }
+
 
 }
 

@@ -96,6 +96,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                 m1.title( mygsondata.data.parkinglots[i].name );
 
 
+                if(mygsondata.data.parkinglots[i].current_price_text.simple_description.matches("")){
+                    mygsondata.data.parkinglots[i].current_price_text.simple_description ="??";
+                }
                 //m1.snippet()  0總車位,1剩餘車位,    2費率simple_description,  3費率full_description,    4 is_opening,   5 today_service_time,   6  地址, 7電話tel, 8 lat,  9 lng,  10 最愛favorite boolean
                 m1.snippet(mygsondata.data.parkinglots[i].total_lots+","
                         +mygsondata.data.parkinglots[i].available_lots+","

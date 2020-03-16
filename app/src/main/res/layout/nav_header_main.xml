@@ -39,5 +39,5 @@
         android:layout_height="24dp"
         android:background="#3F51B5"
         android:backgroundTint="@color/fui_bgPhone"
-        android:text="登入" />
+        android:text="" />
 </LinearLayout>
