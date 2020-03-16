@@ -33,6 +33,9 @@ public class MyGsonData {
                 String simple_description;
                 String full_description;
             }
+
+            String[][] detail_info;
+
             Resultsss street_view;
             public class Resultsss{
                 String street_view_url;

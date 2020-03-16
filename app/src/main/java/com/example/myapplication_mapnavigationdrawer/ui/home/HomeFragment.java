@@ -54,6 +54,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
     private GoogleMap mymap;
     private String string_parkinglot_name;
     private String string_parkinglot_snippet;
+    public float zoomLevel;
 
     // private AppCompatActivity;
     private final static int REQUEST_PERMISSIONS = 1;
@@ -107,8 +108,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                             +mygsondata.data.parkinglots[i].tel+","
                             +mygsondata.data.parkinglots[i].lat+","
                             +mygsondata.data.parkinglots[i].lng+","
-                            +"false"+",");
+                            +"false"+","
+                            +mygsondata.data.parkinglots[i].detail_info[2][0]
+                            +mygsondata.data.parkinglots[i].detail_info[2][1]+"\n"
+                            +mygsondata.data.parkinglots[i].detail_info[3][0]
+                            +mygsondata.data.parkinglots[i].detail_info[3][1]+"\n"+",");
+
                 }
+
 
 /*
                 if(mygsondata.data.parkinglots[i].total_lots == -1){
@@ -137,9 +144,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                         //m1.icon(BitmapDescriptorFactory.fromResource(smallMarker));
                 m1.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
 
-                if (mymap != null){
-                    mymap.addMarker ( m1 );
+                if (zoomLevel > 13) {
+                    mymap.addMarker(m1);
+
+                    Log.e("HomeFragment", "shit");
+                }if (zoomLevel <= 13) {
+                    mymap.clear();
+
+                    Log.e("HomeFragment", "fuck");
                 }
+
+
 
             }
         }
@@ -151,6 +166,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
         if (getActivity() != null)
             LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver,
                     new IntentFilter("MyMessage"));
+        zoomLevel=7;
+
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -259,6 +276,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
             public void onCameraIdle() {
                 CameraPosition test = mymap.getCameraPosition();
                 onActivityCreated(null,test.target.latitude,test.target.longitude);
+                zoomLevel = map.getCameraPosition().zoom;
             }
         });
 
