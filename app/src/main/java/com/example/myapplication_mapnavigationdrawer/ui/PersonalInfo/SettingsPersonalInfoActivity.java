@@ -52,9 +52,9 @@ public class SettingsPersonalInfoActivity extends AppCompatActivity {
 
 
                 Map<String, Object> user = new HashMap<>();
-                user.put("名子","謝佳丞");
-                user.put("手機號碼","0975283472");
-                user.put("車牌號碼","NH1958");
+                user.put("名子",set_name);
+                user.put("手機號碼",set_phone_number);
+                user.put("車牌號碼",set_plate_number);
 
                 user_db.collection("users")
                         .add(user)
