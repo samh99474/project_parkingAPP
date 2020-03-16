@@ -101,7 +101,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                     m1.snippet(mygsondata.data.parkinglots[i].total_lots+","
                             +mygsondata.data.parkinglots[i].available_lots+","
                             +mygsondata.data.parkinglots[i].current_price_text.simple_description+","
-                            +mygsondata.data.parkinglots[i].current_price_text.full_description+","
+                            +mygsondata.data.parkinglots[i].detail_info[2][1]+","
                             +mygsondata.data.parkinglots[i].is_opening+","
                             +mygsondata.data.parkinglots[i].today_service_time+","
                             +mygsondata.data.parkinglots[i].address+","
@@ -109,8 +109,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                             +mygsondata.data.parkinglots[i].lat+","
                             +mygsondata.data.parkinglots[i].lng+","
                             +"false"+","
-                            +mygsondata.data.parkinglots[i].detail_info[2][0]
-                            +mygsondata.data.parkinglots[i].detail_info[2][1]+"\n"
                             +mygsondata.data.parkinglots[i].detail_info[3][0]
                             +mygsondata.data.parkinglots[i].detail_info[3][1]+"\n"+",");
 
