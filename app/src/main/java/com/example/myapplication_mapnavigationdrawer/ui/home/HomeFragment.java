@@ -93,6 +93,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                 Bitmap b=bitmapdraw.getBitmap();
                 Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
 
+                BitmapDrawable bitmapdraw2=(BitmapDrawable)getResources().getDrawable(R.mipmap.loticon_reservatable);
+                Bitmap b2=bitmapdraw2.getBitmap();
+                Bitmap smallMarker2 = Bitmap.createScaledBitmap(b2, 115, 115, false);
+
+                MarkerOptions m2 = new MarkerOptions ();
+                m2.position ( new LatLng ( 25.0421794, 121.5351166 ) );
+                m2.title ( "台北車站" );
+                m2.snippet("100,100,0 / H,免費(宗演教授幫您支付),true,24H,神秘地區,0800-092-000,25.034,121.545,ture,停車場類型：室外平面,");
+                m2.draggable ( true );
+                m2.icon(BitmapDescriptorFactory.fromBitmap(smallMarker2));
+                mymap.addMarker ( m2 );
+
                 m1.position ( new LatLng( mygsondata.data.parkinglots[i].lat  , mygsondata.data.parkinglots[i].lng ) );
                 m1.title( mygsondata.data.parkinglots[i].name );
 
@@ -144,6 +156,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
 
                 if (zoomLevel > 13) {
                     mymap.addMarker(m1);
+                    mymap.addMarker(m2);
 
                     Log.e("HomeFragment", "shit");
                 }if (zoomLevel <= 13) {
@@ -248,14 +261,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
         BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.mipmap.loticon);
         Bitmap b=bitmapdraw.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-
-        MarkerOptions m2 = new MarkerOptions ();
-        m2.position ( new LatLng ( 25.047924, 121.517081 ) );
-        m2.title ( "台北車站" );
-        m2.snippet("100,100,0 / H,免費(宗演教授幫您支付),true,24H,神秘地區,0800-092-000,25.034,121.545,ture,");
-        m2.draggable ( true );
-        m2.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-        mymap.addMarker ( m2 );
 
         mymap.moveCamera ( CameraUpdateFactory.newLatLngZoom (
                 new LatLng ( 25.034,121.545 ), 13 ) );
