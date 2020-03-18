@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
 
                 MarkerOptions m2 = new MarkerOptions ();
                 m2.position ( new LatLng ( 25.0421794, 121.5351166 ) );
-                m2.title ( "台北車站" );
+                m2.title ( "北科大APP特約停車場" );
                 m2.snippet("100,100,0 / H,免費(宗演教授幫您支付),true,24H,神秘地區,0800-092-000,25.034,121.545,ture,停車場類型：室外平面,");
                 m2.draggable ( true );
                 m2.icon(BitmapDescriptorFactory.fromBitmap(smallMarker2));
