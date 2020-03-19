@@ -100,7 +100,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                 MarkerOptions m2 = new MarkerOptions ();
                 m2.position ( new LatLng ( 25.0421794, 121.5351166 ) );
                 m2.title ( "北科大APP特約停車場" );
-                m2.snippet("100,100,0 / H,免費(宗演教授幫您支付),true,24H,神秘地區,0800-092-000,25.034,121.545,ture,停車場類型：室外平面,");
+                m2.snippet("100,100,0 / H,免費(宗演教授幫您支付),true,24H,神秘地區,0800-092-000,25.034,121.545,0001,停車場類型：室外平面,");
                 m2.draggable ( true );
                 m2.icon(BitmapDescriptorFactory.fromBitmap(smallMarker2));
                 mymap.addMarker ( m2 );
@@ -109,7 +109,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                 m1.title( mygsondata.data.parkinglots[i].name );
 
                 if(mygsondata.data.parkinglots[i].current_price_text != null){
-                    //m1.snippet()  0總車位,1剩餘車位,    2費率simple_description,  3費率full_description,    4 is_opening,   5 today_service_time,   6  地址, 7電話tel, 8 lat,  9 lng,  10 最愛favorite boolean
+                    //m1.snippet()  0總車位,1剩餘車位,    2費率simple_description,  3費率full_description,    4 is_opening,
+                    // 5 today_service_time,   6  地址, 7電話tel, 8 lat,  9 lng,  10 API id ,
                     m1.snippet(mygsondata.data.parkinglots[i].total_lots+","
                             +mygsondata.data.parkinglots[i].available_lots+","
                             +mygsondata.data.parkinglots[i].current_price_text.simple_description+","
@@ -120,7 +121,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                             +mygsondata.data.parkinglots[i].tel+","
                             +mygsondata.data.parkinglots[i].lat+","
                             +mygsondata.data.parkinglots[i].lng+","
-                            +"false"+","
+                            +mygsondata.data.parkinglots[i].id+","
                             +mygsondata.data.parkinglots[i].detail_info[3][0]
                             +mygsondata.data.parkinglots[i].detail_info[3][1]+"\n"+",");
 
@@ -265,11 +266,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
         mymap.moveCamera ( CameraUpdateFactory.newLatLngZoom (
                 new LatLng ( 25.034,121.545 ), 13 ) );
 
+
         //Toast
         mymap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(final Marker marker) {
-                Toast.makeText(getActivity(),"這裡的緯度是:"+marker.getPosition().latitude+"",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),"這裡的緯度是:"+marker.getPosition().latitude+"",Toast.LENGTH_SHORT).show();
                 return false;
             }
         });

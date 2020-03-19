@@ -70,7 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:drawableLeft="@drawable/ic_access_time_black_24dp"
-        android:text=" 營業時間："
+        android:text=" 今日營業時間："
         android:textColor="@android:color/black"
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="@+id/textView12"

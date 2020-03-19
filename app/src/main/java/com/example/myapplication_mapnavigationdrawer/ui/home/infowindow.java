@@ -1,6 +1,9 @@
 package com.example.myapplication_mapnavigationdrawer.ui.home;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -15,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication_mapnavigationdrawer.R;
+import com.example.myapplication_mapnavigationdrawer.MyDBHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -50,6 +54,8 @@ public class infowindow extends AppCompatActivity {
     private static final String TAG = "infowindow";
     private CollectionReference mParkingGrid;
 
+    private SQLiteDatabase dari;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +73,8 @@ public class infowindow extends AppCompatActivity {
         parkinglot_address = findViewById(R.id.parkinglot_address);
         parkinglot_tel = findViewById(R.id.parkinglot_tel);
         parkinglot_detail_info = findViewById(R.id.parkinglot_detail_info);
+
+        dari = new MyDBHelper(this).getWritableDatabase();
 
         Bundle b = getIntent().getExtras();
         String string_parkinglot_name = b.getString("string_parkinglot_name");
@@ -109,9 +117,6 @@ public class infowindow extends AppCompatActivity {
         parkinglot_detail_info.setText(String.format(split_string_parkinglot_snippet[11]));
         parkinglot_detail_info.setMovementMethod(new ScrollingMovementMethod());
 
-
-
-
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,36 +124,69 @@ public class infowindow extends AppCompatActivity {
             }
         });
 
+        //SQL我的最愛
+        final String string_id = split_string_parkinglot_snippet[10];
+        final String string_lat = split_string_parkinglot_snippet[8];
+        final String string_lng = split_string_parkinglot_snippet[9];
+        final String string_price = split_string_parkinglot_snippet[2];
+        final String string_address = split_string_parkinglot_snippet[6];
 
+        Cursor cursor;
+        cursor = dari.rawQuery("SELECT * FROM myTable WHERE favorite_id LIKE '" + string_id + "'",null);
 
-
-        if(split_string_parkinglot_snippet[10].matches("false")){
-            btn_favorite.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.drawable.ic_favorite_border_black_24dp),null,null);
-            btn_favorite.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    btn_favorite.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.drawable.ic_favorite_black_24dp),null,null);
-                    Toast.makeText(infowindow.this,"您已成功加入到我的最愛",Toast.LENGTH_SHORT).show();
-                }
-            });
-
-        } else{
+        if(cursor.getCount() != 0){
             btn_favorite.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.drawable.ic_favorite_black_24dp),null,null);
             btn_favorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    btn_favorite.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.drawable.ic_favorite_border_black_24dp),null,null);
-                    Toast.makeText(infowindow.this,"您已移除我的最愛",Toast.LENGTH_SHORT).show();
+                    try{
+                        dari.execSQL("DELETE FROM myTable WHERE favorite_id LIKE '" + string_id + "'");
+                        btn_favorite.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.drawable.ic_favorite_border_black_24dp),null,null);
+                        onBackPressed();
+                        Toast.makeText(infowindow.this,"移除我的最愛"+
+                                string_id + "\n停車場:"+ parkinglot_name.getText().toString(), Toast.LENGTH_LONG).show();
+                    }catch (Exception e){
+                        Toast.makeText(infowindow.this,"刪除失敗"+
+                                e.toString(), Toast.LENGTH_LONG).show();
+                    }
                 }
             });
 
+        }else{
+            btn_favorite.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.drawable.ic_favorite_border_black_24dp),null,null);
+            btn_favorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try{
+                        //新增一筆book與price資料進入 myTable 資料表
+                        dari.execSQL("INSERT INTO myTable(favorite_id,favorite_name, " +
+                                        "favorite_lat, favorite_lng, favorite_price, favorite_address) VALUES(?,?,?,?,?,?)",
+                                new  Object[]{string_id,
+                                        parkinglot_name.getText().toString(),
+                                        string_lat,
+                                        string_lng,
+                                        string_price,
+                                        string_address});
+
+                        onBackPressed();
+                        Toast.makeText(infowindow.this,
+                                "已加入到我的最愛\nID:"+string_id
+                                        +"\n停車場"+parkinglot_name.getText().toString(), Toast.LENGTH_SHORT).show();
+                        btn_favorite.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.drawable.ic_favorite_black_24dp),null,null);
+                    }catch(Exception e){
+                        Toast.makeText(infowindow.this,"最愛新增失敗 :" +
+                                e.toString(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
         }
 
-        parkinglot_street_view_image_url = findViewById(R.id.parkinglot_street_view_image_url);
+
+
 
         //街景URL
+        parkinglot_street_view_image_url = findViewById(R.id.parkinglot_street_view_image_url);
+
         String strUri = "google.streetview:cbll="+
                 String.valueOf(split_string_parkinglot_snippet[8])+","+//讀取lat
                 String.valueOf(split_string_parkinglot_snippet[9]);     //讀取lng
