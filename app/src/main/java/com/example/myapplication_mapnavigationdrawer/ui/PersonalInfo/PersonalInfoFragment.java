@@ -20,28 +20,25 @@ import com.example.myapplication_mapnavigationdrawer.R;
 import com.example.myapplication_mapnavigationdrawer.viewmodel.MainActivityViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class PersonalInfoFragment extends Fragment {
 
     private PersonalInfoViewModel personalInfoViewModel;
     private TextView user_name;
     private TextView phon_number;
-    private TextView plate_number;
+    private TextView license_number;
     private Button btn_edit;
     private Context context;
     private FirebaseFirestore mFirestore;
     private Query mQuery;
     private MainActivityViewModel mViewModel;
+    public int i;
     private static final String TAG = "PersonalInfoFragment";
-    private int i = 0;
-    private String name,phone,plate;
+    public String name,phone,license;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -53,14 +50,37 @@ public class PersonalInfoFragment extends Fragment {
         context = root.getContext();
         user_name = root.findViewById(R.id.show_name);
         phon_number = root.findViewById(R.id.show_phone_number);
-        plate_number = root.findViewById(R.id.show_plate);
+        license_number = root.findViewById(R.id.show_license);
         btn_edit = root.findViewById(R.id.btn_eidt_personalinfo);
 
         final FirebaseFirestore user_db = FirebaseFirestore.getInstance();
 
-        user_db.collection("users")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        DocumentReference docRef = user_db.collection("users").document("i");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.e(TAG, "DocumentSnapshot data: " + document.getData());
+                        name = document.getData().get("名子").toString();
+                        phone = document.getData().get("手機號碼").toString();
+                        license = document.getData().get("車牌號碼").toString();
+
+                    } else {
+                        Log.e(TAG, "No such document");
+                    }
+                    user_name.setText(name);
+                    phon_number.setText(phone);
+                    license_number.setText(license);
+                } else {
+                    Log.e(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
+                /*.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -76,15 +96,15 @@ public class PersonalInfoFragment extends Fragment {
                             user_name.setText(name);
                             phon_number.setText(phone);
                             plate_number.setText(plate);
-
+Log.e(TAG, "Error getting documents.", task.getException());
 
                         } else {
-                            Log.e(TAG, "Error getting documents.", task.getException());
+
                         }
                     }
                 });
 
-
+*/
         btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
