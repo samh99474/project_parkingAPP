@@ -1,5 +1,6 @@
 package com.example.myapplication_mapnavigationdrawer.ui.tools;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -18,8 +19,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.myapplication_mapnavigationdrawer.MainActivity;
 import com.example.myapplication_mapnavigationdrawer.MyDBHelper;
 import com.example.myapplication_mapnavigationdrawer.R;
+import com.example.myapplication_mapnavigationdrawer.ui.home.HomeFragment;
 
 import java.util.ArrayList;
 
@@ -29,6 +32,7 @@ public class ToolsFragment extends Fragment {
     private ListView listView;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> items = new ArrayList<>();
+    private ArrayList<String> items_lat_lng = new ArrayList<>();
 
     private SQLiteDatabase dari;
 
@@ -67,6 +71,7 @@ public class ToolsFragment extends Fragment {
             items.add("\t" + c.getString(1) +
                     "\n\t地址：" + c.getString(5) +
                     "\n\t費率：" + c.getString(4));
+            items_lat_lng.add(","+c.getString(2) + "," + c.getString(3)+",");
             c.moveToNext();
         }
 
@@ -79,7 +84,19 @@ public class ToolsFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(),"點到了", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),items.get(position), Toast.LENGTH_SHORT).show();
+                String[] strings_items_lat_lng = items_lat_lng.get(position).toString().split(",");//split(指定符號) ，可依指定符號把字串分開成陣列
+
+                Bundle b_favorite_lat_lng = new Bundle();    //資訊放入Bundle
+                b_favorite_lat_lng.putString("string_favorite_lat",strings_items_lat_lng[1]);//lat
+                b_favorite_lat_lng.putString("string_favorite_lng",strings_items_lat_lng[2]);//lng
+
+                HomeFragment homeFragment = new HomeFragment();
+                homeFragment.setArguments(b_favorite_lat_lng);
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.nav_host_fragment, homeFragment)
+                        .addToBackStack("TAG_TO_FRAGMENT").commit();
             }
         });
         return root;

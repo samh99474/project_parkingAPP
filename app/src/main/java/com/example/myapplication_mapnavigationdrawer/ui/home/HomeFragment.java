@@ -54,6 +54,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
     private GoogleMap mymap;
     private String string_parkinglot_name;
     private String string_parkinglot_snippet;
+    private String string_favorite_lat;
+    private String string_favorite_lng;
     public float zoomLevel;
 
     // private AppCompatActivity;
@@ -100,7 +102,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                 MarkerOptions m2 = new MarkerOptions ();
                 m2.position ( new LatLng ( 25.0421794, 121.5351166 ) );
                 m2.title ( "北科大APP特約停車場" );
-                m2.snippet("100,100,0 / H,免費(宗演教授幫您支付),true,24H,神秘地區,0800-092-000,25.034,121.545,0001,停車場類型：室外平面,");
+                m2.snippet("100,100,0 / H,免費(宗演教授幫您支付),true,24H,神秘地區,0800-092-000,25.0421794,121.5351166,0001,停車場類型：室外平面,");
                 m2.draggable ( true );
                 m2.icon(BitmapDescriptorFactory.fromBitmap(smallMarker2));
                 mymap.addMarker ( m2 );
@@ -180,6 +182,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                     new IntentFilter("MyMessage"));
         zoomLevel=7;
 
+
+
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -200,6 +204,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                     (SupportMapFragment) getChildFragmentManager().findFragmentById ( R.id.map );
             map.getMapAsync ( this );
         }
+
 
 /*        final TextView textView = root.findViewById(R.id.text_home);
         homeViewModel.getText().observe(getActivity(, new Observer<String>() {
@@ -263,9 +268,20 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
         Bitmap b=bitmapdraw.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
 
-        mymap.moveCamera ( CameraUpdateFactory.newLatLngZoom (
-                new LatLng ( 25.034,121.545 ), 13 ) );
+        Bundle bundle_favorite = getArguments();//當使用者點擊到我的最愛list，取得Favorite的Bundle
+        if (bundle_favorite != null)            //假使有取得到，則Map ZOOM到此地點
+        {
+            string_favorite_lat = bundle_favorite.getString("string_favorite_lat");
+            string_favorite_lng = bundle_favorite.getString("string_favorite_lng");
 
+            mymap.moveCamera ( CameraUpdateFactory.newLatLngZoom (
+                    new LatLng ( Double.parseDouble(string_favorite_lat),Double.parseDouble(string_favorite_lng) ), 13 ) );
+            mymap.animateCamera(CameraUpdateFactory.zoomTo(19), 10, null);
+
+        }else{
+            mymap.moveCamera ( CameraUpdateFactory.newLatLngZoom (
+                    new LatLng ( 25.034,121.545 ), 13 ) );
+        }
 
         //Toast
         mymap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -348,11 +364,21 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                 return view;    //どちらかに処理を記述
             }
         });
-
-
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        //if(data==null) return;
+        Log.e("love","love");
+        Toast.makeText(getActivity(),"成功",Toast.LENGTH_SHORT).show();
+        Bundle bundle_favorite = data.getExtras();
+        String string_favorite_lat = bundle_favorite.getString("string_favorite_lat");
+        String string_favorite_lng = bundle_favorite.getString("string_favorite_lng");
+        HomeFragment homeFragment = new HomeFragment();
+        mymap.moveCamera ( CameraUpdateFactory.newLatLngZoom (
+                new LatLng( Double.parseDouble(string_favorite_lat),Double.parseDouble(string_favorite_lng) ), 13 ) );
 
     }
-
 
     @Override
     public void onDestroy() {

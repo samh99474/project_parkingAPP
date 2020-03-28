@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -21,8 +22,12 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.myapplication_mapnavigationdrawer.ui.bar_action;
+import com.example.myapplication_mapnavigationdrawer.ui.home.HomeFragment;
 import com.example.myapplication_mapnavigationdrawer.viewmodel.MainActivityViewModel;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -217,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, RC_SIGN_IN);
         mViewModel.setIsSigningIn(true);//設定成已登入
     }
+
 
 
 }
