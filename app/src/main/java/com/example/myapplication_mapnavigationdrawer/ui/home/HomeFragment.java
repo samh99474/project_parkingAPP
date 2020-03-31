@@ -33,6 +33,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.example.myapplication_mapnavigationdrawer.MainActivity;
 import com.example.myapplication_mapnavigationdrawer.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -247,20 +248,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
             mymap.moveCamera ( CameraUpdateFactory.newLatLngZoom (
                     new LatLng ( address.getLatitude(),address.getLongitude() ), 13 ) );
 
-            if(address.getLocality()==null && address.getAdminArea()==null){
-                mymap.animateCamera(CameraUpdateFactory.zoomTo(5), 2000, null);
-            }
-            else if(address.getFeatureName() != address.getLocality() || address.getAdminArea()==null){
+            //演算出適當zoomlevel的大小
+            if(address.getSubAdminArea() == null && address.getAdminArea() == null){
+                    mymap.animateCamera(CameraUpdateFactory.zoomTo(5), 2000, null);
+
+            }else {
                 if(address.getThoroughfare()!=null){
                     mymap.animateCamera(CameraUpdateFactory.zoomTo(18), 2000, null);
-                }else{
+                }else {
                     mymap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
                 }
-
-            }else{
-                mymap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
             }
-
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
         }else{
             Toast.makeText(getActivity(),"搜尋無結果",Toast.LENGTH_SHORT).show();
@@ -354,13 +352,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
         mymap.getUiSettings().setMyLocationButtonEnabled(false);    // delete default button(my location button)
 
 
-        //locationManager.requestLocationUpdates(provider, 2000, 1,  this);
+        LocationManager locationManager =
+                (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String provider = locationManager.getBestProvider(criteria, false);
+        final Location location = locationManager.getLastKnownLocation(provider);
 
-        btn_mylocation.setOnClickListener(new View.OnClickListener() {
+        btn_mylocation.setOnClickListener(new View.OnClickListener() {      //my current location button
             @Override
             public void onClick(View view) {
-                
-
+                mymap.animateCamera(CameraUpdateFactory.newLatLngZoom(new
+                        LatLng(location.getLatitude(),
+                        location.getLongitude()), 15));
             }
         });
 

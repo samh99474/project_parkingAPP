@@ -63,22 +63,6 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);//懸浮按鈕(收尋功能)
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(MainActivity.this,"歡迎來到全能搜", Toast.LENGTH_SHORT).show();
-                startActivityForResult(new Intent(MainActivity.this,
-                        bar_action.class),1);
-
-               // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-               //         .setAction("Action", null).show();
-
-
-            }
-
-        });
 
         /////////////////////////////////////////////////Drawer//////////////////////////////////////////////////////
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
