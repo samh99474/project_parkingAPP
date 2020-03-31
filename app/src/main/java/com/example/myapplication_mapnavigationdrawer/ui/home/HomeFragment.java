@@ -8,12 +8,21 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +48,8 @@ import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -57,6 +68,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
     private String string_favorite_lat;
     private String string_favorite_lng;
     public float zoomLevel;
+
+    private EditText mSearchText;
+    private ImageButton btn_mylocation;
 
     // private AppCompatActivity;
     private final static int REQUEST_PERMISSIONS = 1;
@@ -182,7 +196,75 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                     new IntentFilter("MyMessage"));
         zoomLevel=7;
 
+    }
+    private void init(){
+        Log.d("TAG", "init: initializing");
 
+        mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if(actionId == EditorInfo.IME_ACTION_SEARCH
+                        || actionId == EditorInfo.IME_ACTION_DONE
+                        || keyEvent.getAction() == KeyEvent.ACTION_DOWN
+                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
+
+                    //execute our method for searching
+                    geoLocate();
+                    return true;
+                }
+
+                return false;
+            }
+        });
+    }
+
+    private void geoLocate(){           //搜尋地點
+        Log.d("TAG", "geoLocate: geolocating");
+
+        String searchString = mSearchText.getText().toString();
+
+        Geocoder geocoder = new Geocoder(getActivity());
+        List<Address> list = new ArrayList<>();
+        try{
+            list = geocoder.getFromLocationName(searchString, 1);
+        }catch (IOException e){
+            Log.e("TAG", "geoLocate: IOException: " + e.getMessage() );
+        }
+
+        if(list.size() > 0){
+            Address address = list.get(0);
+
+            Toast.makeText(getActivity(),"正在搜尋:\t"+address.getAddressLine(0),Toast.LENGTH_SHORT).show();
+            mSearchText.setText(null);
+
+            Log.d("TAG", "geoLocate: found a location: " + address.toString());
+            /*
+            Toast.makeText(getActivity(),address.getFeatureName()+",\t"+address.getAdminArea()+",\t"+address.getLocality()+
+                    "\n"+ address.getLatitude()+"\n"+address.getLongitude(),Toast.LENGTH_SHORT).show();
+
+             */
+
+            mymap.moveCamera ( CameraUpdateFactory.newLatLngZoom (
+                    new LatLng ( address.getLatitude(),address.getLongitude() ), 13 ) );
+
+            if(address.getLocality()==null && address.getAdminArea()==null){
+                mymap.animateCamera(CameraUpdateFactory.zoomTo(5), 2000, null);
+            }
+            else if(address.getFeatureName() != address.getLocality() || address.getAdminArea()==null){
+                if(address.getThoroughfare()!=null){
+                    mymap.animateCamera(CameraUpdateFactory.zoomTo(18), 2000, null);
+                }else{
+                    mymap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+                }
+
+            }else{
+                mymap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+            }
+
+            //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(getActivity(),"搜尋無結果",Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -204,6 +286,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                     (SupportMapFragment) getChildFragmentManager().findFragmentById ( R.id.map );
             map.getMapAsync ( this );
         }
+
+        mSearchText = (EditText) root.findViewById(R.id.input_search);
+        btn_mylocation = (ImageButton) root.findViewById(R.id.btn_mylocation);
+
+
 
 
 /*        final TextView textView = root.findViewById(R.id.text_home);
@@ -254,12 +341,29 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                 PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission ( getActivity(),
                         Manifest.permission.ACCESS_COARSE_LOCATION)!=
-                        PackageManager.PERMISSION_GRANTED)
+                        PackageManager.PERMISSION_GRANTED){
             return;
+        }
+
+        init();
+
         Marker mCenterMarker = null;
 
         mymap = map;
         mymap.setMyLocationEnabled ( true );
+        mymap.getUiSettings().setMyLocationButtonEnabled(false);    // delete default button(my location button)
+
+
+        //locationManager.requestLocationUpdates(provider, 2000, 1,  this);
+
+        btn_mylocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                
+
+            }
+        });
+
         final MarkerOptions m1 = new MarkerOptions ();
 
         int height = 100;
@@ -364,20 +468,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                 return view;    //どちらかに処理を記述
             }
         });
-    }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        //if(data==null) return;
-        Log.e("love","love");
-        Toast.makeText(getActivity(),"成功",Toast.LENGTH_SHORT).show();
-        Bundle bundle_favorite = data.getExtras();
-        String string_favorite_lat = bundle_favorite.getString("string_favorite_lat");
-        String string_favorite_lng = bundle_favorite.getString("string_favorite_lng");
-        HomeFragment homeFragment = new HomeFragment();
-        mymap.moveCamera ( CameraUpdateFactory.newLatLngZoom (
-                new LatLng( Double.parseDouble(string_favorite_lat),Double.parseDouble(string_favorite_lng) ), 13 ) );
-
     }
 
     @Override
