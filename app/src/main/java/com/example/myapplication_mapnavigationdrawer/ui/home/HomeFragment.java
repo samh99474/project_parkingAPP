@@ -1,6 +1,8 @@
 package com.example.myapplication_mapnavigationdrawer.ui.home;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +19,7 @@ import android.location.LocationListener;
 
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -63,6 +66,10 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import static android.app.Activity.RESULT_OK;
+import static android.content.Context.SEARCH_SERVICE;
+import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
@@ -381,7 +388,24 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             return;
         }
 
-        init();
+        init();//search搜尋地點功能
+
+        //Google語音搜尋功能
+        ImageButton btn_google_speak = (ImageButton) getActivity().findViewById(R.id.btn_google_speak);
+        btn_google_speak.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "請說您要尋找的地點");
+                try{
+                    startActivityForResult(intent,200);
+                }catch (ActivityNotFoundException a){
+                    Toast.makeText(getApplicationContext(),"Intent problem", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         Marker mCenterMarker = null;
 
@@ -514,6 +538,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         {
         }
     };
+
+    //Google語音讀取Intent resultcode requestcode 來執行，將語音轉文字到mSearchText
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 200){
+            if(resultCode == RESULT_OK && data != null){
+                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                mSearchText.setText(result.get(0)); //語音轉文字結果 讀到mSearchText
+                Toast.makeText(getActivity(),"請按Enter開始搜尋",Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     @Override
     public void onDestroy() {
