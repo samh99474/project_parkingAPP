@@ -44,6 +44,8 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".RestaurantDetailActivity" />
+        <activity android:name=".ParkinglotActivity" />
+        <activity android:name=".ReservationActivity" />
     </application>
 
 </manifest>
