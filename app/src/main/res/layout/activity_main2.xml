@@ -15,15 +15,14 @@
 
     <ImageButton
         android:id="@+id/btn_mylocation"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginBottom="28dp"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_marginBottom="40dp"
         android:alpha="0.85"
         android:background="@drawable/custom_mycurrent_position_button_background"
         android:elevation="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_location_searching_black_24dp" />
 
@@ -57,7 +56,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/ic_magnify"
             android:background="@null"
-            android:hint="請輸入想搜尋的地址或區域，並按Enter搜尋"
+            android:hint="Enter搜尋地點"
             android:imeOptions="actionSearch"
             android:textColor="#000"
             android:textSize="15sp" />

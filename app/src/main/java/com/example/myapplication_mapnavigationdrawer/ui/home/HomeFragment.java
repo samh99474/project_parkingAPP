@@ -8,10 +8,13 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
+
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +26,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +54,7 @@ import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,8 +65,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class HomeFragment extends Fragment implements OnMapReadyCallback
-{
+public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     private HomeViewModel homeViewModel;
     private GoogleMap mymap;
@@ -77,8 +82,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
     private final static int REQUEST_PERMISSIONS = 1;
 
     @Override
-    public void onRequestPermissionsResult ( int requsetCode, String
-            permissions[],int[] grantResults){
+    public void onRequestPermissionsResult(int requsetCode, String
+            permissions[], int[] grantResults) {
         switch (requsetCode) {
             case REQUEST_PERMISSIONS:
                 for (int result : grantResults) {
@@ -86,8 +91,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                         getActivity().finish();
                     } else {
                         SupportMapFragment map =
-                                (SupportMapFragment) getChildFragmentManager().findFragmentById ( R.id.map );
-                        map.getMapAsync ( this );
+                                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+                        map.getMapAsync(this);
                     }
                 }
                 break;
@@ -99,48 +104,48 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
         public void onReceive(Context context, Intent intent) {
             final MyGsonData mygsondata = new Gson().fromJson(intent.getExtras().getString("json"), MyGsonData.class);
 
-            for (int i=0; i<mygsondata.data.parkinglots.length-1; i++) {
+            for (int i = 0; i < mygsondata.data.parkinglots.length - 1; i++) {
                 //Log.e("res", mygsondata.data.parkinglots[i].id+"");
 
-                MarkerOptions m1 = new MarkerOptions ();
+                MarkerOptions m1 = new MarkerOptions();
 
                 int height = 100;
                 int width = 100;
-                BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.mipmap.loticon);
-                Bitmap b=bitmapdraw.getBitmap();
+                BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.mipmap.loticon);
+                Bitmap b = bitmapdraw.getBitmap();
                 Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
 
-                BitmapDrawable bitmapdraw2=(BitmapDrawable)getResources().getDrawable(R.mipmap.loticon_reservatable);
-                Bitmap b2=bitmapdraw2.getBitmap();
+                BitmapDrawable bitmapdraw2 = (BitmapDrawable) getResources().getDrawable(R.mipmap.loticon_reservatable);
+                Bitmap b2 = bitmapdraw2.getBitmap();
                 Bitmap smallMarker2 = Bitmap.createScaledBitmap(b2, 115, 115, false);
 
-                MarkerOptions m2 = new MarkerOptions ();
-                m2.position ( new LatLng ( 25.0421794, 121.5351166 ) );
-                m2.title ( "北科大APP特約停車場" );
+                MarkerOptions m2 = new MarkerOptions();
+                m2.position(new LatLng(25.0421794, 121.5351166));
+                m2.title("北科大APP特約停車場");
                 m2.snippet("100,100,0 / H,免費(宗演教授幫您支付),true,24H,神秘地區,0800-092-000,25.0421794,121.5351166,0001,停車場類型：室外平面,");
-                m2.draggable ( true );
+                m2.draggable(true);
                 m2.icon(BitmapDescriptorFactory.fromBitmap(smallMarker2));
-                mymap.addMarker ( m2 );
+                mymap.addMarker(m2);
 
-                m1.position ( new LatLng( mygsondata.data.parkinglots[i].lat  , mygsondata.data.parkinglots[i].lng ) );
-                m1.title( mygsondata.data.parkinglots[i].name );
+                m1.position(new LatLng(mygsondata.data.parkinglots[i].lat, mygsondata.data.parkinglots[i].lng));
+                m1.title(mygsondata.data.parkinglots[i].name);
 
-                if(mygsondata.data.parkinglots[i].current_price_text != null){
+                if (mygsondata.data.parkinglots[i].current_price_text != null) {
                     //m1.snippet()  0總車位,1剩餘車位,    2費率simple_description,  3費率full_description,    4 is_opening,
                     // 5 today_service_time,   6  地址, 7電話tel, 8 lat,  9 lng,  10 API id ,
-                    m1.snippet(mygsondata.data.parkinglots[i].total_lots+","
-                            +mygsondata.data.parkinglots[i].available_lots+","
-                            +mygsondata.data.parkinglots[i].current_price_text.simple_description+","
-                            +mygsondata.data.parkinglots[i].detail_info[2][1]+","
-                            +mygsondata.data.parkinglots[i].is_opening+","
-                            +mygsondata.data.parkinglots[i].today_service_time+","
-                            +mygsondata.data.parkinglots[i].address+","
-                            +mygsondata.data.parkinglots[i].tel+","
-                            +mygsondata.data.parkinglots[i].lat+","
-                            +mygsondata.data.parkinglots[i].lng+","
-                            +mygsondata.data.parkinglots[i].id+","
-                            +mygsondata.data.parkinglots[i].detail_info[3][0]
-                            +mygsondata.data.parkinglots[i].detail_info[3][1]+"\n"+",");
+                    m1.snippet(mygsondata.data.parkinglots[i].total_lots + ","
+                            + mygsondata.data.parkinglots[i].available_lots + ","
+                            + mygsondata.data.parkinglots[i].current_price_text.simple_description + ","
+                            + mygsondata.data.parkinglots[i].detail_info[2][1] + ","
+                            + mygsondata.data.parkinglots[i].is_opening + ","
+                            + mygsondata.data.parkinglots[i].today_service_time + ","
+                            + mygsondata.data.parkinglots[i].address + ","
+                            + mygsondata.data.parkinglots[i].tel + ","
+                            + mygsondata.data.parkinglots[i].lat + ","
+                            + mygsondata.data.parkinglots[i].lng + ","
+                            + mygsondata.data.parkinglots[i].id + ","
+                            + mygsondata.data.parkinglots[i].detail_info[3][0]
+                            + mygsondata.data.parkinglots[i].detail_info[3][1] + "\n" + ",");
 
                 }
 
@@ -169,7 +174,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                 //m1.draggable ( true );
 
 
-                        //m1.icon(BitmapDescriptorFactory.fromResource(smallMarker));
+                //m1.icon(BitmapDescriptorFactory.fromResource(smallMarker));
                 m1.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
 
                 if (zoomLevel > 13) {
@@ -177,12 +182,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                     mymap.addMarker(m2);
 
                     Log.e("HomeFragment", "shit");
-                }if (zoomLevel <= 13) {
+                }
+                if (zoomLevel <= 13) {
                     mymap.clear();
 
                     Log.e("HomeFragment", "fuck");
                 }
-
 
 
             }
@@ -195,19 +200,20 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
         if (getActivity() != null)
             LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver,
                     new IntentFilter("MyMessage"));
-        zoomLevel=7;
+        zoomLevel = 7;
 
     }
-    private void init(){
+
+    private void init() {
         Log.d("TAG", "init: initializing");
 
         mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH
+                if (actionId == EditorInfo.IME_ACTION_SEARCH
                         || actionId == EditorInfo.IME_ACTION_DONE
                         || keyEvent.getAction() == KeyEvent.ACTION_DOWN
-                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
+                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
 
                     //execute our method for searching
                     geoLocate();
@@ -219,23 +225,23 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
         });
     }
 
-    private void geoLocate(){           //搜尋地點
+    private void geoLocate() {           //搜尋地點
         Log.d("TAG", "geoLocate: geolocating");
 
         String searchString = mSearchText.getText().toString();
 
         Geocoder geocoder = new Geocoder(getActivity());
         List<Address> list = new ArrayList<>();
-        try{
+        try {
             list = geocoder.getFromLocationName(searchString, 1);
-        }catch (IOException e){
-            Log.e("TAG", "geoLocate: IOException: " + e.getMessage() );
+        } catch (IOException e) {
+            Log.e("TAG", "geoLocate: IOException: " + e.getMessage());
         }
 
-        if(list.size() > 0){
+        if (list.size() > 0) {
             Address address = list.get(0);
 
-            Toast.makeText(getActivity(),"正在搜尋:\t"+address.getAddressLine(0),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "正在搜尋:\t" + address.getAddressLine(0), Toast.LENGTH_SHORT).show();
             mSearchText.setText(null);
 
             Log.d("TAG", "geoLocate: found a location: " + address.toString());
@@ -245,23 +251,23 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
 
              */
 
-            mymap.moveCamera ( CameraUpdateFactory.newLatLngZoom (
-                    new LatLng ( address.getLatitude(),address.getLongitude() ), 13 ) );
+            mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(address.getLatitude(), address.getLongitude()), 13));
 
             //演算出適當zoomlevel的大小
-            if(address.getSubAdminArea() == null && address.getAdminArea() == null){
-                    mymap.animateCamera(CameraUpdateFactory.zoomTo(5), 2000, null);
+            if (address.getSubAdminArea() == null && address.getAdminArea() == null) {
+                mymap.animateCamera(CameraUpdateFactory.zoomTo(5), 2000, null);
 
-            }else {
-                if(address.getThoroughfare()!=null){
+            } else {
+                if (address.getThoroughfare() != null) {
                     mymap.animateCamera(CameraUpdateFactory.zoomTo(18), 2000, null);
-                }else {
+                } else {
                     mymap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
                 }
             }
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(getActivity(),"搜尋無結果",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "搜尋無結果", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -273,20 +279,52 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
                 ViewModelProviders.of(getActivity()).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.activity_main2, container, false);
 
-        if (ActivityCompat.checkSelfPermission ( getActivity(),
-                Manifest.permission.ACCESS_COARSE_LOCATION)!=
+        if (ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED)
-            ActivityCompat.requestPermissions ( getActivity(),new
+            ActivityCompat.requestPermissions(getActivity(), new
                             String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_PERMISSIONS);
-        else{
+        else {
             SupportMapFragment map =
-                    (SupportMapFragment) getChildFragmentManager().findFragmentById ( R.id.map );
-            map.getMapAsync ( this );
+                    (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+            map.getMapAsync(this);
         }
 
         mSearchText = (EditText) root.findViewById(R.id.input_search);
         btn_mylocation = (ImageButton) root.findViewById(R.id.btn_mylocation);
+
+
+        btn_mylocation.setOnClickListener(new View.OnClickListener() {      //my current location button
+            @Override
+            public void onClick(View view) {
+                //設定抓取使用者當前位置
+                LocationManager locationManager =
+                        (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+                Criteria criteria = new Criteria();
+                String provider = locationManager.getBestProvider(criteria, true);
+//        locationManager.requestLocationUpdates(provider, 10000, 10, (LocationListener) this);
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                locationManager.requestLocationUpdates
+                        (LocationManager.NETWORK_PROVIDER, 0, 10000.0f, LocationChange);
+
+                final Location location = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
+
+                mymap.animateCamera(CameraUpdateFactory.newLatLngZoom(new   //畫面移動並放大到使用者當前位置
+                        LatLng(location.getLatitude(),
+                        location.getLongitude()), 17));
+            }
+        });
 
 
 
@@ -350,22 +388,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
         mymap = map;
         mymap.setMyLocationEnabled ( true );
         mymap.getUiSettings().setMyLocationButtonEnabled(false);    // delete default button(my location button)
-
-
-        LocationManager locationManager =
-                (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String provider = locationManager.getBestProvider(criteria, false);
-        final Location location = locationManager.getLastKnownLocation(provider);
-
-        btn_mylocation.setOnClickListener(new View.OnClickListener() {      //my current location button
-            @Override
-            public void onClick(View view) {
-                mymap.animateCamera(CameraUpdateFactory.newLatLngZoom(new
-                        LatLng(location.getLatitude(),
-                        location.getLongitude()), 15));
-            }
-        });
 
         final MarkerOptions m1 = new MarkerOptions ();
 
@@ -472,6 +494,26 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
             }
         });
     }
+
+    //更新定位Listener
+    public LocationListener LocationChange = new LocationListener()
+    {
+        public void onLocationChanged(Location mLocation)
+        {
+        }
+
+        public void onProviderDisabled(String provider)
+        {
+        }
+
+        public void onProviderEnabled(String provider)
+        {
+        }
+
+        public void onStatusChanged(String provider, int status,Bundle extras)
+        {
+        }
+    };
 
     @Override
     public void onDestroy() {
