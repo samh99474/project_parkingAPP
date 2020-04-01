@@ -327,9 +327,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
                 final Location location = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
 
-                mymap.animateCamera(CameraUpdateFactory.newLatLngZoom(new   //畫面移動並放大到使用者當前位置
-                        LatLng(location.getLatitude(),
-                        location.getLongitude()), 17));
+                if(location != null){
+                    mymap.animateCamera(CameraUpdateFactory.newLatLngZoom(new   //畫面移動並放大到使用者當前位置
+                            LatLng(location.getLatitude(),
+                            location.getLongitude()), 17));
+                }else {
+                    Toast.makeText(getActivity(), "無法讀取您的位置，請檢查是否開啟定位，或者重新開啟APP", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
