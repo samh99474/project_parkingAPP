@@ -74,7 +74,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="出門玩卻找不到停車位嗎?\n讓我們來幫你解決！\n為了造福人類停車的需求方便\n加速停車場停車效率"
+                android:text="出門玩卻找不到停車位嗎?\n讓我們來幫你解決！
+                \n讓你停車沒煩惱\n手指一點搞定好"
                 android:textColor="@color/design_default_color_primary_variant"
                 android:textSize="15dp"
                 android:textStyle="italic"
