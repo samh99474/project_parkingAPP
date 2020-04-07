@@ -22,7 +22,8 @@ public class SendFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         sendViewModel =
                 ViewModelProviders.of(this).get(SendViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_send, container, false);
+        View root = inflater.inflate(R.layout.about_members, container, false);
+        /*
         final TextView textView = root.findViewById(R.id.text_about);
         sendViewModel.getText().observe(this, new Observer<String>() {
             @Override
@@ -30,6 +31,7 @@ public class SendFragment extends Fragment {
                 textView.setText(s);
             }
         });
+         */
         return root;
     }
 }
