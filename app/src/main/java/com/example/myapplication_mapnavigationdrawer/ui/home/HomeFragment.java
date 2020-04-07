@@ -323,7 +323,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     return;
                 }
                 locationManager.requestLocationUpdates
-                        (LocationManager.NETWORK_PROVIDER, 0, 10000.0f, LocationChange);
+                        (LocationManager.NETWORK_PROVIDER, 1, 0.1f, LocationChange);
 
                 final Location location = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
 
