@@ -332,6 +332,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                             LatLng(location.getLatitude(),
                             location.getLongitude()), 17));
                 }else {
+
                     Toast.makeText(getActivity(), "無法讀取您的位置，請檢查是否開啟定位，或者重新開啟APP", Toast.LENGTH_SHORT).show();
                 }
 
@@ -552,7 +553,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             if(resultCode == RESULT_OK && data != null){
                 ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 mSearchText.setText(result.get(0)); //語音轉文字結果 讀到mSearchText
-                Toast.makeText(getActivity(),"請按Enter開始搜尋",Toast.LENGTH_SHORT).show();
+                geoLocate();                        //搜尋
             }
         }
     }
