@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,6 +27,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +38,11 @@ public class ReservationActivity extends AppCompatActivity {
     private EditText license;
     private EditText date;
     private EditText time;
+    private DatePicker mDatePicker = null;
+    private Calendar mCalendar = null;
+    private int mYear;
+    private int mMonth;
+    private int mDay;
     private Button reserve;
     private Button cancel;
     private FirebaseFirestore mFirestore;
@@ -51,6 +59,14 @@ public class ReservationActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reservation);
+        mCalendar = Calendar.getInstance();
+        mYear = mCalendar.get(Calendar.YEAR);
+
+        mMonth = mCalendar.get(Calendar.MONTH);
+
+        mDay = mCalendar.get(Calendar.DAY_OF_MONTH);
+        //mDatePicker = (DatePicker) findViewById(R.id.da
+
 
         final FirebaseFirestore users = FirebaseFirestore.getInstance();
         final FirebaseFirestore reservation_db = FirebaseFirestore.getInstance();
@@ -97,6 +113,18 @@ public class ReservationActivity extends AppCompatActivity {
                 reservation.put("車牌號碼", license_number);
                 reservation.put("預約日期", date_data);
                 reservation.put("預約時間", time_data);
+
+               /* users.collection("parking grid").document("A1").set(reservation.containsValue("預約日期")).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Error adding document", e);
+                    }
+                });*/
 
                 users.collection("parking grid").document("A1").collection("ParkingRecord").document("01").set(reservation).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
