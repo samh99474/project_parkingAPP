@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication_mapnavigationdrawer.ParkinglotActivity;
 import com.example.myapplication_mapnavigationdrawer.R;
 import com.example.myapplication_mapnavigationdrawer.MyDBHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -220,7 +221,7 @@ public class infowindow extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                startActivity(new Intent(infowindow.this,CustomDialogActivity.class));
+                startActivity(new Intent(infowindow.this, ParkinglotActivity.class));
 
             }
         });

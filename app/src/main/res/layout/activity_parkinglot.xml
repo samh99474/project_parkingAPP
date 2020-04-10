@@ -16,13 +16,13 @@
         app:layout_constraintBottom_toTopOf="@+id/A2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.393" />
+        app:layout_constraintVertical_bias="0.791" />
 
     <Button
         android:id="@+id/A2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="44dp"
         android:text="A2"
         app:layout_constraintBottom_toTopOf="@+id/A1"
         app:layout_constraintEnd_toEndOf="@+id/A3" />
@@ -83,6 +83,8 @@
         android:id="@+id/textView18"
         android:layout_width="216dp"
         android:layout_height="63dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginLeft="48dp"
         android:layout_marginBottom="212dp"
         android:text="上圖A區為停車場剩餘車位，請選擇預約車位，確認後不得更改"
         app:layout_constraintBottom_toBottomOf="parent"

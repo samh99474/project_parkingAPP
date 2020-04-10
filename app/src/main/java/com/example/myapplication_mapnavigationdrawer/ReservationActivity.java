@@ -7,13 +7,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication_mapnavigationdrawer.ui.PersonalInfo.SettingsPersonalInfoActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -23,6 +27,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +38,11 @@ public class ReservationActivity extends AppCompatActivity {
     private EditText license;
     private EditText date;
     private EditText time;
+    private DatePicker mDatePicker = null;
+    private Calendar mCalendar = null;
+    private int mYear;
+    private int mMonth;
+    private int mDay;
     private Button reserve;
     private Button cancel;
     private FirebaseFirestore mFirestore;
@@ -44,16 +54,23 @@ public class ReservationActivity extends AppCompatActivity {
     private Button btn_reserve;
 
 
-
     //寫入UserId UserName PhoneNumber LicensePlateNumber到firebase
     //預約中==1
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reservation);
+        mCalendar = Calendar.getInstance();
+        mYear = mCalendar.get(Calendar.YEAR);
+
+        mMonth = mCalendar.get(Calendar.MONTH);
+
+        mDay = mCalendar.get(Calendar.DAY_OF_MONTH);
+        //mDatePicker = (DatePicker) findViewById(R.id.da
+
 
         final FirebaseFirestore users = FirebaseFirestore.getInstance();
         final FirebaseFirestore reservation_db = FirebaseFirestore.getInstance();
-//抓取註冊資料直接顯示
+    //抓取註冊資料直接顯示
         DocumentReference docRef = reservation_db.collection("users").document("i");
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -64,15 +81,15 @@ public class ReservationActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.e(TAG, "DocumentSnapshot data: " + document.getData());
-                        set_phone = document.getData().get("手機號碼").toString();
-                        set_license = document.getData().get("車牌號碼").toString();
+                        //set_phone = document.getData().get("手機號碼").toString();
+                       // set_license = document.getData().get("車牌號碼").toString();
 
                     } else {
                         Log.e(TAG, "No such document");
                     }
 
-                    user_phone.setText(set_phone);
-                    user_license.setText(set_license);
+                    //user_phone.setText(set_phone);
+                    //user_license.setText(set_license);
                 } else {
                     Log.e(TAG, "get failed with ", task.getException());
                 }
@@ -88,31 +105,57 @@ public class ReservationActivity extends AppCompatActivity {
                 license = findViewById(R.id.license);
                 String license_number = license.getText().toString();
                 date = findViewById(R.id.date);
-                String date_data = date.getText().toString();
+                String date_data = date.getText().toString();//想改成timestamp
                 time = findViewById(R.id.time);
-                String time_data = time.getText().toString();
+                String time_data = time.getText().toString();//想改成timestamp
+                Map<String, Object> reservation = new HashMap<>();
+                reservation.put("手機", phone_number);
+                reservation.put("車牌號碼", license_number);
+                reservation.put("預約日期", date_data);
+                reservation.put("預約時間", time_data);
+
+               /* users.collection("parking grid").document("A1").set(reservation.containsValue("預約日期")).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Error adding document", e);
+                    }
+                });*/
+
+                users.collection("parking grid").document("A1").collection("ParkingRecord").document("01").set(reservation).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.e(TAG, "ParkingRecord successfully written!");
+                        Intent intent = new Intent(ReservationActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Error adding document", e);
+                    }
+                });
+
+
 
             }
         });
-        Map<String, Object> reservation = new HashMap<>();
-        reservation.put("手機", phone);
-        reservation.put("車牌號碼", license);
-        reservation.put("預約日期", date);
-        reservation.put("預約時間", time);
-        users.collection("users").add(reservation).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+
+        cancel = findViewById(R.id.cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d("123", documentReference.getId());
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "Error adding document", e);
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
-        Intent i = new Intent();
-        setResult(1, i);
-        finish();
+
+        //Intent i = new Intent();
+        //setResult(1, i);
+       // finish();
 
     }
 }
