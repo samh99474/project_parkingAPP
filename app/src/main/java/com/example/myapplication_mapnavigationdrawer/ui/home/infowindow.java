@@ -220,8 +220,20 @@ public class infowindow extends AppCompatActivity {
         reservation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 Intent intent = new Intent();
                 startActivity(new Intent(infowindow.this, ParkinglotActivity.class));
+                 */
+
+                Intent intent = new Intent(infowindow.this,
+                        ParkinglotActivity.class);
+
+                Bundle b = new Bundle();    //資訊放入Bundle
+                b.putString("string_parkinglot_name",parkinglot_name.getText().toString());
+                b.putString("parkinglot_simple_description",parkinglot_simple_description.getText().toString());
+                b.putString("parkinglot_address",parkinglot_address.getText().toString());
+                intent.putExtras(b);
+                startActivity(intent);
 
             }
         });
