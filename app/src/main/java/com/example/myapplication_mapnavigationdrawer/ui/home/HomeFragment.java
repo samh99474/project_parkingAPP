@@ -129,7 +129,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 MarkerOptions m2 = new MarkerOptions();
                 m2.position(new LatLng(25.0421794, 121.5351166));
                 m2.title("北科大APP特約停車場");
-                m2.snippet("100,100,0 / H,免費(宗演教授幫您支付),true,24H,神秘地區,0800-092-000,25.0421794,121.5351166,0001,停車場類型：室外平面,");
+                m2.snippet("100,100,$30 / 小時,24小時營業 每小時 30 元,true,24H,台北市大安區忠孝東路三段1號,0800-092-000,25.0421794,121.5351166,0001,停車場類型：室外平面,");
                 m2.draggable(true);
                 m2.icon(BitmapDescriptorFactory.fromBitmap(smallMarker2));
                 mymap.addMarker(m2);

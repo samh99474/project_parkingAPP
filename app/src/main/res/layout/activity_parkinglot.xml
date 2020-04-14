@@ -210,7 +210,7 @@
                 android:id="@+id/choose_grid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="_"
+                android:text="無"
                 app:layout_constraintStart_toEndOf="@+id/textView35"
                 app:layout_constraintTop_toTopOf="@+id/textView35" />
 
@@ -236,7 +236,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="24dp"
                 android:text="Step 2：預約資料"
                 android:textColor="#18395A"
                 android:textSize="23dp"
@@ -258,7 +258,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
                 android:layout_marginLeft="40dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:text="姓名："
                 android:textSize="16dp"
                 app:layout_constraintStart_toStartOf="@+id/textView37"
@@ -304,8 +304,8 @@
                 app:layout_constraintEnd_toEndOf="@+id/textView42"
                 app:layout_constraintTop_toBottomOf="@+id/textView42" />
 
-            <EditText
-                android:id="@+id/editText_name"
+            <TextView
+                android:id="@+id/Text_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -315,8 +315,8 @@
                 app:layout_constraintStart_toEndOf="@+id/textView39"
                 app:layout_constraintTop_toTopOf="@+id/textView39" />
 
-            <EditText
-                android:id="@+id/editText_phone"
+            <TextView
+                android:id="@+id/Text_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -326,8 +326,8 @@
                 app:layout_constraintStart_toEndOf="@+id/textView40"
                 app:layout_constraintTop_toTopOf="@+id/textView40" />
 
-            <EditText
-                android:id="@+id/editText_email"
+            <TextView
+                android:id="@+id/Text_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -337,8 +337,8 @@
                 app:layout_constraintStart_toEndOf="@+id/textView41"
                 app:layout_constraintTop_toTopOf="@+id/textView41" />
 
-            <EditText
-                android:id="@+id/editText_license"
+            <TextView
+                android:id="@+id/Text_license"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -381,7 +381,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 android:text="Step 3：付款資訊"
                 android:textColor="#18395A"
                 android:textSize="23dp"
@@ -401,7 +401,7 @@
                 android:id="@+id/textView45"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 android:text="付款金額："
                 android:textSize="16dp"
                 app:layout_constraintEnd_toEndOf="@+id/textView43"
@@ -439,10 +439,11 @@
 
             <TextView
                 android:id="@+id/textView51"
-                android:layout_width="212dp"
-                android:layout_height="130dp"
-                android:layout_marginTop="24dp"
-                android:text="到達預約時間，我們將會自動扣款\n(依照停車場收費方式累加金額)"
+                android:layout_width="195dp"
+                android:layout_height="68dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:text="到達預約時間，將會自動扣款\n(依照停車場收費方式累加金額)"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

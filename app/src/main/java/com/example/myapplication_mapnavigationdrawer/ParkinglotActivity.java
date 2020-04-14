@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -52,7 +51,7 @@ public class ParkinglotActivity extends AppCompatActivity {
     private TextView choose_grid;
 
     private String string_name, string_phone, string_email, string_license, string_reservate_time;
-    private EditText editText_name, editText_phone, editText_email, editText_license, editText_reservate_time;
+    private TextView Text_name, Text_phone, Text_email, Text_license, editText_reservate_time;
 
     private Button gotoreservation;
     private Button returntomap;
@@ -72,10 +71,10 @@ public class ParkinglotActivity extends AppCompatActivity {
         parkinglot_price = findViewById(R.id.parkinglot_price);
         parkinglot_address = findViewById(R.id.parkinglot_address);
         pay = findViewById(R.id.pay);
-        editText_name = findViewById(R.id.editText_name);
-        editText_phone = findViewById(R.id.editText_phone);
-        editText_email = findViewById(R.id.editText_email);
-        editText_license = findViewById(R.id.editText_license);
+        Text_name = findViewById(R.id.Text_name);
+        Text_phone = findViewById(R.id.Text_phone);
+        Text_email = findViewById(R.id.Text_email);
+        Text_license = findViewById(R.id.Text_license);
         editText_reservate_time = findViewById(R.id.editText_reservate_time);
         radiogroup_parkinglot = findViewById(R.id.radiogroup_parkinglot);
         A1 = findViewById(R.id.A1);
@@ -211,13 +210,13 @@ public class ParkinglotActivity extends AppCompatActivity {
                     if (document.exists()) {
                         Log.e(TAG, "DocumentSnapshot data: " + document.getData());
                         string_name = document.getData().get("名子").toString();
-                        editText_name.setText(string_name);
+                        Text_name.setText(string_name);
                         string_phone = document.getData().get("手機號碼").toString();
-                        editText_phone.setText(string_phone);
+                        Text_phone.setText(string_phone);
                         string_license = document.getData().get("車牌號碼").toString();
-                        editText_license.setText(string_license);
+                        Text_license.setText(string_license);
 
-                        editText_email.setText(string_email);
+                        Text_email.setText(string_email);
                     } else {
                         Log.e(TAG, "No such document");
                     }
@@ -230,8 +229,8 @@ public class ParkinglotActivity extends AppCompatActivity {
         gotoreservation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(choose_grid.getText().toString().matches("") || editText_name.getText().toString().matches("") || editText_phone.getText().toString().matches("") ||
-                        editText_email.getText().toString().matches("") || editText_license.getText().toString().matches("") || editText_reservate_time.getText().toString().matches("")){
+                if(choose_grid.getText().toString().matches("") || Text_name.getText().toString().matches("") || Text_phone.getText().toString().matches("") ||
+                        Text_email.getText().toString().matches("") || Text_license.getText().toString().matches("") || editText_reservate_time.getText().toString().matches("")){
                     Toast.makeText(ParkinglotActivity.this,"資料尚未填寫完畢", Toast.LENGTH_SHORT).show();
                 }
                 else {
@@ -247,9 +246,9 @@ public class ParkinglotActivity extends AppCompatActivity {
                                     Map<String, Boolean> A1info_boolean = new HashMap<>();
                                     Map<String, Object> A1info_string = new HashMap<>();
                                     A1info_boolean.put("預約中", true);
-                                    A1info_string.put("姓名",editText_name.getText().toString());
-                                    A1info_string.put("手機", editText_phone.getText().toString());
-                                    A1info_string.put("預約車牌",editText_license.getText().toString());
+                                    A1info_string.put("姓名",Text_name.getText().toString());
+                                    A1info_string.put("手機", Text_phone.getText().toString());
+                                    A1info_string.put("預約車牌",Text_license.getText().toString());
                                     A1info_string.put("預約日期",editText_reservate_time.getText().toString());
                                     A1info_string.put("預約時間",editText_reservate_time.getText().toString());
 
@@ -283,9 +282,9 @@ public class ParkinglotActivity extends AppCompatActivity {
                                     Map<String, Boolean> A2info_boolean = new HashMap<>();
                                     Map<String, Object> A2info_string = new HashMap<>();
                                     A2info_boolean.put("預約中", true);
-                                    A2info_string.put("姓名",editText_name.getText().toString());
-                                    A2info_string.put("手機", editText_phone.getText().toString());
-                                    A2info_string.put("預約車牌",editText_license.getText().toString());
+                                    A2info_string.put("姓名",Text_name.getText().toString());
+                                    A2info_string.put("手機", Text_phone.getText().toString());
+                                    A2info_string.put("預約車牌",Text_license.getText().toString());
                                     A2info_string.put("預約日期",editText_reservate_time.getText().toString());
                                     A2info_string.put("預約時間",editText_reservate_time.getText().toString());
 
@@ -319,9 +318,9 @@ public class ParkinglotActivity extends AppCompatActivity {
                                     Map<String, Boolean> A3info_boolean = new HashMap<>();
                                     Map<String, Object> A3info_string = new HashMap<>();
                                     A3info_boolean.put("預約中", true);
-                                    A3info_string.put("姓名",editText_name.getText().toString());
-                                    A3info_string.put("手機", editText_phone.getText().toString());
-                                    A3info_string.put("預約車牌",editText_license.getText().toString());
+                                    A3info_string.put("姓名",Text_name.getText().toString());
+                                    A3info_string.put("手機", Text_phone.getText().toString());
+                                    A3info_string.put("預約車牌",Text_license.getText().toString());
                                     A3info_string.put("預約日期",editText_reservate_time.getText().toString());
                                     A3info_string.put("預約時間",editText_reservate_time.getText().toString());
 
