@@ -210,33 +210,40 @@ public class infowindow extends AppCompatActivity {
 
         getParkingGridData();
 
+        if(split_string_parkinglot_snippet[12].matches("true")){     //假如是可預約的停車場
 
+            reservation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                /*
+                Intent intent = new Intent();
+                startActivity(new Intent(infowindow.this, ParkinglotActivity.class));
+                 */
+
+                    Intent intent = new Intent(infowindow.this,
+                            ParkinglotActivity.class);
+
+                    Bundle b = new Bundle();    //資訊放入Bundle
+                    b.putString("string_parkinglot_name",parkinglot_name.getText().toString());
+                    b.putString("parkinglot_simple_description",parkinglot_simple_description.getText().toString());
+                    b.putString("parkinglot_address",parkinglot_address.getText().toString());
+                    intent.putExtras(b);
+                    startActivity(intent);
+
+                }
+            });
+        }else{
+            //讓reservation預約按鈕失效且消失
+            reservation.setEnabled(false);
+            reservation.setVisibility(View.GONE);
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        reservation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*
-                Intent intent = new Intent();
-                startActivity(new Intent(infowindow.this, ParkinglotActivity.class));
-                 */
 
-                Intent intent = new Intent(infowindow.this,
-                        ParkinglotActivity.class);
-
-                Bundle b = new Bundle();    //資訊放入Bundle
-                b.putString("string_parkinglot_name",parkinglot_name.getText().toString());
-                b.putString("parkinglot_simple_description",parkinglot_simple_description.getText().toString());
-                b.putString("parkinglot_address",parkinglot_address.getText().toString());
-                intent.putExtras(b);
-                startActivity(intent);
-
-            }
-        });
     }
 
     /**

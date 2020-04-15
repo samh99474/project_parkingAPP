@@ -64,6 +64,7 @@
             android:background="@null"
             android:hint="Enter搜尋地點"
             android:imeOptions="actionSearch"
+            android:imeActionLabel="搜尋"
             android:textColor="#000"
             android:textSize="15sp" />
 

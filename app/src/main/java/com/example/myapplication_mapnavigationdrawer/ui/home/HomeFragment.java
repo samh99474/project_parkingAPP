@@ -129,7 +129,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 MarkerOptions m2 = new MarkerOptions();
                 m2.position(new LatLng(25.0421794, 121.5351166));
                 m2.title("北科大APP特約停車場");
-                m2.snippet("100,100,$30 / 小時,24小時營業 每小時 30 元,true,24H,台北市大安區忠孝東路三段1號,0800-092-000,25.0421794,121.5351166,0001,停車場類型：室外平面,");
+                m2.snippet("100,100,$30 / 小時,24小時營業 每小時 30 元,true,24H,台北市大安區忠孝東路三段1號,0800-092-000,25.0421794,121.5351166,0001,停車場類型：室外平面,true,");
                 m2.draggable(true);
                 m2.icon(BitmapDescriptorFactory.fromBitmap(smallMarker2));
                 mymap.addMarker(m2);
@@ -139,7 +139,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
                 if (mygsondata.data.parkinglots[i].current_price_text != null) {
                     //m1.snippet()  0總車位,1剩餘車位,    2費率simple_description,  3費率full_description,    4 is_opening,
-                    // 5 today_service_time,   6  地址, 7電話tel, 8 lat,  9 lng,  10 API id ,
+                    // 5 today_service_time,   6  地址, 7電話tel, 8 lat,  9 lng,  10 API id , 11 停車場detail info, 12 是否可預約
                     m1.snippet(mygsondata.data.parkinglots[i].total_lots + ","
                             + mygsondata.data.parkinglots[i].available_lots + ","
                             + mygsondata.data.parkinglots[i].current_price_text.simple_description + ","
@@ -152,7 +152,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                             + mygsondata.data.parkinglots[i].lng + ","
                             + mygsondata.data.parkinglots[i].id + ","
                             + mygsondata.data.parkinglots[i].detail_info[3][0]
-                            + mygsondata.data.parkinglots[i].detail_info[3][1] + "\n" + ",");
+                            + mygsondata.data.parkinglots[i].detail_info[3][1] + "\n" + ","
+                            + "false"+",");
 
                 }
 
@@ -333,7 +334,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                             location.getLongitude()), 17));
                 }else {
 
-                    Toast.makeText(getActivity(), "無法讀取您的位置，請檢查是否開啟定位，或者重新開啟APP", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "無法讀取您的位置，請檢查是否開啟定位，或者稍後再試", Toast.LENGTH_SHORT).show();
                 }
 
             }
