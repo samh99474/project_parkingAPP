@@ -7,52 +7,15 @@
     android:background="@drawable/background_gradient"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/favorite_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:drawableLeft="@drawable/ic_favorite_black_24dp"
-        android:text="\t我的最愛"
-        android:textColor="@android:color/black"
-        android:textSize="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/common_google_signin_btn_text_dark_focused"
-        app:layout_constraintEnd_toEndOf="@+id/listView"
-        app:layout_constraintStart_toStartOf="@+id/listView"
-        app:layout_constraintTop_toBottomOf="@+id/favorite_title" />
-
     <ListView
         android:id="@+id/listView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider">
+        app:layout_constraintTop_toTopOf="parent">
 
     </ListView>
-
-    <View
-        android:id="@+id/divider2"
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:background="@color/common_google_signin_btn_text_dark_focused"
-        app:layout_constraintBottom_toBottomOf="@+id/listView"
-        app:layout_constraintEnd_toEndOf="@+id/listView"
-        app:layout_constraintStart_toStartOf="@+id/listView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

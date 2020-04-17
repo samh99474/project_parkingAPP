@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.myapplication_mapnavigationdrawer.MainActivity;
 import com.example.myapplication_mapnavigationdrawer.MyDBHelper;
 import com.example.myapplication_mapnavigationdrawer.R;
+import com.example.myapplication_mapnavigationdrawer.adapter.FavoriteAdapter;
 import com.example.myapplication_mapnavigationdrawer.ui.home.HomeFragment;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class ToolsFragment extends Fragment {
     private ArrayAdapter<String> adapter;
     private ArrayList<String> items = new ArrayList<>();
     private ArrayList<String> items_lat_lng = new ArrayList<>();
+    private ArrayList<Integer> imageId =new ArrayList<>();
 
     private SQLiteDatabase dari;
 
@@ -53,11 +55,22 @@ public class ToolsFragment extends Fragment {
 
      */
         listView = root.findViewById(R.id.listView);
-
+/*
         adapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_list_item_1, items);
+ */
+/*
+        Integer[] imageId = {
+                R.mipmap.loticon,
+                R.mipmap.loticon
+        };
 
-        listView.setAdapter(adapter);
+ */
+
+
+        FavoriteAdapter favoriteAdapter = new
+                FavoriteAdapter(getActivity(), items, imageId);
+
         dari = new MyDBHelper(getActivity()).getWritableDatabase();
 
         Cursor c;
@@ -65,21 +78,32 @@ public class ToolsFragment extends Fragment {
         Toast.makeText(getActivity(),"共有" + c.getCount() +
                 "筆資料", Toast.LENGTH_SHORT).show();
 
+      /*  if(c.moveToFirst() && c.getCount() >= 1){
+            do{
+
+            }while(c.moveToNext());
+
+       */
         c.moveToFirst();//指標一開始是指向-1的位置，所以源碼裡有一行moveToFirst()，把cursor指到第一個位置，否則會出現錯誤
         for(int i=0;i< c.getCount();i++){
+                items.add("\t" + c.getString(1) +
+                        "\n\t地址：" + c.getString(5) +
+                        "\n\t費率：" + c.getString(4));
+                items_lat_lng.add("," + c.getString(2) + "," + c.getString(3) + ",");
 
-            items.add("\t" + c.getString(1) +
-                    "\n\t地址：" + c.getString(5) +
-                    "\n\t費率：" + c.getString(4));
-            items_lat_lng.add(","+c.getString(2) + "," + c.getString(3)+",");
-            c.moveToNext();
+                imageId.add(R.mipmap.loticon);
+                c.moveToNext();
         }
 
 
         //更新listView內容
-        adapter.notifyDataSetChanged();
+        if(adapter != null){
+            adapter.notifyDataSetChanged();
+        }
         //關閉cursor
         c.close();
+
+        listView.setAdapter(favoriteAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

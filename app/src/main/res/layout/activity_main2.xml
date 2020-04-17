@@ -29,7 +29,7 @@
     <RelativeLayout
         android:id="@+id/relLayout1"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="51dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
@@ -43,8 +43,8 @@
 
         <ImageView
             android:id="@+id/ic_magnify"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="27dp"
+            android:layout_height="26dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             app:srcCompat="@drawable/ic_search_black_24dp" />
@@ -63,15 +63,15 @@
             android:layout_toRightOf="@+id/ic_magnify"
             android:background="@null"
             android:hint="Enter搜尋地點"
-            android:imeOptions="actionSearch"
             android:imeActionLabel="搜尋"
+            android:imeOptions="actionSearch"
             android:textColor="#000"
             android:textSize="15sp" />
 
         <ImageButton
             android:id="@+id/btn_google_speak"
             android:layout_width="75dp"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:layout_alignParentRight="true"
             android:background="@drawable/custom_mycurrent_position_button_background"
             app:srcCompat="@drawable/ic_keyboard_voice_black_24dp" />
