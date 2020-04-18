@@ -11,8 +11,9 @@
         </shape>
     </item>
 
+
     <!-- White Top color -->
-    <item android:bottom="6px">
+    <item android:bottom="7px">
 
         <shape  android:shape="rectangle">
 
@@ -27,5 +28,7 @@
         </shape>
 
     </item>
+
+
 
 </layer-list>
