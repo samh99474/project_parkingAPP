@@ -113,8 +113,11 @@ public class ToolsFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(),items.get(position), Toast.LENGTH_SHORT).show();
-                String[] strings_items_lat_lng = items_lat_lng.get(position).toString().split(",");//split(指定符號) ，可依指定符號把字串分開成陣列
+                position -= listView.getHeaderViewsCount();//position 扣掉是因為有head list
+
+                if(position!=-1) {
+                    Toast.makeText(getActivity(), items.get(position), Toast.LENGTH_SHORT).show();
+                    String[] strings_items_lat_lng = items_lat_lng.get(position).toString().split(",");//split(指定符號) ，可依指定符號把字串分開成陣列
 
                 Bundle b_favorite_lat_lng = new Bundle();    //資訊放入Bundle
                 b_favorite_lat_lng.putString("string_favorite_lat",strings_items_lat_lng[1]);//lat
@@ -126,6 +129,7 @@ public class ToolsFragment extends Fragment {
                         .beginTransaction()
                         .replace(R.id.nav_host_fragment, homeFragment)
                         .addToBackStack("TAG_TO_FRAGMENT").commit();
+                }
             }
         });
         return root;
