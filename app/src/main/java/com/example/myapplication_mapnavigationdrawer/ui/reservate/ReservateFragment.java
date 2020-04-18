@@ -23,7 +23,8 @@ public class ReservateFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         reservateViewModel =
                 ViewModelProviders.of(this).get(ReservateViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_gallery, container, false);
+        View root = inflater.inflate(R.layout.settings, container, false);
+        /*
         final TextView textView = root.findViewById(R.id.text_historical);
         reservateViewModel.getText().observe(this, new Observer<String>() {
             @Override
@@ -31,6 +32,7 @@ public class ReservateFragment extends Fragment {
                 textView.setText(s);
             }
         });
+         */
         return root;
     }
 }

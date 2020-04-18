@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication_mapnavigationdrawer.adapter.RestaurantAdapter;
 import com.example.myapplication_mapnavigationdrawer.model.Restaurant;
+import com.example.myapplication_mapnavigationdrawer.ui.reservate.ReservateFragment;
 import com.example.myapplication_mapnavigationdrawer.util.RestaurantUtil;
 import com.example.myapplication_mapnavigationdrawer.viewmodel.MainActivityViewModel;
 import com.firebase.ui.auth.AuthUI;
@@ -223,12 +224,12 @@ public class FirebaseActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_add_items:
-                onAddItemsClicked();
-                break;
-            case R.id.menu_sign_out:
-                AuthUI.getInstance().signOut(this);
-                startSignIn();
+
+            case R.id.action_settings:
+                Toast.makeText(FirebaseActivity.this, "設定", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(FirebaseActivity.this,
+                        ReservateFragment.class);
+                startActivity(intent);
                 break;
         }
         return super.onOptionsItemSelected(item);

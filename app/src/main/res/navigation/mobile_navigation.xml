@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/nav_historical"
         android:name="com.example.myapplication_mapnavigationdrawer.ui.gallery.GalleryFragment"
-        android:label="歷史紀錄"
+        android:label="預約紀錄"
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
@@ -43,6 +43,6 @@
     <fragment
         android:id="@+id/nav_reservation"
         android:name="com.example.myapplication_mapnavigationdrawer.ui.reservate.ReservateFragment"
-        android:label="Car_Reservation"
+        android:label="設定"
         tools:layout="@layout/fragment_send" />
 </navigation>

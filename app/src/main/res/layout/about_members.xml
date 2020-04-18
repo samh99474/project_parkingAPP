@@ -87,37 +87,25 @@
                 android:id="@+id/imageView15"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toTopOf="@+id/textView28"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView19"
-                app:srcCompat="@drawable/custom_mycurrent_position_button_background" />
+                app:layout_constraintTop_toTopOf="@+id/textView19"
+                app:srcCompat="@drawable/custom_background_block" />
 
             <TextView
                 android:id="@+id/textView19"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:text="TEAM MEMBERS"
+                android:textColor="#18395A"
                 android:textSize="23dp"
                 android:textStyle="bold"
-                android:textColor="#18395A"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/imageView3"
                 app:layout_constraintTop_toBottomOf="@+id/imageView12" />
-
-            <View
-                android:id="@+id/divider5"
-                android:layout_width="270dp"
-                android:layout_height="1dp"
-                android:background="@color/fui_bgFacebook"
-                app:layout_constraintBottom_toBottomOf="@+id/textView19"
-                app:layout_constraintStart_toStartOf="@+id/imageView3" />
 
             <ImageView
                 android:id="@+id/imageView3"
@@ -136,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:text="謝尚泓"
                 android:textColor="@color/browser_actions_text_color"
                 android:textStyle="bold"
@@ -247,44 +235,32 @@
                 android:id="@+id/imageView16"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView28"
-                app:srcCompat="@drawable/custom_mycurrent_position_button_background" />
+                app:layout_constraintTop_toTopOf="@+id/textView28"
+                app:srcCompat="@drawable/custom_background_block" />
 
             <TextView
                 android:id="@+id/textView28"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="32dp"
                 android:text="ADVISOR"
+                android:textColor="#18395A"
                 android:textSize="23dp"
                 android:textStyle="bold"
-                android:textColor="#18395A"
-                app:layout_constraintStart_toStartOf="@+id/textView19"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView7" />
-
-            <View
-                android:id="@+id/divider3"
-                android:layout_width="270dp"
-                android:layout_height="1dp"
-                android:background="@color/fui_bgFacebook"
-                app:layout_constraintStart_toStartOf="@+id/textView28"
-                app:layout_constraintTop_toBottomOf="@+id/textView28" />
 
             <ImageView
                 android:id="@+id/imageView9"
                 android:layout_width="94dp"
                 android:layout_height="106dp"
                 app:layout_constraintBottom_toBottomOf="@+id/textView30"
-                app:layout_constraintStart_toStartOf="@+id/textView28"
+                app:layout_constraintStart_toStartOf="@+id/imageView7"
                 app:layout_constraintTop_toTopOf="@+id/textView29"
                 app:srcCompat="@mipmap/lee" />
 
@@ -294,12 +270,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:text="李宗演 教授"
                 android:textColor="@color/browser_actions_text_color"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/imageView9"
-                app:layout_constraintTop_toBottomOf="@+id/divider3" />
+                app:layout_constraintTop_toBottomOf="@+id/textView28" />
 
             <TextView
                 android:id="@+id/textView30"
