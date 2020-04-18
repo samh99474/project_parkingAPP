@@ -3,6 +3,7 @@ package com.example.myapplication_mapnavigationdrawer.ui.tools;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -103,7 +104,11 @@ public class ToolsFragment extends Fragment {
         //關閉cursor
         c.close();
 
-        listView.setAdapter(favoriteAdapter);
+        listView.setAdapter(favoriteAdapter);   //list Adapter客製化list的樣式
+
+        //ListView加入Head list 頭標
+        View headlist = getLayoutInflater().inflate(R.layout.favorite_head_list, null);
+        listView.addHeaderView(headlist);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
