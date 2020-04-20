@@ -356,7 +356,7 @@
 
             <Button
                 android:id="@+id/btn_timepicker"
-                android:layout_width="201dp"
+                android:layout_width="215dp"
                 android:layout_height="37dp"
                 android:background="@drawable/background_listview"
                 android:text="請選擇時間"

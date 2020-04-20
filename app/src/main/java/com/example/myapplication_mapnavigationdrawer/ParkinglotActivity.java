@@ -251,16 +251,23 @@ public class ParkinglotActivity extends AppCompatActivity {
                 Toast.makeText(ParkinglotActivity.this,"現在時間:"
                         +currentDateandTime, Toast.LENGTH_SHORT).show();
 
+                SimpleDateFormat sdf_yyyy_mm_dd = new SimpleDateFormat("yyyy/MM/dd");    //取得現在日期時間
+                final String currentDateandTime_yyyy_mm_dd = sdf_yyyy_mm_dd.format(new Date());
+                SimpleDateFormat sdf_hh = new SimpleDateFormat("hh");    //取得現在日期時間 (時)
+                final String currentDateandTime_hh = sdf_hh.format(new Date());
+                SimpleDateFormat sdf_mm = new SimpleDateFormat("mm");    //取得現在日期時間 (分)
+                final String currentDateandTime_mm = sdf_hh.format(new Date());
+
+
                 TimePickerDialog timePickerDialog = new TimePickerDialog(ParkinglotActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-                        if(minute<10){
-                            btn_timepicker.setText(hourOfDay + ":" +"0"+minute);
-                        }else {
-                            btn_timepicker.setText(hourOfDay + ":" +minute);
-                        }
-
+                            if(minute<10){
+                                btn_timepicker.setText("\t"+currentDateandTime_yyyy_mm_dd + ",\t" +hourOfDay + ":" + "0" + minute);
+                            }else {
+                                btn_timepicker.setText("\t"+currentDateandTime_yyyy_mm_dd + ",\t" +hourOfDay + ":" + minute);
+                            }
 
                     }
                 },mHour, mMin, true);
