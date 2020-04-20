@@ -20,6 +20,8 @@ import com.example.myapplication_mapnavigationdrawer.R;
 import com.example.myapplication_mapnavigationdrawer.viewmodel.MainActivityViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,7 +40,7 @@ public class PersonalInfoFragment extends Fragment {
     private MainActivityViewModel mViewModel;
     public int i;
     private static final String TAG = "PersonalInfoFragment";
-    public String name,phone,license;
+    public String string_uid ,name ,phone ,license;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -54,8 +56,12 @@ public class PersonalInfoFragment extends Fragment {
         btn_edit = root.findViewById(R.id.btn_eidt_personalinfo);
 
         final FirebaseFirestore user_db = FirebaseFirestore.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null){
+            string_uid = user.getUid();     //抓取使用者UID
+        }
 
-        DocumentReference docRef = user_db.collection("users").document("i");
+        DocumentReference docRef = user_db.collection("users").document(string_uid);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override

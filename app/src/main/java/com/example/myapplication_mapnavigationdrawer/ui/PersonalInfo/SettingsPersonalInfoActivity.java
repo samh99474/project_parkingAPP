@@ -17,6 +17,8 @@ import com.example.myapplication_mapnavigationdrawer.R;
 import com.example.myapplication_mapnavigationdrawer.viewmodel.MainActivityViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -31,6 +33,7 @@ public class SettingsPersonalInfoActivity extends AppCompatActivity {
     private EditText set_phone_number;
     private EditText set_plate_number;
     private Button btn_info;
+    private String string_uid;
     private FirebaseFirestore mFirestore;
     private Query mQuery;
     private MainActivityViewModel mViewModel;
@@ -42,6 +45,10 @@ public class SettingsPersonalInfoActivity extends AppCompatActivity {
         setContentView(R.layout.settings_activity);
 
         final FirebaseFirestore user_db = FirebaseFirestore.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null){
+            string_uid = user.getUid();     //抓取使用者UID
+        }
 
         btn_info = findViewById(R.id.btn_info);
         btn_info.setOnClickListener(new View.OnClickListener() {
@@ -54,13 +61,11 @@ public class SettingsPersonalInfoActivity extends AppCompatActivity {
                 String phone_number = set_phone_number.getText().toString();
                 String plate_number = set_plate_number.getText().toString();
 
-
-
                 Map<String, Object> user = new HashMap<>();
                 user.put("名子",name);
                 user.put("手機號碼",phone_number);
                 user.put("車牌號碼",plate_number);
-                user_db.collection("users").document("i").set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {//固定文件ID
+                user_db.collection("users").document(string_uid).set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {//固定文件ID
 
                     @Override
                     public void onSuccess(Void aVoid) {
