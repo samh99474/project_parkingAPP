@@ -1,15 +1,23 @@
 package com.example.myapplication_mapnavigationdrawer.ui.PersonalInfo;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -19,13 +27,26 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.myapplication_mapnavigationdrawer.R;
 import com.example.myapplication_mapnavigationdrawer.viewmodel.MainActivityViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+
+
+import static android.app.Activity.RESULT_OK;
 
 public class PersonalInfoFragment extends Fragment {
 
@@ -42,7 +63,6 @@ public class PersonalInfoFragment extends Fragment {
     private static final String TAG = "PersonalInfoFragment";
     public String string_uid ,name ,phone ,license;
 
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         personalInfoViewModel =
@@ -54,6 +74,7 @@ public class PersonalInfoFragment extends Fragment {
         phon_number = root.findViewById(R.id.show_phone_number);
         license_number = root.findViewById(R.id.show_license);
         btn_edit = root.findViewById(R.id.btn_eidt_personalinfo);
+
 
         final FirebaseFirestore user_db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -119,9 +140,7 @@ Log.e(TAG, "Error getting documents.", task.getException());
             }
         });
 
-
         return root;
     }
-
 
 }

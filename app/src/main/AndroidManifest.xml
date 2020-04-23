@@ -46,6 +46,7 @@
         <activity android:name=".RestaurantDetailActivity" />
         <activity android:name=".ParkinglotActivity" />
         <activity android:name=".ReservationActivity" />
+        <activity android:name=".ui.PersonalInfo.select_upload_profile_head" />
     </application>
 
 </manifest>
