@@ -104,8 +104,8 @@
                         android:layout_height="wrap_content"
 
                         android:layout_alignParentTop="true"
-                        android:layout_marginStart="60dp"
-                        android:layout_marginLeft="60dp"
+                        android:layout_marginStart="46dp"
+                        android:layout_marginLeft="46dp"
                         android:layout_marginTop="110dp"
                         android:layout_weight="1"
                         android:text="姓名："
@@ -121,7 +121,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/textView11"
                         android:layout_weight="1"
-                        android:ems="10"
+                        android:ems="8"
                         android:inputType="textPersonName"
                         android:textColor="#18395A"
                         android:textSize="20dp"
@@ -149,7 +149,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/textView10"
                         android:layout_weight="1"
-                        android:ems="10"
+                        android:ems="8"
                         android:inputType="phone"
                         android:textColor="#18395A"
                         android:textSize="20dp"
@@ -177,14 +177,13 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/textView9"
                         android:layout_weight="1"
-                        android:ems="10"
+                        android:ems="8"
                         android:inputType="textPersonName"
                         android:textColor="#18395A"
                         android:textSize="20dp"
                         app:layout_constraintBottom_toBottomOf="@+id/textView9"
                         app:layout_constraintStart_toEndOf="@+id/textView9"
-                        app:layout_constraintTop_toTopOf="@+id/textView9"
-                        app:layout_constraintVertical_bias="0.0" />
+                        app:layout_constraintTop_toTopOf="@+id/textView9" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
