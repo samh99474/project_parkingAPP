@@ -24,6 +24,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication_mapnavigationdrawer.R;
 import com.example.myapplication_mapnavigationdrawer.viewmodel.MainActivityViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -55,13 +56,14 @@ public class PersonalInfoFragment extends Fragment {
     private TextView phon_number;
     private TextView license_number;
     private Button btn_edit;
+    private ImageView profile_head;
     private Context context;
     private FirebaseFirestore mFirestore;
     private Query mQuery;
     private MainActivityViewModel mViewModel;
     public int i;
     private static final String TAG = "PersonalInfoFragment";
-    public String string_uid ,name ,phone ,license;
+    public String string_uid ,name ,phone ,license, string_head_name;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -74,6 +76,7 @@ public class PersonalInfoFragment extends Fragment {
         phon_number = root.findViewById(R.id.show_phone_number);
         license_number = root.findViewById(R.id.show_license);
         btn_edit = root.findViewById(R.id.btn_eidt_personalinfo);
+        profile_head = root.findViewById(R.id.profile_head);
 
 
         final FirebaseFirestore user_db = FirebaseFirestore.getInstance();
@@ -135,10 +138,52 @@ Log.e(TAG, "Error getting documents.", task.getException());
         btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),SettingsPersonalInfoActivity.class);
+                Intent intent = new Intent(getActivity(),
+                        SettingsPersonalInfoActivity.class);
+
+                Bundle b = new Bundle();    //資訊放入Bundle
+                b.putString("string_user_name",user_name.getText().toString());
+                b.putString("string_user_phone",phon_number.getText().toString());
+                b.putString("string_user_license",license_number.getText().toString());
+                intent.putExtras(b);
                 startActivity(intent);
             }
         });
+
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.e(TAG, "DocumentSnapshot data: " + document.getData());
+                        string_head_name = document.getData().get("大頭貼").toString();
+
+                        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                        StorageReference dateRef = storageRef.child("profile_pic_" + string_uid +"/"+ string_head_name);
+                        dateRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
+                        {
+                            @Override
+                            public void onSuccess(Uri downloadUrl)
+                            {
+                                Glide.with(getActivity())
+                                        .load(downloadUrl)
+                                        .into(profile_head);
+                            }
+                        });
+
+                    } else {
+                        Log.e(TAG, "No such document");
+                    }
+
+                } else {
+                    Log.e(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
 
         return root;
     }

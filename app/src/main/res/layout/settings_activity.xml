@@ -53,12 +53,14 @@
                 app:layout_constraintStart_toStartOf="@+id/cardView"
                 app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
-            <ImageButton
+            <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/img_btn_select_head"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
                 android:layout_marginTop="68dp"
                 android:elevation="10dp"
+                app:civ_border_color="@android:color/white"
+                app:civ_border_width="8dp"
                 app:layout_constraintEnd_toEndOf="@+id/cardView"
                 app:layout_constraintStart_toStartOf="@+id/cardView"
                 app:layout_constraintTop_toBottomOf="@+id/textView33"
@@ -66,8 +68,11 @@
 
             <ImageView
                 android:id="@+id/imageView23"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginEnd="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginBottom="14dp"
                 android:background="@drawable/custom_mycurrent_position_button_background"
                 android:elevation="10dp"
                 app:layout_constraintBottom_toBottomOf="@+id/img_btn_select_head"
@@ -99,12 +104,14 @@
                         android:layout_height="wrap_content"
 
                         android:layout_alignParentTop="true"
-                        android:layout_marginStart="64dp"
-                        android:layout_marginLeft="64dp"
-                        android:layout_marginTop="88dp"
+                        android:layout_marginStart="60dp"
+                        android:layout_marginLeft="60dp"
+                        android:layout_marginTop="110dp"
                         android:layout_weight="1"
-                        android:text="姓名"
-                        android:textSize="24sp"
+                        android:text="姓名："
+                        android:textColor="#5F97F4"
+                        android:textSize="20dp"
+                        android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -115,8 +122,9 @@
                         android:layout_below="@+id/textView11"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:hint="請輸入名稱"
                         android:inputType="textPersonName"
+                        android:textColor="#18395A"
+                        android:textSize="20dp"
                         app:layout_constraintBottom_toBottomOf="@+id/textView11"
                         app:layout_constraintStart_toEndOf="@+id/textView11"
                         app:layout_constraintTop_toTopOf="@+id/textView11" />
@@ -128,10 +136,11 @@
                         android:layout_below="@+id/input_username"
                         android:layout_marginTop="24dp"
                         android:layout_weight="1"
-                        android:text="手機號碼"
-                        android:textSize="24sp"
+                        android:text="手機號碼："
+                        android:textColor="#5F97F4"
+                        android:textSize="20dp"
+                        android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/textView11"
-                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
                     <EditText
@@ -141,8 +150,9 @@
                         android:layout_below="@+id/textView10"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:hint="請填入手機號碼"
-                        android:inputType="textPersonName"
+                        android:inputType="phone"
+                        android:textColor="#18395A"
+                        android:textSize="20dp"
                         app:layout_constraintBottom_toBottomOf="@+id/textView10"
                         app:layout_constraintStart_toEndOf="@+id/textView10"
                         app:layout_constraintTop_toTopOf="@+id/textView10" />
@@ -154,8 +164,10 @@
                         android:layout_below="@+id/input_phone_number"
                         android:layout_marginTop="24dp"
                         android:layout_weight="1"
-                        android:text="車牌"
-                        android:textSize="24sp"
+                        android:text="車牌："
+                        android:textColor="#5F97F4"
+                        android:textSize="20dp"
+                        android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/textView10"
                         app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
@@ -166,11 +178,13 @@
                         android:layout_below="@+id/textView9"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:hint="請輸入車牌號碼"
                         android:inputType="textPersonName"
+                        android:textColor="#18395A"
+                        android:textSize="20dp"
                         app:layout_constraintBottom_toBottomOf="@+id/textView9"
                         app:layout_constraintStart_toEndOf="@+id/textView9"
-                        app:layout_constraintTop_toTopOf="@+id/textView9" />
+                        app:layout_constraintTop_toTopOf="@+id/textView9"
+                        app:layout_constraintVertical_bias="0.0" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 

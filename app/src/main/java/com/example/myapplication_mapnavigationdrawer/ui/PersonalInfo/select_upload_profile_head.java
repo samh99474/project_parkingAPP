@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -15,28 +16,47 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.myapplication_mapnavigationdrawer.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class select_upload_profile_head extends AppCompatActivity {
-    private Uri mImageUri;
+    public Uri mImageUri;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
     private StorageTask mUploadTask;
     private Button mButtonChooseImage, mButtonUpload;
     private ImageView mImageView;
     private static final int PICK_IMAGE_REQUEST = 1;
+
+    private boolean lockAspectRatio = false, setBitmapMaxWidthHeight = false;
+    private int ASPECT_RATIO_X = 16, ASPECT_RATIO_Y = 9, bitmapMaxWidth = 1000, bitmapMaxHeight = 1000;
+    private int IMAGE_COMPRESSION = 80;
+    public static final String INTENT_ASPECT_RATIO_X = "aspect_ratio_x";
+    public static final String INTENT_ASPECT_RATIO_Y = "aspect_ratio_Y";
+    public static final String INTENT_LOCK_ASPECT_RATIO = "lock_aspect_ratio";
+    public static final String INTENT_IMAGE_COMPRESSION_QUALITY = "compression_quality";
+    public static final String INTENT_SET_BITMAP_MAX_WIDTH_HEIGHT = "set_bitmap_max_width_height";
+    public static final String INTENT_BITMAP_MAX_WIDTH = "max_width";
+    public static final String INTENT_BITMAP_MAX_HEIGHT = "max_height";
+    public static final String INTENT_IMAGE_PICKER_OPTION = "image_picker_option";
 
     private String string_uid;
 
@@ -48,6 +68,21 @@ public class select_upload_profile_head extends AppCompatActivity {
         mButtonChooseImage = findViewById(R.id.mButtonChooseImage);
         mButtonUpload = findViewById(R.id.mButtonUpload);
         mImageView = findViewById(R.id.mImageView);
+
+
+        Intent intent = getIntent();
+        if (intent == null) {
+            Toast.makeText(getApplicationContext(), "getString(R.string.toast_image_intent_null)", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        ASPECT_RATIO_X = intent.getIntExtra(INTENT_ASPECT_RATIO_X, ASPECT_RATIO_X);
+        ASPECT_RATIO_Y = intent.getIntExtra(INTENT_ASPECT_RATIO_Y, ASPECT_RATIO_Y);
+        IMAGE_COMPRESSION = intent.getIntExtra(INTENT_IMAGE_COMPRESSION_QUALITY, IMAGE_COMPRESSION);
+        lockAspectRatio = intent.getBooleanExtra(INTENT_LOCK_ASPECT_RATIO, false);
+        setBitmapMaxWidthHeight = intent.getBooleanExtra(INTENT_SET_BITMAP_MAX_WIDTH_HEIGHT, false);
+        bitmapMaxWidth = intent.getIntExtra(INTENT_BITMAP_MAX_WIDTH, bitmapMaxWidth);
+        bitmapMaxHeight = intent.getIntExtra(INTENT_BITMAP_MAX_HEIGHT, bitmapMaxHeight);
 
         final FirebaseFirestore user_db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -91,7 +126,7 @@ public class select_upload_profile_head extends AppCompatActivity {
                 && data != null && data.getData() != null) {
             mImageUri = data.getData();
 
-            Picasso.with(select_upload_profile_head.this).load(mImageUri).into(mImageView);
+            Picasso.with(select_upload_profile_head.this).load(mImageUri).fit().centerCrop().into(mImageView);
         }
     }
 
@@ -105,6 +140,23 @@ public class select_upload_profile_head extends AppCompatActivity {
         if (mImageUri != null) {
             final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
                     + "." + getFileExtension(mImageUri));
+
+            final FirebaseFirestore user_db = FirebaseFirestore.getInstance();
+            Map<String, Object> user = new HashMap<>();
+            user.put("大頭貼",fileReference.getName());    //上傳檔案的圖片NAEM
+            user_db.collection("users").document(string_uid).set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {//固定文件ID
+
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.e("TAG", "DocumentSnapshot successfully written!");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("TAG", "Error writing document", e);
+                }
+            });
+
 
 /*
             mUploadTask = fileReference.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -142,8 +194,8 @@ public class select_upload_profile_head extends AppCompatActivity {
 
                             String uploadId = mDatabaseRef.push().getKey();
                             mDatabaseRef.child(uploadId).setValue(upload);
-                            onBackPressed();
-
+                            Intent intent = new Intent(select_upload_profile_head.this,SettingsPersonalInfoActivity.class);
+                            startActivity(intent);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

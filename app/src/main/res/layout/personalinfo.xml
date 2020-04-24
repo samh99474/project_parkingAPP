@@ -58,23 +58,27 @@
                 android:layout_height="41dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginRight="24dp"
-                android:text="編輯"
+                android:background="@drawable/background_listview"
+                android:text="編\t輯"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/textView38"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textView38" />
 
-            <ImageView
+            <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/profile_head"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
                 android:layout_marginTop="28dp"
-                android:background="@drawable/rounded"
                 android:elevation="10dp"
+                app:civ_border_color="@android:color/white"
+                app:civ_border_width="8dp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView22"
                 app:layout_constraintEnd_toEndOf="@+id/cardView2"
                 app:layout_constraintStart_toStartOf="@+id/cardView2"
                 app:layout_constraintTop_toBottomOf="@+id/textView38"
-                app:srcCompat="@mipmap/cat" />
+                app:srcCompat="@mipmap/ic_launcher" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView2"
@@ -101,10 +105,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="64dp"
                         android:layout_marginLeft="64dp"
-                        android:layout_marginTop="88dp"
-                        android:text="姓名 :"
-                        android:textColor="@android:color/black"
-                        android:textSize="24sp"
+                        android:layout_marginTop="100dp"
+                        android:text="姓名："
+                        android:textColor="#5F97F4"
+                        android:textSize="25dp"
+                        android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -112,10 +117,9 @@
                         android:id="@+id/show_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
                         android:text="user"
-                        android:textSize="24sp"
+                        android:textColor="#18395A"
+                        android:textSize="25dp"
                         app:layout_constraintBottom_toBottomOf="@+id/personalinfo_name"
                         app:layout_constraintStart_toEndOf="@+id/personalinfo_name"
                         app:layout_constraintTop_toTopOf="@+id/personalinfo_name" />
@@ -125,9 +129,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
-                        android:text="連絡電話 :"
-                        android:textColor="@android:color/black"
-                        android:textSize="24sp"
+                        android:text="連絡電話："
+                        android:textColor="#5F97F4"
+                        android:textSize="25dp"
+                        android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/personalinfo_name"
                         app:layout_constraintTop_toBottomOf="@+id/personalinfo_name" />
 
@@ -136,7 +141,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="未輸入手機號碼"
-                        android:textSize="24sp"
+                        android:textColor="#18395A"
+                        android:textSize="25dp"
                         app:layout_constraintBottom_toBottomOf="@+id/membergrade"
                         app:layout_constraintStart_toStartOf="@+id/show_name"
                         app:layout_constraintTop_toTopOf="@+id/membergrade" />
@@ -146,18 +152,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
-                        android:text="車牌號碼 :"
-                        android:textColor="@android:color/black"
-                        android:textSize="24sp"
+                        android:text="車牌號碼："
+                        android:textColor="#5F97F4"
+                        android:textSize="25dp"
+                        android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/membergrade"
                         app:layout_constraintTop_toBottomOf="@+id/membergrade" />
 
                     <TextView
                         android:id="@+id/show_license"
-                        android:layout_width="148dp"
-                        android:layout_height="35dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="未輸入車牌"
-                        android:textSize="24sp"
+                        android:textColor="#18395A"
+                        android:textSize="25dp"
                         app:layout_constraintBottom_toBottomOf="@+id/introduce"
                         app:layout_constraintStart_toStartOf="@+id/show_phone_number"
                         app:layout_constraintTop_toTopOf="@+id/introduce" />
