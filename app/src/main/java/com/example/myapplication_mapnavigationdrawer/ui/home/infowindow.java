@@ -22,6 +22,8 @@ import com.example.myapplication_mapnavigationdrawer.R;
 import com.example.myapplication_mapnavigationdrawer.MyDBHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -57,6 +59,8 @@ public class infowindow extends AppCompatActivity {
 
     private SQLiteDatabase dari;
 
+    private String string_email, string_uid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,8 +79,6 @@ public class infowindow extends AppCompatActivity {
         parkinglot_tel = findViewById(R.id.parkinglot_tel);
         parkinglot_detail_info = findViewById(R.id.parkinglot_detail_info);
 
-        dari = new MyDBHelper(this).getWritableDatabase();
-
         Bundle b = getIntent().getExtras();
         String string_parkinglot_name = b.getString("string_parkinglot_name");
         String string_parkinglot_snippet = b.getString("string_parkinglot_snippet");
@@ -84,6 +86,56 @@ public class infowindow extends AppCompatActivity {
         parkinglot_name.setText(String.format("%s",string_parkinglot_name));//停車場名 Title
 
         String[] split_string_parkinglot_snippet = string_parkinglot_snippet.split(",");//split(指定符號) ，可依指定符號把字串分開成陣列
+
+        dari = new MyDBHelper(this).getWritableDatabase();
+
+        final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null){
+            string_email = user.getEmail();//抓取使用者email
+            string_uid = user.getUid();     //抓取使用者UID
+
+            final DocumentReference docRef_user = firestore.collection("users").document(string_uid);
+            if(docRef_user != null){
+                if(split_string_parkinglot_snippet[12].matches("true")){     //假如是可預約的停車場
+
+                    reservation.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                /*
+                Intent intent = new Intent();
+                startActivity(new Intent(infowindow.this, ParkinglotActivity.class));
+                 */
+
+                            Intent intent = new Intent(infowindow.this,
+                                    ParkinglotActivity.class);
+
+                            Bundle b = new Bundle();    //資訊放入Bundle
+                            b.putString("string_parkinglot_name",parkinglot_name.getText().toString());
+                            b.putString("parkinglot_simple_description",parkinglot_simple_description.getText().toString());
+                            b.putString("parkinglot_address",parkinglot_address.getText().toString());
+                            intent.putExtras(b);
+                            startActivity(intent);
+
+                        }
+                    });
+                }else{
+                    //讓reservation預約按鈕失效且消失
+                    reservation.setEnabled(false);
+                    reservation.setVisibility(View.GONE);
+                }
+            }else {
+                Toast.makeText(infowindow.this,"請先填寫個人資料完畢，即可預約!", Toast.LENGTH_LONG).show();
+            }
+        }else{
+            reservation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(infowindow.this,"尚未登入，請先登入，即可預約。", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
 
         if(split_string_parkinglot_snippet[0].equals("-1") == true){
             parkinglot_lot.setText(String.format("無資訊"));
@@ -209,34 +261,6 @@ public class infowindow extends AppCompatActivity {
         getParkingGrid(mParkingGrid);
 
         getParkingGridData();
-
-        if(split_string_parkinglot_snippet[12].matches("true")){     //假如是可預約的停車場
-
-            reservation.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                /*
-                Intent intent = new Intent();
-                startActivity(new Intent(infowindow.this, ParkinglotActivity.class));
-                 */
-
-                    Intent intent = new Intent(infowindow.this,
-                            ParkinglotActivity.class);
-
-                    Bundle b = new Bundle();    //資訊放入Bundle
-                    b.putString("string_parkinglot_name",parkinglot_name.getText().toString());
-                    b.putString("parkinglot_simple_description",parkinglot_simple_description.getText().toString());
-                    b.putString("parkinglot_address",parkinglot_address.getText().toString());
-                    intent.putExtras(b);
-                    startActivity(intent);
-
-                }
-            });
-        }else{
-            //讓reservation預約按鈕失效且消失
-            reservation.setEnabled(false);
-            reservation.setVisibility(View.GONE);
-        }
     }
 
     @Override

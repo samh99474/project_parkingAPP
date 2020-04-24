@@ -2,6 +2,7 @@ package com.example.myapplication_mapnavigationdrawer.ui.PersonalInfo;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -21,12 +22,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.bumptech.glide.Glide;
+import com.example.myapplication_mapnavigationdrawer.MainActivity;
 import com.example.myapplication_mapnavigationdrawer.R;
 import com.example.myapplication_mapnavigationdrawer.viewmodel.MainActivityViewModel;
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -47,6 +51,8 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 
+import java.util.Collections;
+
 import static android.app.Activity.RESULT_OK;
 
 public class PersonalInfoFragment extends Fragment {
@@ -63,6 +69,7 @@ public class PersonalInfoFragment extends Fragment {
     private MainActivityViewModel mViewModel;
     public int i;
     private static final String TAG = "PersonalInfoFragment";
+    private static final int RC_SIGN_IN = 9001;
     public String string_uid ,name ,phone ,license, string_head_name;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -80,35 +87,97 @@ public class PersonalInfoFragment extends Fragment {
 
 
         final FirebaseFirestore user_db = FirebaseFirestore.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null){
-            string_uid = user.getUid();     //抓取使用者UID
+        if(user_db != null) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                string_uid = user.getUid();     //抓取使用者UID
+
+                DocumentReference docRef = user_db.collection("users").document(string_uid);
+                if (docRef != null) {
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    Log.e(TAG, "DocumentSnapshot data: " + document.getData());
+                                    name = document.getData().get("名子").toString();
+                                    phone = document.getData().get("手機號碼").toString();
+                                    license = document.getData().get("車牌號碼").toString();
+
+                                } else {
+                                    Log.e(TAG, "No such document");
+                                }
+                                user_name.setText(name);
+                                phon_number.setText(phone);
+                                license_number.setText(license);
+                            } else {
+                                Log.e(TAG, "get failed with ", task.getException());
+                            }
+                        }
+                    });
+
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    Log.e(TAG, "DocumentSnapshot data: " + document.getData());
+                                    string_head_name = document.getData().get("大頭貼").toString();
+
+                                    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                                    StorageReference dateRef = storageRef.child("profile_pic_" + string_uid + "/" + string_head_name);
+                                    dateRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri downloadUrl) {
+                                            Glide.with(getActivity())
+                                                    .load(downloadUrl)
+                                                    .into(profile_head);
+                                        }
+                                    });
+
+                                } else {
+                                    Log.e(TAG, "No such document");
+                                }
+
+                            } else {
+                                Log.e(TAG, "get failed with ", task.getException());
+                            }
+                        }
+                    });
+
+                    btn_edit.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getActivity(),
+                                    SettingsPersonalInfoActivity.class);
+
+                            Bundle b = new Bundle();    //資訊放入Bundle
+                            b.putString("string_user_name", user_name.getText().toString());
+                            b.putString("string_user_phone", phon_number.getText().toString());
+                            b.putString("string_user_license", license_number.getText().toString());
+                            intent.putExtras(b);
+                            startActivity(intent);
+                        }
+                    });
+
+                }
+            } else {
+                btn_edit.setClickable(false);
+                btn_edit.setPressed(false);
+                Toast.makeText(getActivity(), "尚未登入，請先登入", Toast.LENGTH_SHORT).show();
+            }
         }
 
-        DocumentReference docRef = user_db.collection("users").document(string_uid);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.e(TAG, "DocumentSnapshot data: " + document.getData());
-                        name = document.getData().get("名子").toString();
-                        phone = document.getData().get("手機號碼").toString();
-                        license = document.getData().get("車牌號碼").toString();
+        FirebaseFirestore.setLoggingEnabled(true);
+        // View model
+        mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+        // Initialize Firestore and the main RecyclerView
 
-                    } else {
-                        Log.e(TAG, "No such document");
-                    }
-                    user_name.setText(name);
-                    phon_number.setText(phone);
-                    license_number.setText(license);
-                } else {
-                    Log.e(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
+
 
                 /*.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -135,57 +204,7 @@ Log.e(TAG, "Error getting documents.", task.getException());
                 });
 
 */
-        btn_edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),
-                        SettingsPersonalInfoActivity.class);
-
-                Bundle b = new Bundle();    //資訊放入Bundle
-                b.putString("string_user_name",user_name.getText().toString());
-                b.putString("string_user_phone",phon_number.getText().toString());
-                b.putString("string_user_license",license_number.getText().toString());
-                intent.putExtras(b);
-                startActivity(intent);
-            }
-        });
-
-
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.e(TAG, "DocumentSnapshot data: " + document.getData());
-                        string_head_name = document.getData().get("大頭貼").toString();
-
-                        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                        StorageReference dateRef = storageRef.child("profile_pic_" + string_uid +"/"+ string_head_name);
-                        dateRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
-                        {
-                            @Override
-                            public void onSuccess(Uri downloadUrl)
-                            {
-                                Glide.with(getActivity())
-                                        .load(downloadUrl)
-                                        .into(profile_head);
-                            }
-                        });
-
-                    } else {
-                        Log.e(TAG, "No such document");
-                    }
-
-                } else {
-                    Log.e(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
-
 
         return root;
     }
-
 }

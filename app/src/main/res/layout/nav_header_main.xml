@@ -28,9 +28,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="立即登錄預約"
-        android:textSize="16dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:text="立即登入預約"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="16dp" />
 
     <TextView
         android:id="@+id/nav_header_email"

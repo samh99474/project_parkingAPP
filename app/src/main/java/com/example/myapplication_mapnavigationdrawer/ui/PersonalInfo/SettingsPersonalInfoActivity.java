@@ -56,7 +56,7 @@ public class SettingsPersonalInfoActivity extends AppCompatActivity {
     private Query mQuery;
     private MainActivityViewModel mViewModel;
     private static final String TAG = "PersonalInfoActivity";
-    private String string_head_name;
+    private String string_head_name, name, phone, license;
 
     private boolean lockAspectRatio = false, setBitmapMaxWidthHeight = false;
     private int ASPECT_RATIO_X = 16, ASPECT_RATIO_Y = 9, bitmapMaxWidth = 1000, bitmapMaxHeight = 1000;
@@ -112,6 +112,50 @@ public class SettingsPersonalInfoActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){
             string_uid = user.getUid();     //抓取使用者UID
+
+            DocumentReference docRef = user_db.collection("users").document(string_uid);
+            if(docRef != null){
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                Log.e(TAG, "DocumentSnapshot data: " + document.getData());
+                                string_head_name = document.getData().get("大頭貼").toString();
+                                name = document.getData().get("名子").toString();
+                                phone = document.getData().get("手機號碼").toString();
+                                license = document.getData().get("車牌號碼").toString();
+
+                                set_name.setText(name);
+                                set_phone_number.setText(phone);
+                                set_plate_number.setText(license);
+
+                                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                                StorageReference dateRef = storageRef.child("profile_pic_" + string_uid +"/"+ string_head_name);
+                                dateRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
+                                {
+                                    @Override
+                                    public void onSuccess(Uri downloadUrl)
+                                    {
+                                        Glide.with(SettingsPersonalInfoActivity.this)
+                                                .load(downloadUrl)
+                                                .into(img_btn_select_head);
+                                    }
+                                });
+
+                            } else {
+                                Log.e(TAG, "No such document");
+                            }
+
+
+                        } else {
+                            Log.e(TAG, "get failed with ", task.getException());
+                        }
+                    }
+                });
+            }
         }
 
         btn_save = findViewById(R.id.btn_save);
@@ -195,39 +239,6 @@ public class SettingsPersonalInfoActivity extends AppCompatActivity {
             }
         });
 
-        DocumentReference docRef = user_db.collection("users").document(string_uid);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.e(TAG, "DocumentSnapshot data: " + document.getData());
-                        string_head_name = document.getData().get("大頭貼").toString();
-
-                        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                        StorageReference dateRef = storageRef.child("profile_pic_" + string_uid +"/"+ string_head_name);
-                        dateRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
-                        {
-                            @Override
-                            public void onSuccess(Uri downloadUrl)
-                            {
-                                Glide.with(SettingsPersonalInfoActivity.this)
-                                        .load(downloadUrl)
-                                        .into(img_btn_select_head);
-                            }
-                        });
-
-                    } else {
-                        Log.e(TAG, "No such document");
-                    }
-
-                } else {
-                    Log.e(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
-
     }
+
 }

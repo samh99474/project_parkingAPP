@@ -471,7 +471,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
                 string_parkinglot_name = arg0.getTitle();  //點擊Marker window時觸發，取得點擊marker的title(停車場NAME)
                 string_parkinglot_snippet = arg0.getSnippet();
-                Toast.makeText(getActivity(),"停車場名稱:"+string_parkinglot_name,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),"停車場名稱:"+string_parkinglot_name,Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(getActivity(),
                         infowindow.class);
