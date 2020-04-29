@@ -122,20 +122,22 @@ public class MainActivity extends AppCompatActivity {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
                                 Log.e(TAG, "DocumentSnapshot data: " + document.getData());
-                                string_head_name = document.getData().get("大頭貼").toString();
 
-                                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                                StorageReference dateRef = storageRef.child("profile_pic_" + string_uid +"/"+ string_head_name);
-                                dateRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
-                                {
-                                    @Override
-                                    public void onSuccess(Uri downloadUrl)
+                                if(document.getData().get("大頭貼") != null){
+                                    string_head_name = document.getData().get("大頭貼").toString();
+                                    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                                    StorageReference dateRef = storageRef.child("profile_pic_" + string_uid +"/"+ string_head_name);
+                                    dateRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
                                     {
-                                        Glide.with(MainActivity.this)
-                                                .load(downloadUrl)
-                                                .into(nav_header_pic);
-                                    }
-                                });
+                                        @Override
+                                        public void onSuccess(Uri downloadUrl)
+                                        {
+                                            Glide.with(MainActivity.this)
+                                                    .load(downloadUrl)
+                                                    .into(nav_header_pic);
+                                        }
+                                    });
+                                }
 
                             } else {
                                 Log.e(TAG, "No such document");

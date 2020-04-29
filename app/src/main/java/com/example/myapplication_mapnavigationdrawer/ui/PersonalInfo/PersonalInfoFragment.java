@@ -126,18 +126,22 @@ public class PersonalInfoFragment extends Fragment {
                                 DocumentSnapshot document = task.getResult();
                                 if (document.exists()) {
                                     Log.e(TAG, "DocumentSnapshot data: " + document.getData());
-                                    string_head_name = document.getData().get("大頭貼").toString();
 
-                                    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                                    StorageReference dateRef = storageRef.child("profile_pic_" + string_uid + "/" + string_head_name);
-                                    dateRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri downloadUrl) {
-                                            Glide.with(getActivity())
-                                                    .load(downloadUrl)
-                                                    .into(profile_head);
-                                        }
-                                    });
+                                    if(document.getData().get("大頭貼") != null){
+                                        string_head_name = document.getData().get("大頭貼").toString();
+
+                                        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                                        StorageReference dateRef = storageRef.child("profile_pic_" + string_uid + "/" + string_head_name);
+                                        dateRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri downloadUrl) {
+                                                Glide.with(getActivity())
+                                                        .load(downloadUrl)
+                                                        .into(profile_head);
+                                            }
+                                        });
+                                    }
+
 
                                 } else {
                                     Log.e(TAG, "No such document");
