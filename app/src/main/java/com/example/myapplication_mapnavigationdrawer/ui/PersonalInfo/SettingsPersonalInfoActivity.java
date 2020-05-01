@@ -123,31 +123,36 @@ public class SettingsPersonalInfoActivity extends AppCompatActivity {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
                                 Log.e(TAG, "DocumentSnapshot data: " + document.getData());
-                                if(document.getData().get("大頭貼") != null
-                                        && document.getData().get("名子") != null
-                                        && document.getData().get("手機號碼") != null
-                                        && document.getData().get("車牌號碼") != null){
-                                    string_head_name = document.getData().get("大頭貼").toString();
-                                    name = document.getData().get("名子").toString();
-                                    phone = document.getData().get("手機號碼").toString();
-                                    license = document.getData().get("車牌號碼").toString();
+
+                                if (document.exists()) {
+                                    Log.e(TAG, "DocumentSnapshot data: " + document.getData());
+                                    if (document.getData().get("名子") != null) {
+                                        name = document.getData().get("名子").toString();
+                                    }
+                                    if (document.getData().get("手機號碼") != null) {
+                                        phone = document.getData().get("手機號碼").toString();
+                                    }
+                                    if (document.getData().get("車牌號碼") != null) {
+                                        license = document.getData().get("車牌號碼").toString();
+                                    }
 
                                     set_name.setText(name);
                                     set_phone_number.setText(phone);
                                     set_plate_number.setText(license);
 
-                                    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                                    StorageReference dateRef = storageRef.child("profile_pic_" + string_uid +"/"+ string_head_name);
-                                    dateRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
-                                    {
-                                        @Override
-                                        public void onSuccess(Uri downloadUrl)
-                                        {
-                                            Glide.with(SettingsPersonalInfoActivity.this)
-                                                    .load(downloadUrl)
-                                                    .into(img_btn_select_head);
-                                        }
-                                    });
+                                    if (document.getData().get("大頭貼") != null) {
+                                        string_head_name = document.getData().get("大頭貼").toString();
+                                        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                                        StorageReference dateRef = storageRef.child("profile_pic_" + string_uid + "/" + string_head_name);
+                                        dateRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri downloadUrl) {
+                                                Glide.with(SettingsPersonalInfoActivity.this)
+                                                        .load(downloadUrl)
+                                                        .into(img_btn_select_head);
+                                            }
+                                        });
+                                    }
                                 }
                             } else {
                                 Log.e(TAG, "No such document");

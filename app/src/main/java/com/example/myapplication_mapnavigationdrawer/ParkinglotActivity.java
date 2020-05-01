@@ -220,14 +220,22 @@ public class ParkinglotActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.e(TAG, "DocumentSnapshot data: " + document.getData());
-                        string_name = document.getData().get("名子").toString();
-                        Text_name.setText(string_name);
-                        string_phone = document.getData().get("手機號碼").toString();
-                        Text_phone.setText(string_phone);
-                        string_license = document.getData().get("車牌號碼").toString();
-                        Text_license.setText(string_license);
 
+                        if (document.getData().get("名子") != null) {
+                            string_name = document.getData().get("名子").toString();
+                            Text_name.setText(string_name);
+                        }
+                        if (document.getData().get("手機號碼") != null) {
+                            string_phone = document.getData().get("手機號碼").toString();
+                            Text_phone.setText(string_phone);
+                        }
+                        if (document.getData().get("車牌號碼") != null) {
+                            string_license = document.getData().get("車牌號碼").toString();
+                            Text_license.setText(string_license);
+
+                        }
                         Text_email.setText(string_email);
+
                     } else {
                         Log.e(TAG, "No such document");
                     }
@@ -278,7 +286,7 @@ public class ParkinglotActivity extends AppCompatActivity {
         gotoreservation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(choose_grid.getText().toString().matches("") || Text_name.getText().toString().matches("") || Text_phone.getText().toString().matches("") ||
+                if(choose_grid.getText().toString().isEmpty() || Text_name.getText().toString().matches("") || Text_phone.getText().toString().matches("") ||
                         Text_email.getText().toString().matches("") || Text_license.getText().toString().matches("") || btn_timepicker.getText().toString().matches("請選擇時間")){
                     Toast.makeText(ParkinglotActivity.this,"資料尚未填寫完畢", Toast.LENGTH_SHORT).show();
                 }

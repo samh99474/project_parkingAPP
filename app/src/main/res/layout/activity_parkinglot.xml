@@ -215,9 +215,9 @@
                 android:id="@+id/choose_grid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="無"
-                android:textSize="18dp"
                 android:textColor="#5F97F4"
+                android:textSize="18dp"
+                android:hint="無"
                 app:layout_constraintStart_toEndOf="@+id/textView35"
                 app:layout_constraintTop_toTopOf="@+id/textView35" />
 

@@ -102,15 +102,20 @@ public class PersonalInfoFragment extends Fragment {
                                 DocumentSnapshot document = task.getResult();
                                 if (document.exists()) {
                                     Log.e(TAG, "DocumentSnapshot data: " + document.getData());
-                                    if(document.getData().get("名子") != null && document.getData().get("手機號碼") != null
-                                    && document.getData().get("車牌號碼") != null){
+                                    if(document.getData().get("名子") != null){
                                         name = document.getData().get("名子").toString();
+                                    }else {
+                                        user_name.setText("尚未填寫");
+                                    }
+                                    if(document.getData().get("手機號碼") != null){
                                         phone = document.getData().get("手機號碼").toString();
+                                    }else {
+                                        phon_number.setText("尚未填寫");
+                                    }
+                                    if(document.getData().get("車牌號碼") != null){
                                         license = document.getData().get("車牌號碼").toString();
                                     }else {
-                                        name = "尚未填寫";
-                                        phone = "尚未填寫";
-                                        license = "尚未填寫";
+                                        license_number.setText("尚未填寫");
                                     }
 
                                 } else {
