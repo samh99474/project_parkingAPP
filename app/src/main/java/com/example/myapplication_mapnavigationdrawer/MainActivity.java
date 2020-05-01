@@ -102,7 +102,11 @@ public class MainActivity extends AppCompatActivity {
                                 DocumentSnapshot document = task.getResult();
                                 if (document.exists()) {
                                     Log.e(TAG, "DocumentSnapshot data: " + document.getData());
-                                    string_name = document.getData().get("名子").toString();
+                                    if(document.getData().get("名子") != null){
+                                        string_name = document.getData().get("名子").toString();
+                                    }else {
+                                        string_name ="個人資料尚未填寫完畢";
+                                    }
                                 } else {
                                     Log.e(TAG, "No such document");
                                 }

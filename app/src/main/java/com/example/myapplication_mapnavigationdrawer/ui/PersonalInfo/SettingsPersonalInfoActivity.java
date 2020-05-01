@@ -123,7 +123,10 @@ public class SettingsPersonalInfoActivity extends AppCompatActivity {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
                                 Log.e(TAG, "DocumentSnapshot data: " + document.getData());
-                                if(document.getData().get("大頭貼") != null){
+                                if(document.getData().get("大頭貼") != null
+                                        && document.getData().get("名子") != null
+                                        && document.getData().get("手機號碼") != null
+                                        && document.getData().get("車牌號碼") != null){
                                     string_head_name = document.getData().get("大頭貼").toString();
                                     name = document.getData().get("名子").toString();
                                     phone = document.getData().get("手機號碼").toString();
