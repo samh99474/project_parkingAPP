@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_listview">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@mipmap/loticon_reservatable" />
+
+            <TextView
+                android:id="@+id/txt_is_finish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/about_top_background"
+                android:text="\t預約中\t"
+                android:textColor="#FFFFFF"
+                android:textSize="22dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+            <TextView
+                android:id="@+id/txt_is_using"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginLeft="12dp"
+                android:background="@drawable/about_top_background"
+                android:text="\t車輛未進場\t\t"
+                android:textColor="#FFFFFF"
+                android:textSize="22dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/txt_is_finish"
+                app:layout_constraintTop_toTopOf="@+id/txt_is_finish" />
+
+            <TextView
+                android:id="@+id/record_parkinglot_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="xxxxxx停車場"
+                android:textColor="#FFFFFF"
+                android:textSize="22dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/txt_is_finish"
+                app:layout_constraintTop_toBottomOf="@+id/txt_is_finish" />
+
+            <TextView
+                android:id="@+id/record_parkinglot_space"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="A?"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/Textview"
+                app:layout_constraintTop_toTopOf="@+id/Textview" />
+
+            <TextView
+                android:id="@+id/Textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="車位："
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/txt_is_finish"
+                app:layout_constraintTop_toBottomOf="@+id/record_parkinglot_name" />
+
+            <TextView
+                android:id="@+id/record_parkinglot_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
+                android:gravity="center"
+                android:text="2020/05/05,11:51"
+                android:textColor="#18395A"
+                android:textSize="22dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView"
+                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintTop_toTopOf="@+id/imageView" />
+
+            <TextView
+                android:id="@+id/textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="預約時間"
+                android:textColor="#18395A"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/record_parkinglot_time"
+                app:layout_constraintEnd_toEndOf="@+id/record_parkinglot_time"
+                app:layout_constraintStart_toStartOf="@+id/record_parkinglot_time" />
+
+            <TextView
+                android:id="@+id/record_parkinglot_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="地址123456789"
+                android:textColor="#18395A"
+                app:layout_constraintStart_toStartOf="@+id/textView47"
+                app:layout_constraintTop_toBottomOf="@+id/textView53" />
+
+            <TextView
+                android:id="@+id/current_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$30 / 小時"
+                android:textColor="#18395A"
+                app:layout_constraintStart_toStartOf="@+id/record_parkinglot_address"
+                app:layout_constraintTop_toBottomOf="@+id/record_parkinglot_address" />
+
+            <TextView
+                android:id="@+id/textView53"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="停車時數："
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/textView47"
+                app:layout_constraintTop_toBottomOf="@+id/textView47" />
+
+            <TextView
+                android:id="@+id/textView47"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="車牌："
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/record_parkinglot_name"
+                app:layout_constraintTop_toBottomOf="@+id/Textview" />
+
+            <TextView
+                android:id="@+id/parking_total_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="666分鐘"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/textView53"
+                app:layout_constraintTop_toTopOf="@+id/textView53" />
+
+            <TextView
+                android:id="@+id/record_license"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AAAAA-12"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/textView47"
+                app:layout_constraintTop_toTopOf="@+id/textView47" />
+
+            <TextView
+                android:id="@+id/textView57"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="累積金額"
+                android:textColor="#C0F499"
+                android:textSize="28dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/current_price"
+                app:layout_constraintTop_toBottomOf="@+id/current_price" />
+
+            <TextView
+                android:id="@+id/should_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$600NT"
+                android:textColor="#C0F499"
+                android:textSize="28dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/textView57"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView57"
+                app:layout_constraintTop_toTopOf="@+id/textView57" />
+
+            <Button
+                android:id="@+id/btn_finish_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/custom_mycurrent_position_button_background"
+                android:drawableLeft="@drawable/ic_monetization_on_black_24dp"
+                android:text="\t結束預約並付費\t\t"
+                android:textColor="#A0806F"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/textView57"
+                app:layout_constraintTop_toBottomOf="@+id/textView57" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </TableRow>
+
+</TableLayout>

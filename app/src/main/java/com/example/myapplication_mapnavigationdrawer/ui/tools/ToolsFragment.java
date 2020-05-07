@@ -79,7 +79,15 @@ public class ToolsFragment extends Fragment {
         Toast.makeText(getActivity(),"共有" + c.getCount() +
                 "筆資料", Toast.LENGTH_SHORT).show();
 
-      /*  if(c.moveToFirst() && c.getCount() >= 1){
+      /*  if(c.moveToFirst() && c.getCount() >= 1){for(int i=0;i< c.getCount();i++){
+                items.add("\t" + c.getString(1) +
+                        "\n\t地址：" + c.getString(5) +
+                        "\n\t費率：" + c.getString(4));
+                items_lat_lng.add("," + c.getString(2) + "," + c.getString(3) + ",");
+
+                imageId.add(R.mipmap.loticon);
+                c.moveToNext();
+        }
             do{
 
             }while(c.moveToNext());
