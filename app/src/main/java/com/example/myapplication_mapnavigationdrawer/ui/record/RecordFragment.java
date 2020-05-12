@@ -1,10 +1,14 @@
 package com.example.myapplication_mapnavigationdrawer.ui.record;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.core.Tag;
@@ -27,9 +32,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import static com.example.myapplication_mapnavigationdrawer.RatingDialogFragment.TAG;
 
@@ -38,13 +49,13 @@ public class RecordFragment extends Fragment {
     private GalleryViewModel galleryViewModel;
     private ListView listview_record;
 
-    public String string_email, string_uid, record_parkinglot_reservating, record_parkinglot_time, txt_is_finish, txt_is_using, record_parkinglot_name,
-            record_parkinglot_space, parking_total_time, record_parkinglot_address, current_price, should_pay, record_license;
+    public String string_email, string_uid, record_string_parkinglot_time, txt_is_finish, txt_is_using, record_parkinglot_name,
+            parking_total_time, record_parkinglot_address, current_price, should_pay, record_license;
+    private Timestamp record_timestamp_parkinglot_time;
     private ArrayList<String> items_record_parkinglot_time = new ArrayList<>();
     private ArrayList<String> items_txt_is_finish = new ArrayList<>();
     private ArrayList<String> items_txt_is_using = new ArrayList<>();
     private ArrayList<String> items_record_parkinglot_name = new ArrayList<>();
-    private ArrayList<String> items_record_parkinglot_space = new ArrayList<>();
     private ArrayList<String> items_parking_total_time = new ArrayList<>();
     private ArrayList<String> items_record_parkinglot_address = new ArrayList<>();
     private ArrayList<String> items_current_price = new ArrayList<>();
@@ -58,8 +69,6 @@ public class RecordFragment extends Fragment {
         View root = inflater.inflate(R.layout.praking_record, container, false);
 
         listview_record = root.findViewById(R.id.listview_record);
-
-
 
         final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -76,9 +85,14 @@ public class RecordFragment extends Fragment {
                                 int count = 0;
                                 for (DocumentSnapshot document : task.getResult()) {
                                     count++;
-                                    record_parkinglot_time =  document.getData().get("預約日期時間").toString();
+
+
+                                    //將timestamp轉成Date(Date格式整理過)，最後轉成String
+                                    record_timestamp_parkinglot_time = document.getTimestamp("預約日期時間");
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                    record_string_parkinglot_time = sdf.format(record_timestamp_parkinglot_time.toDate());
+
                                     record_parkinglot_name = document.getData().get("停車場").toString();
-                                    record_parkinglot_space = document.getData().get("車位").toString();
                                     record_parkinglot_address = document.getData().get("地址").toString();
                                     current_price = document.getData().get("費率").toString();
                                     record_license = document.getData().get("預約車牌").toString();
@@ -175,7 +189,6 @@ public class RecordFragment extends Fragment {
                                     }
 
  */
-
                                     if(document.getData().get("預約中").toString().matches("true")){
                                         txt_is_finish = "\t預約中\t";
                                     }else{
@@ -193,10 +206,9 @@ public class RecordFragment extends Fragment {
                                     parking_total_time = "0分鐘";
                                     should_pay = "0NT";
 
-                                    items_record_parkinglot_time.add(record_parkinglot_time);
+                                    items_record_parkinglot_time.add(record_string_parkinglot_time);
                                     items_txt_is_finish.add(txt_is_finish);
                                     items_record_parkinglot_name.add(record_parkinglot_name);
-                                    items_record_parkinglot_space.add(record_parkinglot_space);
                                     items_record_parkinglot_address.add(record_parkinglot_address);
                                     items_current_price.add(current_price);
                                     items_txt_is_using.add(txt_is_using);
@@ -209,7 +221,7 @@ public class RecordFragment extends Fragment {
 
                                 RecordAdapter recordAdapter = new
                                         RecordAdapter(getActivity(), items_record_parkinglot_time, items_txt_is_finish, items_txt_is_using, items_record_parkinglot_name,
-                                        items_record_parkinglot_space, items_parking_total_time, items_record_parkinglot_address, items_current_price, items_should_pay, items_record_license);
+                                        items_parking_total_time, items_record_parkinglot_address, items_current_price, items_should_pay, items_record_license);
 
                                 listview_record.setAdapter(recordAdapter);
 
@@ -220,6 +232,38 @@ public class RecordFragment extends Fragment {
                     });
         }
 
+        //ListView加入Head list 頭標
+        View headlist = getLayoutInflater().inflate(R.layout.record_head_list, null);
+        listview_record.addHeaderView(headlist);
+
+        listview_record.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                position -= listview_record.getHeaderViewsCount();//position 扣掉是因為有head list
+
+                if(position!=-1) {
+
+                    AlertDialog.Builder dialog_finish_pay = new AlertDialog.Builder(getActivity());
+                    dialog_finish_pay.setTitle("結束預約，並付費");
+                    dialog_finish_pay.setMessage("付費資訊:");
+                    dialog_finish_pay.setNeutralButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(getActivity(),"取消", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    dialog_finish_pay.setPositiveButton("確定付費", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    dialog_finish_pay.show();
+
+                }
+            }
+        });
 
 
 

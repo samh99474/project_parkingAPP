@@ -6,8 +6,8 @@
     android:layout_height="match_parent">
 
     <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@drawable/background_listview">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -66,30 +66,6 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/txt_is_finish"
                 app:layout_constraintTop_toBottomOf="@+id/txt_is_finish" />
-
-            <TextView
-                android:id="@+id/record_parkinglot_space"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="A?"
-                android:textColor="#FFFFFF"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/Textview"
-                app:layout_constraintTop_toTopOf="@+id/Textview" />
-
-            <TextView
-                android:id="@+id/Textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="車位："
-                android:textColor="#FFFFFF"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/txt_is_finish"
-                app:layout_constraintTop_toBottomOf="@+id/record_parkinglot_name" />
 
             <TextView
                 android:id="@+id/record_parkinglot_time"
@@ -157,7 +133,7 @@
                 android:textSize="20dp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/record_parkinglot_name"
-                app:layout_constraintTop_toBottomOf="@+id/Textview" />
+                app:layout_constraintTop_toBottomOf="@+id/record_parkinglot_name" />
 
             <TextView
                 android:id="@+id/parking_total_time"
@@ -206,16 +182,17 @@
                 app:layout_constraintStart_toEndOf="@+id/textView57"
                 app:layout_constraintTop_toTopOf="@+id/textView57" />
 
-            <Button
-                android:id="@+id/btn_finish_pay"
+            <TextView
+                android:id="@+id/textView52"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/custom_mycurrent_position_button_background"
+                android:background="@drawable/custom_background_block"
                 android:drawableLeft="@drawable/ic_monetization_on_black_24dp"
-                android:text="\t結束預約並付費\t\t"
+                android:text="\t結束預約，並繳費\t"
                 android:textColor="#A0806F"
+                android:textSize="25dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView57"
                 app:layout_constraintTop_toBottomOf="@+id/textView57" />

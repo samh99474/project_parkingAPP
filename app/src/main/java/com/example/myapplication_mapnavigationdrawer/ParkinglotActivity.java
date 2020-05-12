@@ -3,15 +3,14 @@ package com.example.myapplication_mapnavigationdrawer;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -25,52 +24,53 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.ServerTimestamp;
 import com.google.firebase.firestore.SetOptions;
 
-import java.time.Month;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class ParkinglotActivity extends AppCompatActivity {
 
 
     //if(預約||使用==0){ButtonA1可按}else{ButtonA1不可按 顏色改暗}
     private String choose;
-    private RadioGroup radiogroup_parkinglot;
+
     private RadioButton A1;
     private RadioButton A2;
     private RadioButton A3;
     final private String string_A1 = "A1";
     final private String string_A2 = "A2";
     final private String string_A3 = "A3";
-    private String string_choose_grid, string_order_number;
+    private String string_order_number;
     private TextView parkinglot_name;
     private TextView parkinglot_price;
     private TextView parkinglot_address;
     private TextView pay;
-    private TextView choose_grid;
+    private TextView space_temp;
 
     private String string_name, string_phone, string_email, string_uid, string_license, string_reservate_time;
     private TextView Text_name, Text_phone, Text_email, Text_license;
-    private int mHour, mMin;
+    private int mYear, mMonth, mDay, mHour, mMin;
+    private Timestamp timestamp;
 
     private Button gotoreservation;
     private Button returntomap;
     private Button btn_timepicker;
-    private FirebaseFirestore mFirestore;
-    private boolean using = false;
-    private boolean reserved = false;
-    private Query mQuery;
-    private static final String TAG = "ParkinglotActivity";
 
+    private static final String TAG = "ParkinglotActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,12 +86,10 @@ public class ParkinglotActivity extends AppCompatActivity {
         Text_email = findViewById(R.id.Text_email);
         Text_license = findViewById(R.id.Text_license);
         btn_timepicker = findViewById(R.id.btn_timepicker);
-        radiogroup_parkinglot = findViewById(R.id.radiogroup_parkinglot);
-        A1 = findViewById(R.id.A1);
-        A2 = findViewById(R.id.A2);
-        A3 = findViewById(R.id.A3);
+        space_temp = findViewById(R.id.space_temp);
+        space_temp.setText("");
 
-        choose_grid = findViewById(R.id.choose_grid);
+
         gotoreservation = findViewById(R.id.gotoreservation);
         returntomap = findViewById(R.id.returntomap);
 
@@ -107,7 +105,7 @@ public class ParkinglotActivity extends AppCompatActivity {
         parkinglot_address.setText(string_parkinglot_address);
         //////////////////////////////////////////////////////////////////////////////////////////////
 
-//寫case
+
         final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -121,6 +119,7 @@ public class ParkinglotActivity extends AppCompatActivity {
         final DocumentReference docRef_A2 = firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("parking grid").document("A2");
         final DocumentReference docRef_A3 = firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("parking grid").document("A3");
 
+        /*
         if(docRef_A1 != null){
             docRef_A1.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {  //抓取parking grid/A1 是否使用中或已被預約
                 @Override
@@ -134,11 +133,16 @@ public class ParkinglotActivity extends AppCompatActivity {
                                 using = (Boolean) document.get("使用中");
                             }
 
-                            if(reserved || using){  //假如A1車位已經被預約或使用中，使A1不能選取
-                                A1.setClickable(false);
-                                A1.setText(A1.getText()+"已被預約或使用中");
-                                A1.setTextColor(Color.parseColor("#FF4B5A"));
+
+                            if(space_temp.getText().toString().matches("")){
+                                if(reserved || using){  //假如A1車位已經被預約或使用中，使A2不能選取
+                                    space_temp.setText("");
+                                }else {
+                                    space_temp.setText("A1");
+                                }
                             }
+
+
                         } else {
                             Log.e(TAG, "No such document");
                         }
@@ -163,11 +167,14 @@ public class ParkinglotActivity extends AppCompatActivity {
                                 using = (Boolean) document.get("使用中");
                             }
 
-                            if (reserved || using) {  //假如A1車位已經被預約或使用中，使A2不能選取
-                                A2.setClickable(false);
-                                A2.setText(A2.getText() + "已被預約或使用中");
-                                A2.setTextColor(Color.parseColor("#FF4B5A"));
+                            if(space_temp.getText().toString().matches("")){
+                                if(reserved || using){  //假如A1車位已經被預約或使用中，使A2不能選取
+                                    space_temp.setText("");
+                                }else {
+                                    space_temp.setText("A2");
+                                }
                             }
+
                         } else {
                             Log.e(TAG, "No such document");
                         }
@@ -179,12 +186,12 @@ public class ParkinglotActivity extends AppCompatActivity {
         }
 
         if(docRef_A3 != null) {
-
             docRef_A3.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {  //抓取parking grid/A3 是否使用中或已被預約
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
+
                         if (document.exists()) {
                             Log.e(TAG, "DocumentSnapshot data: " + document.getData());
                             reserved = (Boolean) document.get("預約中");
@@ -192,11 +199,14 @@ public class ParkinglotActivity extends AppCompatActivity {
                                 using = (Boolean) document.get("使用中");
                             }
 
-                            if (reserved || using) {  //假如A1車位已經被預約或使用中，使A3不能選取
-                                A3.setClickable(false);
-                                A3.setText(A3.getText() + "已被預約或使用中");
-                                A3.setTextColor(Color.parseColor("#FF4B5A"));
+                            if(space_temp.getText().toString().matches("")){
+                                if(reserved || using){  //假如A1車位已經被預約或使用中，使A2不能選取
+                                    space_temp.setText("");
+                                }else {
+                                    space_temp.setText("A3");
+                                }
                             }
+
                         } else {
                             Log.e(TAG, "No such document");
                         }
@@ -206,30 +216,29 @@ public class ParkinglotActivity extends AppCompatActivity {
                 }
             });
         }
-
-            ///////////////////////////////////Step 1，選擇停車格/////////////////////////////////////////////
-            radiogroup_parkinglot.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    switch (checkedId) {
-                        case R.id.A1:
-                            string_choose_grid = "A1";
-                            choose_grid.setText(string_choose_grid);
-                            break;
-                        case R.id.A2:
-                            string_choose_grid = "A2";
-                            choose_grid.setText(string_choose_grid);
-                            break;
-                        case R.id.A3:
-                            string_choose_grid = "A3";
-                            choose_grid.setText(string_choose_grid);
-                            break;
-                    }
+            ///////////////////////////////////判斷停車場車位是否足夠/////////////////////////////////////////////
+        Toast.makeText(ParkinglotActivity.this,space_temp.getText().toString(), Toast.LENGTH_SHORT).show();
+        if(space_temp.getText().toString().matches("A1")){
+            string_choose_grid = "A1";
+        }else {
+            if(space_temp.getText().toString().matches("A2")){
+                string_choose_grid = "A2";
+            }else {
+                if(space_temp.getText().toString().matches("A3")){
+                    string_choose_grid = "A3";
+                }else{
+                    string_choose_grid = "";  //停車位已滿
+                    gotoreservation.setText("車位已滿");
+                    //gotoreservation.setClickable(false);
+                    //gotoreservation.setEnabled(false);
                 }
-            });
+            }
+        }
+        string_choose_grid = "A3";
+*/
 
 
-///////////////////////////////////Step 2，預約資料/////////////////////////////////////////////
+///////////////////////////////////Step 1，預約資料/////////////////////////////////////////////
         docRef_user.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {  //抓取user
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -268,6 +277,9 @@ public class ParkinglotActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Calendar time_picker = Calendar.getInstance();
+                mYear = time_picker.get(Calendar.YEAR);
+                mMonth = time_picker.get(Calendar.MONTH);
+                mDay = time_picker.get(Calendar.DAY_OF_MONTH);
                 mHour = time_picker.get(Calendar.HOUR_OF_DAY);
                 mMin = time_picker.get(Calendar.MINUTE);
 
@@ -279,27 +291,40 @@ public class ParkinglotActivity extends AppCompatActivity {
                 SimpleDateFormat sdf_yyyy_mm_dd = new SimpleDateFormat("yyyy/MM/dd");    //取得現在日期時間
                 final String currentDateandTime_yyyy_mm_dd = sdf_yyyy_mm_dd.format(new Date());
 
+                SimpleDateFormat sdf_yyyy = new SimpleDateFormat("yyyy");    //取得現在日期時間 (月)
+                final String currentDateandTime_yyyy = sdf_yyyy.format(new Date());
                 SimpleDateFormat sdf_MM = new SimpleDateFormat("MM");    //取得現在日期時間 (月)
                 final String currentDateandTime_MM = sdf_MM.format(new Date());
                 SimpleDateFormat sdf_dd = new SimpleDateFormat("dd");    //取得現在日期時間 (天)
                 final String currentDateandTime_dd = sdf_dd.format(new Date());
-                SimpleDateFormat sdf_hh = new SimpleDateFormat("hh");    //取得現在日期時間 (時)
+                SimpleDateFormat sdf_hh = new SimpleDateFormat("HH");    //取得現在日期時間 (時)
                 final String currentDateandTime_hh = sdf_hh.format(new Date());
                 SimpleDateFormat sdf_mm = new SimpleDateFormat("mm");    //取得現在日期時間 (分)
                 final String currentDateandTime_mm = sdf_mm.format(new Date());
-
 
                 TimePickerDialog timePickerDialog = new TimePickerDialog(ParkinglotActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
                             if(minute<10){
-                                btn_timepicker.setText("\t"+currentDateandTime_yyyy_mm_dd + "," +hourOfDay + ":" + "0" + minute);
+                                btn_timepicker.setText("\t"+currentDateandTime_yyyy_mm_dd + "," + hourOfDay + ":" + "0" + minute);
                                 string_order_number = string_uid+currentDateandTime_MM+currentDateandTime_dd+hourOfDay+ "0" + minute;
                             }else {
-                                btn_timepicker.setText("\t"+currentDateandTime_yyyy_mm_dd + "," +hourOfDay + ":" + minute);
+                                btn_timepicker.setText("\t"+currentDateandTime_yyyy_mm_dd + "," + hourOfDay + ":" + minute);
                                 string_order_number = string_uid+currentDateandTime_MM+currentDateandTime_dd+hourOfDay + minute;
                             }
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.YEAR, Integer.valueOf(currentDateandTime_yyyy));
+                        calendar.set(Calendar.MONTH, Integer.valueOf(currentDateandTime_MM)-1);//因為bug會自動month+1，所以要減回去
+                        calendar.set(Calendar.DATE, Integer.valueOf(currentDateandTime_dd));
+                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        calendar.set(Calendar.MINUTE, minute);
+                        calendar.set(Calendar.SECOND, 0);
+
+                        String string_date = DateFormat.format("yyyy-MM-dd HH:mm:ss", calendar).toString();//HH要大寫
+                        timestamp = new Timestamp(java.sql.Timestamp.valueOf( string_date ));
+
 
                     }
                 },mHour, mMin, true);
@@ -310,11 +335,12 @@ public class ParkinglotActivity extends AppCompatActivity {
         gotoreservation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(choose_grid.getText().toString().isEmpty() || Text_name.getText().toString().matches("") || Text_phone.getText().toString().matches("") ||
+                if(Text_name.getText().toString().matches("") || Text_phone.getText().toString().matches("") ||
                         Text_email.getText().toString().matches("") || Text_license.getText().toString().matches("") || btn_timepicker.getText().toString().matches("請選擇時間")){
                     Toast.makeText(ParkinglotActivity.this,"資料尚未填寫完畢", Toast.LENGTH_SHORT).show();
                 }
                 else {
+
                     AlertDialog.Builder dialog_reservate_send = new AlertDialog.Builder(ParkinglotActivity.this);
                     dialog_reservate_send.setTitle("確定預約");
                     dialog_reservate_send.setMessage("確定送出後則無法取消");
@@ -322,18 +348,122 @@ public class ParkinglotActivity extends AppCompatActivity {
                     dialog_reservate_send.setPositiveButton("是", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            switch (choose_grid.getText().toString()){
+
+                            Map<String, Boolean> A1info_boolean = new HashMap<>();
+                            Map<String, Object> A1info_string = new HashMap<>();
+                            Map<String, Timestamp> A1info_timestamp = new HashMap<>();
+                            A1info_timestamp.put("預約日期時間", timestamp);
+
+                            A1info_boolean.put("預約中", true);
+                            A1info_boolean.put("使用中", false);
+                            A1info_string.put("姓名",Text_name.getText().toString());
+                            A1info_string.put("手機", Text_phone.getText().toString());
+                            A1info_string.put("User_uid",string_uid);
+                            A1info_string.put("預約車牌",Text_license.getText().toString());
+                            A1info_string.put("訂單編號",string_order_number);
+
+                            firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("parking grid").document(Text_license.getText().toString()).set(A1info_boolean, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.e(TAG, "A1 successfully reserved!");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e(TAG, "Error writing document", e);
+                                }
+                            });
+
+                            firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("parking grid").document(Text_license.getText().toString()).set(A1info_string, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.e(TAG, "A1 successfully reserved!");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e(TAG, "Error writing document", e);
+                                }
+                            });
+
+                            firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("parking grid").document(Text_license.getText().toString()).set(A1info_timestamp, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.e(TAG, "A1 successfully reserved!");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e(TAG, "Error writing document", e);
+                                }
+                            });
+
+                            ////////寫入user預約紀錄////
+                            Map<String, Boolean> A1_record_boolean = new HashMap<>();
+                            Map<String, Object> A1_record_string = new HashMap<>();
+                            Map<String, Timestamp> A1record_timestamp = new HashMap<>();
+                            A1record_timestamp.put("預約日期時間", timestamp);
+
+                            A1_record_boolean.put("訂單完成", false);
+                            A1_record_boolean.put("預約中", true);
+                            A1_record_boolean.put("使用中", false);
+                            A1_record_string.put("停車場",parkinglot_name.getText().toString());
+                            A1_record_string.put("費率", parkinglot_price.getText().toString());
+                            A1_record_string.put("地址",parkinglot_address.getText().toString());
+                            A1_record_string.put("訂單編號",string_order_number);
+                            A1_record_string.put("預約車牌",string_license);
+                            //A1info_string.put("結束時間日期","");
+                            //A1info_string.put("應付金額","");
+                            firestore.collection("users").document(string_uid).collection("record").document(string_order_number).set(A1_record_boolean, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.e(TAG, "successfully write to user record!");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e(TAG, "Error writing document", e);
+                                }
+                            });
+
+                            firestore.collection("users").document(string_uid).collection("record").document(string_order_number).set(A1_record_string, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.e(TAG, "successfully write to user record!");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e(TAG, "Error writing document", e);
+                                }
+                            });
+
+                            firestore.collection("users").document(string_uid).collection("record").document(string_order_number).set(A1record_timestamp, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.e(TAG, "successfully write to user record!");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e(TAG, "Error writing document", e);
+                                }
+                            });
+
+                            /*
+                            switch (string_choose_grid){
                                 case string_A1:
                                     Map<String, Boolean> A1info_boolean = new HashMap<>();
                                     Map<String, Object> A1info_string = new HashMap<>();
                                     A1info_boolean.put("預約中", true);
                                     A1info_string.put("姓名",Text_name.getText().toString());
                                     A1info_string.put("手機", Text_phone.getText().toString());
+                                    A1info_string.put("User_uid",string_uid);
                                     A1info_string.put("預約車牌",Text_license.getText().toString());
                                     A1info_string.put("預約日期時間",btn_timepicker.getText().toString());
                                     A1info_string.put("訂單編號",string_order_number);
 
-                                    firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("parking grid").document(string_A1).set(A1info_boolean, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("parking grid").document(Text_license.getText().toString()).set(A1info_boolean, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             Log.e(TAG, "A1 successfully reserved!");
@@ -345,7 +475,7 @@ public class ParkinglotActivity extends AppCompatActivity {
                                         }
                                     });
 
-                                    firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("parking grid").document(string_A1).set(A1info_string, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("parking grid").document(Text_license.getText().toString()).set(A1info_string, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             Log.e(TAG, "A1 successfully reserved!");
@@ -365,7 +495,7 @@ public class ParkinglotActivity extends AppCompatActivity {
                                     A1_record_boolean.put("使用中", false);
                                     A1_record_string.put("停車場",parkinglot_name.getText().toString());
                                     A1_record_string.put("費率", parkinglot_price.getText().toString());
-                                    A1_record_string.put("車位",choose_grid.getText().toString());
+                                    A1_record_string.put("車位",string_A1);
                                     A1_record_string.put("預約日期時間",btn_timepicker.getText().toString());
                                     A1_record_string.put("地址",parkinglot_address.getText().toString());
                                     A1_record_string.put("訂單編號",string_order_number);
@@ -405,11 +535,12 @@ public class ParkinglotActivity extends AppCompatActivity {
                                     A2info_boolean.put("預約中", true);
                                     A2info_string.put("姓名",Text_name.getText().toString());
                                     A2info_string.put("手機", Text_phone.getText().toString());
+                                    A2info_string.put("User_uid",string_uid);
                                     A2info_string.put("預約車牌",Text_license.getText().toString());
                                     A2info_string.put("預約日期時間",btn_timepicker.getText().toString());
                                     A2info_string.put("訂單編號",string_order_number);
 
-                                    firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("parking grid").document(string_A2).set(A2info_boolean, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("parking grid").document(Text_license.getText().toString()).set(A2info_boolean, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             Log.e(TAG, "A2 successfully reserved!");
@@ -421,7 +552,7 @@ public class ParkinglotActivity extends AppCompatActivity {
                                         }
                                     });
 
-                                    firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("parking grid").document(string_A2).set(A2info_string, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("parking grid").document(Text_license.getText().toString()).set(A2info_string, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             Log.e(TAG, "A2 successfully reserved!");
@@ -441,7 +572,7 @@ public class ParkinglotActivity extends AppCompatActivity {
                                     A2_record_boolean.put("使用中", false);
                                     A2_record_string.put("停車場",parkinglot_name.getText().toString());
                                     A2_record_string.put("費率", parkinglot_price.getText().toString());
-                                    A2_record_string.put("車位",choose_grid.getText().toString());
+                                    A2_record_string.put("車位",string_A2);
                                     A2_record_string.put("預約日期時間",btn_timepicker.getText().toString());
                                     A2_record_string.put("地址",parkinglot_address.getText().toString());
                                     A2_record_string.put("訂單編號",string_order_number);
@@ -477,14 +608,18 @@ public class ParkinglotActivity extends AppCompatActivity {
                                 case string_A3:
                                     Map<String, Boolean> A3info_boolean = new HashMap<>();
                                     Map<String, Object> A3info_string = new HashMap<>();
+                                    Map<String, Timestamp> A3info_timestamp = new HashMap<>();
                                     A3info_boolean.put("預約中", true);
                                     A3info_string.put("姓名",Text_name.getText().toString());
                                     A3info_string.put("手機", Text_phone.getText().toString());
+                                    A3info_string.put("User_uid",string_uid);
                                     A3info_string.put("預約車牌",Text_license.getText().toString());
-                                    A3info_string.put("預約日期時間",btn_timepicker.getText().toString());
+                                    //A3info_string.put("預約日期時間",btn_timepicker.getText().toString());
                                     A3info_string.put("訂單編號",string_order_number);
 
-                                    firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("parking grid").document(string_A3).set(A3info_boolean, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    A3info_timestamp.put("預約日期時間",timestamp);
+
+                                    firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("parking grid").document(Text_license.getText().toString()).set(A3info_boolean, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             Log.e(TAG, "A3 successfully reserved!");
@@ -496,7 +631,7 @@ public class ParkinglotActivity extends AppCompatActivity {
                                         }
                                     });
 
-                                    firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("parking grid").document(string_A3).set(A3info_string, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("parking grid").document(Text_license.getText().toString()).set(A3info_string, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             Log.e(TAG, "A3 successfully reserved!");
@@ -516,7 +651,7 @@ public class ParkinglotActivity extends AppCompatActivity {
                                     A3_record_boolean.put("使用中", false);
                                     A3_record_string.put("停車場",parkinglot_name.getText().toString());
                                     A3_record_string.put("費率", parkinglot_price.getText().toString());
-                                    A3_record_string.put("車位",choose_grid.getText().toString());
+                                    A3_record_string.put("車位",string_A3);
                                     A3_record_string.put("預約日期時間",btn_timepicker.getText().toString());
                                     A3_record_string.put("地址",parkinglot_address.getText().toString());
                                     A3_record_string.put("訂單編號",string_order_number);
@@ -550,6 +685,8 @@ public class ParkinglotActivity extends AppCompatActivity {
 
                                     break;
                             }
+
+                             */
 
                             Toast.makeText(ParkinglotActivity.this,"預約成功!", Toast.LENGTH_SHORT).show();
 
