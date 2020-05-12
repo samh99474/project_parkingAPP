@@ -45,7 +45,7 @@ public class infowindow extends AppCompatActivity {
     private TextView parkinglot_is_opening;
     private TextView parkinglot_name;
     private TextView parkinglot_today_service_time;
-    private TextView parkinglot_simple_description;
+    private TextView parkinglot_simple_description, parkinglot_simple_description2;
     private TextView parkinglot_full_description;
     private TextView parkinglot_address;
     private TextView parkinglot_tel;
@@ -74,6 +74,7 @@ public class infowindow extends AppCompatActivity {
         parkinglot_is_opening = findViewById(R.id.parkinglot_is_opening);
         parkinglot_today_service_time = findViewById(R.id.parkinglot_today_service_time);
         parkinglot_simple_description = findViewById(R.id.parkinglot_simple_description);
+        parkinglot_simple_description2 = findViewById(R.id.parkinglot_simple_description2);
         parkinglot_full_description = findViewById(R.id.detail_price);
         parkinglot_address = findViewById(R.id.parkinglot_address);
         parkinglot_tel = findViewById(R.id.parkinglot_tel);
@@ -158,6 +159,7 @@ public class infowindow extends AppCompatActivity {
 
         parkinglot_today_service_time.setText(String.format(split_string_parkinglot_snippet[5]));
         parkinglot_simple_description.setText(String.format(split_string_parkinglot_snippet[2]));
+        parkinglot_simple_description2.setText(String.format(split_string_parkinglot_snippet[2]));
         parkinglot_full_description.setText(String.format(split_string_parkinglot_snippet[3])); //之後改成detail_info
         parkinglot_address.setText(String.format(split_string_parkinglot_snippet[6]));
 

@@ -18,8 +18,8 @@
             android:layout_gravity="center_horizontal"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="#000"
-            android:textSize="14sp"
+            android:textColor="#18395A"
+            android:textSize="19sp"
             android:textStyle="bold" />
 
         <TextView
@@ -28,8 +28,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="10"
-            android:textColor="#000"
-            android:textSize="14sp" />
+            android:textColor="#18395A"
+            android:textSize="15sp" />
 
     </LinearLayout>
 
