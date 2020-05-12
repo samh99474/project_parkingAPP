@@ -72,7 +72,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="24dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:text="費率"
@@ -81,7 +80,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/parkinglot_image"
                 app:layout_constraintStart_toStartOf="@+id/imageView8"
-                app:layout_constraintTop_toBottomOf="@+id/parkinglot_name" />
+                app:layout_constraintTop_toTopOf="@+id/parkinglot_image" />
 
             <TextView
                 android:id="@+id/parkinglot_simple_description2"
@@ -95,6 +94,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="20dp"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/parkinglot_image"
                 app:layout_constraintEnd_toStartOf="@+id/parkinglot_image"
                 app:layout_constraintStart_toStartOf="@+id/imageView8"
                 app:layout_constraintTop_toBottomOf="@+id/textview" />
@@ -255,7 +255,7 @@
             <TextView
                 android:id="@+id/textView8"
                 android:layout_width="wrap_content"
-                android:layout_height="100dp"
+                android:layout_height="200dp"
                 android:layout_marginTop="50dp"
                 android:text="停車場資訊"
                 app:layout_constraintEnd_toEndOf="parent"
