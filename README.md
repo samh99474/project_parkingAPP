@@ -2,7 +2,6 @@
 ## Navigation Drawer 側選單 列表 ##
 
 <img width="250" height="500" src="navigation.jpg"/>
-<br />功能:
 
 <br />1.側選單上方(簡易個人資料)
 ----------------------------
