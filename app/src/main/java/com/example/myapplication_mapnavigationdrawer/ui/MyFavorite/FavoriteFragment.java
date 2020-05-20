@@ -1,9 +1,7 @@
-package com.example.myapplication_mapnavigationdrawer.ui.tools;
+package com.example.myapplication_mapnavigationdrawer.ui.MyFavorite;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,16 +9,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.myapplication_mapnavigationdrawer.MainActivity;
 import com.example.myapplication_mapnavigationdrawer.MyDBHelper;
 import com.example.myapplication_mapnavigationdrawer.R;
 import com.example.myapplication_mapnavigationdrawer.adapter.FavoriteAdapter;
@@ -28,7 +22,7 @@ import com.example.myapplication_mapnavigationdrawer.ui.home.HomeFragment;
 
 import java.util.ArrayList;
 
-public class ToolsFragment extends Fragment {
+public class FavoriteFragment extends Fragment {
 
     private ToolsViewModel toolsViewModel;
     private ListView listView;

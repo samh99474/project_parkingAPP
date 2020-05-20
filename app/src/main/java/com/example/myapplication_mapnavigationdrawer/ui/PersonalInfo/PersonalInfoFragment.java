@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.icu.text.SimpleDateFormat;
+import android.net.ParseException;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -52,6 +54,7 @@ import com.squareup.picasso.Picasso;
 
 
 import java.util.Collections;
+import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -224,3 +227,5 @@ Log.e(TAG, "Error getting documents.", task.getException());
         return root;
     }
 }
+
+

@@ -1,4 +1,4 @@
-package com.example.myapplication_mapnavigationdrawer.ui.tools;
+package com.example.myapplication_mapnavigationdrawer.ui.MyFavorite;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
