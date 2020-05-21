@@ -1,4 +1,4 @@
-package com.example.myapplication_mapnavigationdrawer.ui.share;
+package com.example.myapplication_mapnavigationdrawer.ui.Help;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,17 +7,14 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.myapplication_mapnavigationdrawer.R;
 
-public class ShareFragment extends Fragment {
+public class HelpFragment extends Fragment {
 
     private ShareViewModel shareViewModel;
     private WebView webView;

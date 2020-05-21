@@ -31,18 +31,18 @@
 
     <fragment
         android:id="@+id/nav_help"
-        android:name="com.example.myapplication_mapnavigationdrawer.ui.share.ShareFragment"
+        android:name="com.example.myapplication_mapnavigationdrawer.ui.Help.HelpFragment"
         android:label="Help"
         tools:layout="@layout/fragment_share" />
 
     <fragment
         android:id="@+id/nav_about"
-        android:name="com.example.myapplication_mapnavigationdrawer.ui.send.SendFragment"
+        android:name="com.example.myapplication_mapnavigationdrawer.ui.About.AboutFragment"
         android:label="About"
         tools:layout="@layout/fragment_send" />
     <fragment
         android:id="@+id/nav_reservation"
-        android:name="com.example.myapplication_mapnavigationdrawer.ui.reservate.ReservateFragment"
+        android:name="com.example.myapplication_mapnavigationdrawer.ui.Setting.SettingFragment"
         android:label="設定"
         tools:layout="@layout/fragment_send" />
 </navigation>

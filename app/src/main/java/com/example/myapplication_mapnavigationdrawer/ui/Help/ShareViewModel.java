@@ -1,4 +1,4 @@
-package com.example.myapplication_mapnavigationdrawer.ui.share;
+package com.example.myapplication_mapnavigationdrawer.ui.Help;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

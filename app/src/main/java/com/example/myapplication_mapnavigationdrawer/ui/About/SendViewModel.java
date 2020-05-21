@@ -1,4 +1,4 @@
-package com.example.myapplication_mapnavigationdrawer.ui.send;
+package com.example.myapplication_mapnavigationdrawer.ui.About;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

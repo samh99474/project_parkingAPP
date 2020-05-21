@@ -404,6 +404,8 @@ public class ParkinglotActivity extends AppCompatActivity {
                             Map<String, Timestamp> A1record_timestamp = new HashMap<>();
                             A1record_timestamp.put("預約日期時間", timestamp);
 
+                            A1_record_boolean.put("按下結束按鈕", false);
+                            A1_record_boolean.put("是否重新計費", false);
                             A1_record_boolean.put("訂單完成", false);
                             A1_record_boolean.put("預約中", true);
                             A1_record_boolean.put("使用中", false);
