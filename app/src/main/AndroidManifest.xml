@@ -14,9 +14,12 @@
         android:roundIcon="@mipmap/loticon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.PaySetting.ChoosePayMethod"></activity>
+        <activity android:name=".ui.PaySetting.DepositWallet" />
+
         <activity
             android:name=".ui.PersonalInfo.SettingsPersonalInfoActivity"
-            android:label="@string/title_activity_settings_personal_info"></activity>
+            android:label="@string/title_activity_settings_personal_info" />
         <activity android:name=".ui.home.CustomDialogActivity" />
         <activity android:name=".ui.home.MarkerWindowAdapter" />
         <activity android:name=".ui.bar_action" />
@@ -53,6 +56,8 @@
         <activity android:name=".ParkinglotActivity" />
         <activity android:name=".ReservationActivity" />
         <activity android:name=".ui.PersonalInfo.select_upload_profile_head" />
+
+        <receiver android:name=".ten_min_ReminderBroadcast" />
     </application>
 
 </manifest>

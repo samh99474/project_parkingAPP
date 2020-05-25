@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication_mapnavigationdrawer.adapter.RestaurantAdapter;
 import com.example.myapplication_mapnavigationdrawer.model.Restaurant;
-import com.example.myapplication_mapnavigationdrawer.ui.Setting.SettingFragment;
+import com.example.myapplication_mapnavigationdrawer.ui.PaySetting.PaySettingFragment;
 import com.example.myapplication_mapnavigationdrawer.util.RestaurantUtil;
 import com.example.myapplication_mapnavigationdrawer.viewmodel.MainActivityViewModel;
 import com.firebase.ui.auth.AuthUI;
@@ -228,7 +228,7 @@ public class FirebaseActivity extends AppCompatActivity implements
             case R.id.action_settings:
                 Toast.makeText(FirebaseActivity.this, "設定", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(FirebaseActivity.this,
-                        SettingFragment.class);
+                        PaySettingFragment.class);
                 startActivity(intent);
                 break;
         }

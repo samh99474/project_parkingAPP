@@ -42,7 +42,7 @@
         tools:layout="@layout/fragment_send" />
     <fragment
         android:id="@+id/nav_reservation"
-        android:name="com.example.myapplication_mapnavigationdrawer.ui.Setting.SettingFragment"
-        android:label="設定"
+        android:name="com.example.myapplication_mapnavigationdrawer.ui.PaySetting.PaySettingFragment"
+        android:label="付款設定"
         tools:layout="@layout/fragment_send" />
 </navigation>

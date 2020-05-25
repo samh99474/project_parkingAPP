@@ -1,11 +1,13 @@
 package com.example.myapplication_mapnavigationdrawer.ui.record;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +15,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.ParseException;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.util.Log;
@@ -26,7 +29,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -35,6 +40,7 @@ import com.example.myapplication_mapnavigationdrawer.MainActivity;
 import com.example.myapplication_mapnavigationdrawer.MessageFirebaseService;
 import com.example.myapplication_mapnavigationdrawer.R;
 import com.example.myapplication_mapnavigationdrawer.adapter.RecordAdapter;
+import com.example.myapplication_mapnavigationdrawer.ten_min_ReminderBroadcast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -61,6 +67,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -104,57 +111,40 @@ public class RecordFragment extends Fragment {
 
         final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null){
-            string_email = user.getEmail();//抓取使用者email
-            string_uid = user.getUid();     //抓取使用者UID
 
-            firestore.collection("users").document(string_uid).collection("record")
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                int count = 0;
-                                for (DocumentSnapshot document : task.getResult()) {
-                                    count++;
+        try{
+            if(user != null){
+                string_email = user.getEmail();//抓取使用者email
+                string_uid = user.getUid();     //抓取使用者UID
 
-                                    //將timestamp轉成Date(Date格式整理過)，最後轉成String
-                                    record_timestamp_parkinglot_time = document.getTimestamp("預約日期時間");
-                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                    record_string_parkinglot_time = sdf.format(record_timestamp_parkinglot_time.toDate());
+                firestore.collection("users").document(string_uid).collection("record")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    int count = 0;
+                                    for (DocumentSnapshot document : task.getResult()) {
+                                        count++;
 
+                                        //將timestamp轉成Date(Date格式整理過)，最後轉成String
 
-                                    record_parkinglot_name = document.getData().get("停車場").toString();
-                                    record_parkinglot_address = document.getData().get("地址").toString();
-                                    current_price = document.getData().get("費率").toString();
-                                    record_license = document.getData().get("預約車牌").toString();
-                                    string_order_number = document.getData().get("訂單編號").toString();
+                                        try {
+                                            record_timestamp_parkinglot_time = document.getTimestamp("預約日期時間");
+                                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                            record_string_parkinglot_time = sdf.format(record_timestamp_parkinglot_time.toDate());
+                                            record_parkinglot_name = document.getData().get("停車場").toString();
+                                            record_parkinglot_address = document.getData().get("地址").toString();
+                                            current_price = document.getData().get("費率").toString();
+                                            record_license = document.getData().get("預約車牌").toString();
+                                            string_order_number = document.getData().get("訂單編號").toString();
 
-
-                                        if(document.getData().get("訂單完成").toString().matches("false")){
-                                            if(document.getData().get("是否重新計費").toString().matches("true")){
-                                                if(document.getData().get("預約中").toString().matches("true")){
-                                                    txt_is_finish = "\t預約中\t";
-                                                    txt_press_finish = "\t結束預約，並繳費\t";
-                                                }
-                                                if(document.getData().get("使用中") != null){
-                                                    if(document.getData().get("使用中").toString().matches("true")){
-                                                        txt_is_using = "\t車輛已進場\t\t";
-                                                    }else {
-                                                        txt_is_using = "\t車輛未進場\t\t";
-                                                    }
-                                                }
-                                            }else {
-                                                if(document.getData().get("按下結束按鈕").toString().matches("true")){
-                                                    txt_is_finish = "\t結束預約中\t";
-                                                    txt_is_using = "\t車輛已進場\t\t";
-                                                    txt_press_finish = "\t車輛請於10分鐘內離場\t";
-                                                }else {
+                                            if(document.getData().get("訂單完成").toString().matches("false")){
+                                                if(document.getData().get("是否重新計費").toString().matches("true")){
                                                     if(document.getData().get("預約中").toString().matches("true")){
                                                         txt_is_finish = "\t預約中\t";
                                                         txt_press_finish = "\t結束預約，並繳費\t";
                                                     }
-
                                                     if(document.getData().get("使用中") != null){
                                                         if(document.getData().get("使用中").toString().matches("true")){
                                                             txt_is_using = "\t車輛已進場\t\t";
@@ -162,75 +152,95 @@ public class RecordFragment extends Fragment {
                                                             txt_is_using = "\t車輛未進場\t\t";
                                                         }
                                                     }
+                                                }else {
+                                                    if(document.getData().get("按下結束按鈕").toString().matches("true")){
+                                                        txt_is_finish = "\t結束預約中\t";
+                                                        txt_is_using = "\t車輛已進場\t\t";
+                                                        txt_press_finish = "\t車輛請於10分鐘內離場\t";
+                                                    }else {
+                                                        if(document.getData().get("預約中").toString().matches("true")){
+                                                            txt_is_finish = "\t預約中\t";
+                                                            txt_press_finish = "\t結束預約，並繳費\t";
+                                                        }
+
+                                                        if(document.getData().get("使用中") != null){
+                                                            if(document.getData().get("使用中").toString().matches("true")){
+                                                                txt_is_using = "\t車輛已進場\t\t";
+                                                            }else {
+                                                                txt_is_using = "\t車輛未進場\t\t";
+                                                            }
+                                                        }
+                                                    }
                                                 }
+                                            }else {
+                                                txt_press_finish = "\t訂單已完成\t";
                                             }
-                                        }else {
-                                            txt_press_finish = "\t訂單已完成\t";
+
+
+
+                                            items_order_number.add(string_order_number);
+                                            items_record_parkinglot_time.add(record_string_parkinglot_time);
+                                            items_txt_is_finish.add(txt_is_finish);
+                                            items_record_parkinglot_name.add(record_parkinglot_name);
+                                            items_record_parkinglot_address.add(record_parkinglot_address);
+                                            items_current_price.add(current_price);
+                                            items_txt_is_using.add(txt_is_using);
+                                            items_record_license.add(record_license);
+                                            items_txt_press_finish.add(txt_press_finish);
+                                        }catch (Exception e){
+                                            e.printStackTrace();
                                         }
 
+                                    }
+                                    Toast.makeText(getActivity(),"共有"+ count+ "筆資料", Toast.LENGTH_SHORT).show();
 
+                                    RecordAdapter recordAdapter = new
+                                            RecordAdapter(getActivity(), items_order_number, items_record_parkinglot_time, items_txt_is_finish, items_txt_is_using, items_record_parkinglot_name,
+                                            items_record_parkinglot_address, items_current_price, items_record_license, items_txt_press_finish);
 
-                                    items_order_number.add(string_order_number);
-                                    items_record_parkinglot_time.add(record_string_parkinglot_time);
-                                    items_txt_is_finish.add(txt_is_finish);
-                                    items_record_parkinglot_name.add(record_parkinglot_name);
-                                    items_record_parkinglot_address.add(record_parkinglot_address);
-                                    items_current_price.add(current_price);
-                                    items_txt_is_using.add(txt_is_using);
-                                    items_record_license.add(record_license);
-                                    items_txt_press_finish.add(txt_press_finish);
+                                    listview_record.setAdapter(recordAdapter);
 
-
+                                } else {
+                                    Log.d("record", "Error getting documents: ", task.getException());
                                 }
-                                Toast.makeText(getActivity(),"共有"+ count+ "筆資料", Toast.LENGTH_SHORT).show();
-
-                                RecordAdapter recordAdapter = new
-                                        RecordAdapter(getActivity(), items_order_number, items_record_parkinglot_time, items_txt_is_finish, items_txt_is_using, items_record_parkinglot_name,
-                                        items_record_parkinglot_address, items_current_price, items_record_license, items_txt_press_finish);
-
-                                listview_record.setAdapter(recordAdapter);
-
-                            } else {
-                                Log.d("record", "Error getting documents: ", task.getException());
                             }
-                        }
-                    });
+                        });
 
-            firestore.collection("users").document(string_uid).collection("record")
-                    .addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot querySnapshot,
-                                            @Nullable FirebaseFirestoreException e) {
-                            if (e != null) {
-                                Log.w(TAG, "Listen error", e);
-                                return;
-                            }
-
-                            for (DocumentChange change : querySnapshot.getDocumentChanges()) {
-                                if (change.getType() == DocumentChange.Type.ADDED) {
-                                    Log.d(TAG, "New city:" + change.getDocument().getData());
+                firestore.collection("users").document(string_uid).collection("record")
+                        .addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable QuerySnapshot querySnapshot,
+                                                @Nullable FirebaseFirestoreException e) {
+                                if (e != null) {
+                                    Log.w(TAG, "Listen error", e);
+                                    return;
                                 }
 
-                                String source = querySnapshot.getMetadata().isFromCache() ?
-                                        "local cache" : "server";
-                                Log.d(TAG, "Data fetched from " + source);
+                                for (DocumentChange change : querySnapshot.getDocumentChanges()) {
+                                    if (change.getType() == DocumentChange.Type.ADDED) {
+                                        Log.d(TAG, "New city:" + change.getDocument().getData());
+                                    }
 
-                                DocumentSnapshot documentSnapshot = change.getDocument();
-                                String id = documentSnapshot.getId();
-                                int oldIndex = change.getOldIndex();
-                                int newIndex = change.getNewIndex();
+                                    String source = querySnapshot.getMetadata().isFromCache() ?
+                                            "local cache" : "server";
+                                    Log.d(TAG, "Data fetched from " + source);
 
-                                switch (change.getType()){
-                                    case MODIFIED:
-                                        //Toast.makeText(getActivity(),"資料修改更新"+id+"\nold:"+oldIndex+"\nnew:"+newIndex, Toast.LENGTH_SHORT).show();
+                                    DocumentSnapshot documentSnapshot = change.getDocument();
+                                    String id = documentSnapshot.getId();
+                                    int oldIndex = change.getOldIndex();
+                                    int newIndex = change.getNewIndex();
 
-                                        //刷新refresh Fragment
-                                        RecordFragment recordFragment = new RecordFragment();
-                                        getFragmentManager()
-                                                .beginTransaction()
-                                                .replace(R.id.nav_host_fragment, recordFragment)
-                                                .addToBackStack("TAG_TO_FRAGMENT").commit();
-                                        break;
+                                    switch (change.getType()){
+                                        case MODIFIED:
+                                            //Toast.makeText(getActivity(),"資料修改更新"+id+"\nold:"+oldIndex+"\nnew:"+newIndex, Toast.LENGTH_SHORT).show();
+
+                                            //刷新refresh Fragment
+                                            RecordFragment recordFragment = new RecordFragment();
+                                            getFragmentManager()
+                                                    .beginTransaction()
+                                                    .replace(R.id.nav_host_fragment, recordFragment)
+                                                    .addToBackStack("TAG_TO_FRAGMENT").commit();
+                                            break;
                                         /*
                                     case ADDED:
                                         Toast.makeText(getActivity(),"資料加入"+id+"\nold:"+oldIndex+"\nnew:"+newIndex, Toast.LENGTH_SHORT).show();
@@ -239,21 +249,25 @@ public class RecordFragment extends Fragment {
                                         Toast.makeText(getActivity(),"資料移除"+id+"\nold:"+oldIndex+"\nnew:"+newIndex, Toast.LENGTH_SHORT).show();
                                         break;
                                          */
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
+            }
+
+            //ListView加入Head list 頭標
+            View headlist = getLayoutInflater().inflate(R.layout.record_head_list, null);
+            listview_record.addHeaderView(headlist);
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
-        //ListView加入Head list 頭標
-        View headlist = getLayoutInflater().inflate(R.layout.record_head_list, null);
-        listview_record.addHeaderView(headlist);
 
         listview_record.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 position -= listview_record.getHeaderViewsCount();//position 扣掉是因為有head list
-
+                /*
                 if(position!=-1) {
 
                     if(!(items_txt_press_finish.get(position).matches("\t車輛請於10分鐘內離場\t")
@@ -301,10 +315,36 @@ public class RecordFragment extends Fragment {
                         final String order_number = items_order_number.get(position);
                         final String parkinglot_name = items_record_parkinglot_name.get(position);
                         final String car_license = items_record_license.get(position);
+                        final String user_uid = string_uid;
+
                         dialog_finish_pay.setPositiveButton("確定結束預約", new DialogInterface.OnClickListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
+                                //法二，Alarm calendar
+
+
+                                //calendar.add(calendar.DATE,1); //把日期往后增加一天,整数  往后推,负数往前移动
+                                //date=calendar.getTime(); //这个时间就是日期往后推一天的结果
+
+                                Date date= new Date(); //取时间
+                                Calendar   calendar = new GregorianCalendar();
+                                calendar.setTime(date);
+                                //Calendar c = Calendar.getInstance();
+                                calendar.add(calendar.SECOND,15);//10秒後的calendar
+
+
+                                AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+                                Intent intent = new Intent(getActivity(), ten_min_ReminderBroadcast.class);
+
+                                PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 1, intent, 0);
+                                if (calendar.before(Calendar.getInstance())) {
+                                    calendar.add(Calendar.SECOND, 15);
+                                }
+                                alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+
+                                //跳通知，告知10分鐘內離場
                                 NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
                                 int notificationId = createID();
                                 String channelId = "channel-id";
@@ -317,7 +357,6 @@ public class RecordFragment extends Fragment {
                                     notificationManager.createNotificationChannel(mChannel);
                                 }
 
-                                //跳通知，告知10分鐘內離場
                                 NotificationCompat.InboxStyle inboxStyle =
                                         new NotificationCompat.InboxStyle();
 
@@ -411,21 +450,12 @@ public class RecordFragment extends Fragment {
                         });
                         dialog_finish_pay.show();
                     }
-
                 }
+                */
             }
         });
 
 
-        /*
-        final TextView textView = root.findViewById(R.id.text_historical);
-        galleryViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-         */
         return root;
     }
 
@@ -433,5 +463,20 @@ public class RecordFragment extends Fragment {
         Date now = new Date();
         int id = Integer.parseInt(new SimpleDateFormat("ddHHmmss", Locale.FRENCH).format(now));
         return id;
+    }
+
+    private void createNotificationChannel(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name = "LemubitReminderChannel";
+            String description = "Channel for Lemubit Reminder";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("notifyLemubit", name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getContext().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+
+        }
+
     }
 }

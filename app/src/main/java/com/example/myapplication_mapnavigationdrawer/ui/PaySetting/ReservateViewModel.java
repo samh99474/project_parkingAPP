@@ -1,4 +1,4 @@
-package com.example.myapplication_mapnavigationdrawer.ui.Setting;
+package com.example.myapplication_mapnavigationdrawer.ui.PaySetting;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

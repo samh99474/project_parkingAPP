@@ -20,6 +20,10 @@
             android:id="@+id/nav_favorite"
             android:icon="@drawable/ic_favorite_black_24dp"
             android:title="我的最愛" />
+        <item
+            android:id="@+id/nav_reservation"
+            android:icon="@drawable/ic_card_giftcard_black_24dp"
+            android:title="付款設定" />
 
     </group>
 
@@ -33,10 +37,6 @@
                 android:id="@+id/nav_about"
                 android:icon="@drawable/ic_sentiment_satisfied_black_24dp"
                 android:title="About" />
-            <item
-                android:id="@+id/nav_reservation"
-                android:icon="@drawable/ic_settings_black_24dp"
-                android:title="設定" />
         </menu>
     </item>
 

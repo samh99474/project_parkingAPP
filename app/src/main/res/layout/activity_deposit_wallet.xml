@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.PaySetting.DepositWallet">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/TextView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="32dp"
+                android:drawableRight="@drawable/ic_error_black_24dp"
+                android:text="加值\t"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
+                android:background="@color/greyDisabled"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/TextView1"
+                app:layout_constraintTop_toBottomOf="@+id/TextView1" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup_wallet_deposit_method"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:layout_constraintStart_toStartOf="@+id/TextView1"
+                app:layout_constraintTop_toBottomOf="@+id/view">
+
+                <RadioButton
+                    android:id="@+id/radioButton_method"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="超商代碼"
+                    android:textColor="#18395A"
+                    android:textSize="20dp" />
+            </RadioGroup>
+
+            <RadioGroup
+                android:id="@+id/radioGroup_wallet_deposit_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup_wallet_deposit_method">
+
+                <RadioButton
+                    android:id="@+id/price_100"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/radiobuttonbackground"
+                    android:button="@android:color/transparent"
+                    android:padding="15dp"
+                    android:text="100"
+                    android:textSize="20dp" />
+
+                <RadioButton
+                    android:id="@+id/price_250"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/radiobuttonbackground"
+                    android:button="@android:color/transparent"
+                    android:padding="15dp"
+                    android:text="250"
+                    android:textSize="20dp" />
+
+                <RadioButton
+                    android:id="@+id/price_500"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/radiobuttonbackground"
+                    android:button="@android:color/transparent"
+                    android:padding="15dp"
+                    android:text="500"
+                    android:textSize="20dp" />
+
+                <RadioButton
+                    android:id="@+id/price_1000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/radiobuttonbackground"
+                    android:button="@android:color/transparent"
+                    android:padding="15dp"
+                    android:text="1000"
+                    android:textSize="20dp" />
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/btb_deposit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/about_top_background"
+                android:text="確定加值"
+                android:textColor="#FFFFFF"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup_wallet_deposit_price" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
