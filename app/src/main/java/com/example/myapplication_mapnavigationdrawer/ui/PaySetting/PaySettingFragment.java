@@ -49,7 +49,8 @@ public class PaySettingFragment extends Fragment {
     private ReservateViewModel reservateViewModel;
     private TextView show_wallet_remaining;
     private Button btn_setting_wallet;
-    private String string_uid, wallet_remaining;
+    private String string_uid;
+    private Long wallet_remaining;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -75,9 +76,9 @@ public class PaySettingFragment extends Fragment {
                             if (document.exists()) {
                                 Log.e(TAG, "DocumentSnapshot data: " + document.getData());
                                 if (document.getData().get("錢包") != null) {
-                                    wallet_remaining = document.getData().get("錢包").toString();
+                                    wallet_remaining = document.getLong("錢包");
                                 }else {
-                                    wallet_remaining = "0";
+                                    wallet_remaining = Long.valueOf(0);
                                     Map<String, Object> user_wallet = new HashMap<>();
                                     user_wallet.put("錢包","0");
                                     user_db.collection("users").document(string_uid).set(user_wallet, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {//固定文件ID
@@ -93,7 +94,7 @@ public class PaySettingFragment extends Fragment {
                                         }
                                     });
                                 }
-                                show_wallet_remaining.setText(wallet_remaining);
+                                show_wallet_remaining.setText(String.valueOf(wallet_remaining));
                             } else {
                                 Log.e(TAG, "No such document");
                             }

@@ -111,7 +111,16 @@
                 android:text="地址123456789"
                 android:textColor="#18395A"
                 app:layout_constraintStart_toStartOf="@+id/textView47"
-                app:layout_constraintTop_toBottomOf="@+id/textView47" />
+                app:layout_constraintTop_toBottomOf="@+id/textView54" />
+
+            <TextView
+                android:id="@+id/record_parkinglot_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="09xx"
+                android:textColor="#18395A"
+                app:layout_constraintStart_toStartOf="@+id/record_parkinglot_address"
+                app:layout_constraintTop_toBottomOf="@+id/record_parkinglot_address" />
 
             <TextView
                 android:id="@+id/current_price"
@@ -120,18 +129,40 @@
                 android:text="$30 / 小時"
                 android:textColor="#18395A"
                 app:layout_constraintStart_toStartOf="@+id/record_parkinglot_address"
-                app:layout_constraintTop_toBottomOf="@+id/record_parkinglot_address" />
+                app:layout_constraintTop_toBottomOf="@+id/record_parkinglot_phone" />
 
             <TextView
                 android:id="@+id/textView47"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="車牌："
+                android:text="我的車牌："
                 android:textColor="#5F97F4"
                 android:textSize="20dp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/record_parkinglot_name"
                 app:layout_constraintTop_toBottomOf="@+id/record_parkinglot_name" />
+
+            <TextView
+                android:id="@+id/textView35"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="累積時數："
+                android:textColor="#5F97F4"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/textView47"
+                app:layout_constraintTop_toBottomOf="@+id/textView47" />
+
+            <TextView
+                android:id="@+id/textView54"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="預估金額："
+                android:textColor="#5F97F4"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/textView35"
+                app:layout_constraintTop_toBottomOf="@+id/textView35" />
 
             <TextView
                 android:id="@+id/record_license"
@@ -145,6 +176,39 @@
                 app:layout_constraintTop_toTopOf="@+id/textView47" />
 
             <TextView
+                android:id="@+id/record_accumulated_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="XX"
+                android:textColor="#5F97F4"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/textView54"
+                app:layout_constraintTop_toTopOf="@+id/textView54" />
+
+            <TextView
+                android:id="@+id/txt_NT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="\tNT"
+                android:textColor="#5F97F4"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/record_accumulated_price"
+                app:layout_constraintTop_toTopOf="@+id/record_accumulated_price" />
+
+            <TextView
+                android:id="@+id/record_accumulated_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="XX小時"
+                android:textColor="#5F97F4"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/textView35"
+                app:layout_constraintTop_toTopOf="@+id/textView35" />
+
+            <TextView
                 android:id="@+id/txt_press_finish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -152,9 +216,9 @@
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/custom_background_block"
                 android:drawableLeft="@drawable/ic_monetization_on_black_24dp"
-                android:text="\t結束預約，並繳費\t"
+                android:text="\t車輛出場時將自動付款完成訂單\t"
                 android:textColor="#A0806F"
-                android:textSize="25dp"
+                android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/current_price"

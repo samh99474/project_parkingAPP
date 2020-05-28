@@ -52,6 +52,16 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.MetadataChanges;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
@@ -69,6 +79,7 @@ import okhttp3.Response;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.SEARCH_SERVICE;
+import static com.example.myapplication_mapnavigationdrawer.FilterDialogFragment.TAG;
 import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 
@@ -80,6 +91,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private String string_parkinglot_snippet;
     private String string_favorite_lat;
     private String string_favorite_lng;
+    private String full_description, simple_description, parkinglot_total_space,
+            parkinglot_price_number, API_id, more_detail_info, today_service_time, parkinglot_address, parkinglot_phone;
+    private Boolean is_opening, reservatable;
+    private Double parkinglot_lat, parkinglot_lng;
+    private Long parkinglot_remain_space;
     public float zoomLevel;
 
     private EditText mSearchText;
@@ -114,6 +130,72 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             for (int i = 0; i < mygsondata.data.parkinglots.length - 1; i++) {
                 //Log.e("res", mygsondata.data.parkinglots[i].id+"");
 
+                final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                final DocumentReference docRef_parkinglot_info = firestore.collection("reservatable parkinglot").document("北科大APP特約停車場").collection("info").document("detail_info");
+
+                if(docRef_parkinglot_info != null){
+                    docRef_parkinglot_info.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {  //抓取parking grid/A1 是否使用中或已被預約
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    Log.e(TAG, "DocumentSnapshot data: " + document.getData());
+                                    full_description = (String) document.get("full_description");
+                                    simple_description = (String) document.get("simple_description");
+                                    parkinglot_remain_space = (Long) document.get("剩餘車位");
+                                    parkinglot_total_space = (String) document.get("總車位");
+                                    parkinglot_price_number = (String) document.get("費率");
+                                    API_id = (String) document.get("API_id");
+                                    more_detail_info = (String) document.get("more_detail_info");
+                                    today_service_time = (String) document.get("today_service_time");
+                                    parkinglot_address = (String) document.get("地址");
+                                    parkinglot_phone = (String) document.get("電話");
+                                    is_opening = (Boolean) document.get("is_opening");
+                                    reservatable = (Boolean) document.get("reservatable");
+                                    parkinglot_lat = (Double) document.get("lat");
+                                    parkinglot_lng = (Double) document.get("lng");
+
+                                    BitmapDrawable bitmapdraw2 = (BitmapDrawable) getResources().getDrawable(R.mipmap.loticon_reservatable);
+                                    Bitmap b2 = bitmapdraw2.getBitmap();
+                                    Bitmap smallMarker2 = Bitmap.createScaledBitmap(b2, 115, 115, false);
+
+                                    MarkerOptions m2 = new MarkerOptions();
+                                    m2.position(new LatLng(parkinglot_lat, parkinglot_lng));
+                                    m2.title("北科大APP特約停車場");
+                                    m2.snippet(parkinglot_total_space + ","+
+                                            parkinglot_remain_space + ","+
+                                            simple_description + ","+
+                                            full_description + ","+
+                                            String.valueOf(is_opening) + ","+
+                                            today_service_time + ","+
+                                            parkinglot_address + ","+
+                                            parkinglot_phone + ","+
+                                            String.valueOf(parkinglot_lat)+ ","+
+                                            String.valueOf(parkinglot_lng)+ ","+
+                                            API_id+ ","+
+                                            more_detail_info+ ","+
+                                            String.valueOf(reservatable)+ ",");
+                                    m2.draggable(true);
+                                    m2.icon(BitmapDescriptorFactory.fromBitmap(smallMarker2));
+                                    mymap.addMarker(m2);
+
+                                    if (zoomLevel > 13) {
+                                        mymap.addMarker(m2);
+
+                                        Log.e("HomeFragment", "shit");
+                                    }
+
+                                } else {
+                                    Log.e(TAG, "No such document");
+                                }
+                            } else {
+                                Log.e(TAG, "get failed with ", task.getException());
+                            }
+                        }
+                    });
+                }
+
                 MarkerOptions m1 = new MarkerOptions();
 
                 int height = 100;
@@ -121,18 +203,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.mipmap.loticon);
                 Bitmap b = bitmapdraw.getBitmap();
                 Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-
-                BitmapDrawable bitmapdraw2 = (BitmapDrawable) getResources().getDrawable(R.mipmap.loticon_reservatable);
-                Bitmap b2 = bitmapdraw2.getBitmap();
-                Bitmap smallMarker2 = Bitmap.createScaledBitmap(b2, 115, 115, false);
-
-                MarkerOptions m2 = new MarkerOptions();
-                m2.position(new LatLng(25.0421794, 121.5351166));
-                m2.title("北科大APP特約停車場");
-                m2.snippet("100,100,$30 / 小時,24小時營業 每小時 30 元,true,24H,台北市大安區忠孝東路三段1號,0800-092-000,25.0421794,121.5351166,0001,停車場類型：室外平面,true,");
-                m2.draggable(true);
-                m2.icon(BitmapDescriptorFactory.fromBitmap(smallMarker2));
-                mymap.addMarker(m2);
 
                 m1.position(new LatLng(mygsondata.data.parkinglots[i].lat, mygsondata.data.parkinglots[i].lng));
                 m1.title(mygsondata.data.parkinglots[i].name);
@@ -154,7 +224,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                             + mygsondata.data.parkinglots[i].detail_info[3][0]
                             + mygsondata.data.parkinglots[i].detail_info[3][1] + "\n" + ","
                             + "false"+",");
-
                 }
 
 
@@ -187,7 +256,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
                 if (zoomLevel > 13) {
                     mymap.addMarker(m1);
-                    mymap.addMarker(m2);
 
                     Log.e("HomeFragment", "shit");
                 }
@@ -196,8 +264,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
                     Log.e("HomeFragment", "fuck");
                 }
-
-
             }
         }
     };

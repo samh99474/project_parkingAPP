@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,9 +26,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -60,6 +65,11 @@ public class infowindow extends AppCompatActivity {
     private SQLiteDatabase dari;
 
     private String string_email, string_uid;
+    private String full_description, simple_description, parkinglot_total_space,
+            parkinglot_price_number, API_id, more_detail_info, today_service_time, string_parkinglot_address, parkinglot_phone;
+    private Boolean is_opening, reservatable;
+    private Double parkinglot_lat, parkinglot_lng;
+    private Long parkinglot_remain_space;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +126,7 @@ public class infowindow extends AppCompatActivity {
                             b.putString("string_parkinglot_name",parkinglot_name.getText().toString());
                             b.putString("parkinglot_simple_description",parkinglot_simple_description.getText().toString());
                             b.putString("parkinglot_address",parkinglot_address.getText().toString());
+                            b.putString("parkinglot_phone",parkinglot_tel.getText().toString());
                             intent.putExtras(b);
                             startActivity(intent);
 
@@ -138,15 +149,47 @@ public class infowindow extends AppCompatActivity {
             });
         }
 
+/*
+        final DocumentReference docRef_parkinglot_info = firestore.collection("reservatable parkinglot").document("北科大APP特約停車場").collection("info").document("detail_info");
+
+        if(docRef_parkinglot_info != null){
+            docRef_parkinglot_info.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {  //抓取parking grid/A1 是否使用中或已被預約
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.e(TAG, "DocumentSnapshot data: " + document.getData());
+                            full_description = (String) document.get("full_description");
+                            simple_description = (String) document.get("simple_description");
+                            parkinglot_remain_space = (Long) document.get("剩餘車位");
+                            parkinglot_total_space = (String) document.get("總車位");
+                            parkinglot_price_number = (String) document.get("費率");
+
+                            parkinglot_lot.setText(String.format(parkinglot_total_space+"  /  剩餘車位：" + parkinglot_remain_space));
+
+                        } else {
+                            Log.e(TAG, "No such document");
+                        }
+                    } else {
+                        Log.e(TAG, "get failed with ", task.getException());
+                    }
+                }
+            });
+        }
+
+ */
+
         if(split_string_parkinglot_snippet[0].equals("-1") == true){
-            parkinglot_lot.setText(String.format("無資訊"));
+            parkinglot_lot.setText("無資訊");
         }
         else if (split_string_parkinglot_snippet[1].equals("-1") == true){
-            parkinglot_lot.setText(String.format(split_string_parkinglot_snippet[0]));
+            parkinglot_lot.setText(split_string_parkinglot_snippet[0]);
         }
         else{
-            parkinglot_lot.setText(String.format(split_string_parkinglot_snippet[0]+"  /  剩餘車位："+split_string_parkinglot_snippet[1]));
+            parkinglot_lot.setText(split_string_parkinglot_snippet[0]+"\t\t/\t\t剩餘車位："+split_string_parkinglot_snippet[1]);
         }
+
 /*
         windowadapter_parkinglot_lot.setText(windowadapter_parkinglot_lot.getText()+"\n●費率: "+split_string_parkinglot_snippet[2]);
 */
@@ -321,5 +364,6 @@ public class infowindow extends AppCompatActivity {
     private void getAvailableParkingGrid (CollectionReference mAvailableParkingGrid) {
 
     }
+
 
 }

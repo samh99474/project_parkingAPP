@@ -42,8 +42,9 @@ public class DepositWallet extends AppCompatActivity {
     private RadioButton radioButton_method, price_100, price_250, price_500, price_1000;
     private RadioGroup radioGroup_wallet_deposit_price;
     private Button btb_deposit;
-    private String choose_method="", choose_price="", string_uid, wallet_remaining;
+    private String choose_method="", choose_price="", string_uid;
     private Integer wallet_after_add;
+    private Long wallet_remaining;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,7 @@ public class DepositWallet extends AppCompatActivity {
                                 if (document.exists()) {
                                     Log.e(TAG, "DocumentSnapshot data: " + document.getData());
                                     if (document.getData().get("錢包") != null) {
-                                        wallet_remaining = document.getData().get("錢包").toString();
+                                        wallet_remaining = document.getLong("錢包");
                                     }
                                 }
                             } else {
@@ -141,7 +142,7 @@ public class DepositWallet extends AppCompatActivity {
                                     btb_deposit.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            wallet_after_add = Integer.parseInt(wallet_remaining)+Integer.parseInt(choose_price);
+                                            wallet_after_add = wallet_remaining.intValue()+Integer.parseInt(choose_price);
                                             Map<String, Object> user_wallet = new HashMap<>();
                                             user_wallet.put("錢包",wallet_after_add);
                                             user_db.collection("users").document(string_uid).set(user_wallet, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {//固定文件ID

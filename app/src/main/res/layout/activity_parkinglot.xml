@@ -21,7 +21,7 @@
             <ImageView
                 android:id="@+id/imageView2"
                 android:layout_width="0dp"
-                android:layout_height="180dp"
+                android:layout_height="210dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
@@ -75,6 +75,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/parkinglot_name" />
 
             <TextView
+                android:id="@+id/show_parkinglot_remain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="總車位/剩餘車位"
+                android:textColor="@color/design_default_color_surface"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/parkinglot_name"
+                app:layout_constraintTop_toBottomOf="@+id/parkinglot_price" />
+
+            <TextView
                 android:id="@+id/parkinglot_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -93,9 +104,21 @@
                 android:textColor="@color/design_default_color_surface"
                 android:textSize="10dp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+                app:layout_constraintBottom_toTopOf="@+id/show_parkinglot_phone"
                 app:layout_constraintStart_toStartOf="@+id/TextView"
-                app:layout_constraintTop_toBottomOf="@+id/parkinglot_price" />
+                app:layout_constraintTop_toBottomOf="@+id/show_parkinglot_remain" />
+
+            <TextView
+                android:id="@+id/show_parkinglot_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="contact_tel"
+                android:textColor="@color/design_default_color_surface"
+                android:textSize="10dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+                app:layout_constraintStart_toStartOf="@+id/TextView" />
 
             <ImageView
                 android:id="@+id/imageView10"
@@ -197,6 +220,18 @@
                 app:layout_constraintTop_toTopOf="@+id/textView39" />
 
             <TextView
+                android:id="@+id/reservate_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text=""
+                android:textColor="#18395A"
+                android:textSize="18dp"
+                app:layout_constraintStart_toEndOf="@+id/textView43"
+                app:layout_constraintTop_toTopOf="@+id/textView43" />
+
+            <TextView
                 android:id="@+id/Text_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -232,41 +267,15 @@
                 app:layout_constraintStart_toEndOf="@+id/textView42"
                 app:layout_constraintTop_toTopOf="@+id/textView42" />
 
-            <Button
-                android:id="@+id/btn_timepicker"
-                android:layout_width="215dp"
-                android:layout_height="37dp"
-                android:background="@drawable/background_listview"
-                android:text="請選擇時間"
-                android:textColor="#FFFFFF"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/textView43"
-                app:layout_constraintStart_toEndOf="@+id/textView43"
-                app:layout_constraintTop_toTopOf="@+id/textView43" />
-
-            <ImageView
-                android:id="@+id/imageView17"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:elevation="3dp"
-                app:layout_constraintBottom_toBottomOf="@+id/btn_timepicker"
-                app:layout_constraintStart_toStartOf="@+id/btn_timepicker"
-                app:layout_constraintTop_toTopOf="@+id/btn_timepicker"
-                app:srcCompat="@drawable/ic_access_time_white_24dp" />
-
             <ImageView
                 android:id="@+id/imageView14"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="60dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView51"
+                app:layout_constraintBottom_toBottomOf="@+id/textView57"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btn_timepicker"
+                app:layout_constraintTop_toBottomOf="@+id/textView43"
                 app:srcCompat="@drawable/custom_background_block" />
 
             <TextView
@@ -280,7 +289,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btn_timepicker" />
+                app:layout_constraintTop_toBottomOf="@+id/textView43" />
 
             <TextView
                 android:id="@+id/textView45"
@@ -294,52 +303,91 @@
                 app:layout_constraintEnd_toEndOf="@+id/textView43"
                 app:layout_constraintTop_toBottomOf="@+id/textView44" />
 
-            <TextView
-                android:id="@+id/pay"
+            <com.example.myapplication_mapnavigationdrawer.adapter.AutoSplitTextView
+                android:id="@+id/pay_simple_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="xx NT"
-                android:textSize="18dp"
                 android:textColor="#18395A"
-                app:layout_constraintBottom_toBottomOf="@+id/textView45"
+                android:textSize="18dp"
+                android:inputType="textMultiLine"
                 app:layout_constraintStart_toEndOf="@+id/textView45"
                 app:layout_constraintTop_toTopOf="@+id/textView45" />
+
+            <TextView
+                android:id="@+id/pay_full_description"
+                android:layout_width="260dp"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:text="每小時"
+                android:textColor="#18395A"
+                android:textSize="18dp"
+                app:layout_constraintStart_toEndOf="@+id/textView45"
+                app:layout_constraintTop_toBottomOf="@+id/pay_simple_description" />
 
             <TextView
                 android:id="@+id/textView49"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:text="付款方式："
-                android:textSize="18dp"
                 android:textColor="#5F97F4"
+                android:textSize="18dp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="@+id/textView43"
-                app:layout_constraintTop_toBottomOf="@+id/textView45" />
+                app:layout_constraintTop_toBottomOf="@+id/pay_full_description" />
 
             <TextView
                 android:id="@+id/textView50"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="我的信用卡"
-                android:textSize="18dp"
+                android:text="我的錢包"
                 android:textColor="#18395A"
+                android:textSize="18dp"
                 app:layout_constraintBottom_toBottomOf="@+id/textView49"
                 app:layout_constraintStart_toEndOf="@+id/textView45"
                 app:layout_constraintTop_toTopOf="@+id/textView49" />
 
             <TextView
-                android:id="@+id/textView51"
-                android:layout_width="195dp"
-                android:layout_height="68dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                android:text="到達預約時間，將會開始計費\n(依照停車場收費方式累加金額)"
+                android:id="@+id/textView58"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="剩餘金額："
+                android:textColor="#18395A"
+                android:textSize="18dp"
+                app:layout_constraintStart_toEndOf="@+id/textView49"
+                app:layout_constraintTop_toBottomOf="@+id/textView50" />
+
+            <TextView
+                android:id="@+id/textView59"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="\tNT"
+                android:textColor="#18395A"
+                android:textSize="18dp"
+                app:layout_constraintStart_toEndOf="@+id/wallet_remaining"
+                app:layout_constraintTop_toTopOf="@+id/wallet_remaining" />
+
+            <TextView
+                android:id="@+id/wallet_remaining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="XX"
+                android:textColor="#18395A"
+                android:textSize="18dp"
+                app:layout_constraintStart_toEndOf="@+id/textView58"
+                app:layout_constraintTop_toTopOf="@+id/textView58" />
+
+            <TextView
+                android:id="@+id/textView57"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
                 android:gravity="center"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="預約時請確保餘額充足\n如有問題請聯繫停車場，感謝您的配合"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView50" />
+                app:layout_constraintTop_toBottomOf="@+id/textView58" />
 
             <Button
                 android:id="@+id/gotoreservation"

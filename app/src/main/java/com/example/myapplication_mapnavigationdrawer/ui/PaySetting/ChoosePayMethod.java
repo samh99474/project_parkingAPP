@@ -41,7 +41,8 @@ public class ChoosePayMethod extends AppCompatActivity {
     private RadioButton radio_btb_my_wallet ;
     private Button btn_wallet_deposit;
     private TextView choose_pay_method_show_wallet_remaining;
-    private String string_uid,  wallet_remaining;
+    private String string_uid;
+    private Long wallet_remaining;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +71,9 @@ public class ChoosePayMethod extends AppCompatActivity {
                                 if (document.exists()) {
                                     Log.e(TAG, "DocumentSnapshot data: " + document.getData());
                                     if (document.getData().get("錢包") != null) {
-                                        wallet_remaining = document.getData().get("錢包").toString();
+                                        wallet_remaining = document.getLong("錢包");
                                     }
-                                    choose_pay_method_show_wallet_remaining.setText(wallet_remaining);
+                                    choose_pay_method_show_wallet_remaining.setText(String.valueOf(wallet_remaining));
                                 }
                             } else {
                                 Log.e(TAG, "No such document");
