@@ -97,6 +97,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private Double parkinglot_lat, parkinglot_lng;
     private Long parkinglot_remain_space;
     public float zoomLevel;
+    private int number ;
 
     private EditText mSearchText;
     private ImageButton btn_mylocation;
@@ -182,8 +183,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
                                     if (zoomLevel > 13) {
                                         mymap.addMarker(m2);
-
-                                        Log.e("HomeFragment", "shit");
                                     }
 
                                 } else {
@@ -256,13 +255,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
                 if (zoomLevel > 13) {
                     mymap.addMarker(m1);
-
-                    Log.e("HomeFragment", "shit");
                 }
                 if (zoomLevel <= 13) {
                     mymap.clear();
+                }
 
-                    Log.e("HomeFragment", "fuck");
+                if(number <= 400){  //載入太多API的話，清除mymap
+                    number = number+1;
+                }else {
+                    number = 0;
+                    mymap.clear();
                 }
             }
         }
