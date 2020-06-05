@@ -132,9 +132,12 @@ public class RecordFragment extends Fragment {
                                         count++;
 
                                         //將timestamp轉成Date(Date格式整理過)，最後轉成String
-                                        record_timestamp_parkinglot_time = document.getTimestamp("預約日期時間");
-                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                        record_string_parkinglot_time = sdf.format(record_timestamp_parkinglot_time.toDate());
+                                        if(document.getTimestamp("預約日期時間") != null){
+                                            record_timestamp_parkinglot_time = document.getTimestamp("預約日期時間");
+                                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                            record_string_parkinglot_time = sdf.format(record_timestamp_parkinglot_time.toDate());
+                                        }
+
                                         record_parkinglot_name = document.getData().get("停車場").toString();
                                         record_parkinglot_address = document.getData().get("地址").toString();
                                         parkinglot_phone = document.getData().get("聯絡電話").toString();
@@ -159,11 +162,56 @@ public class RecordFragment extends Fragment {
                                         long min = mins / 60;                   //總分鐘數除以60s的取整為分鐘數
                                         //long second = mins % 60;                //總分鐘數除以60s的餘數為剩下的秒數
 
-                                        if(document.getData().get("訂單完成").toString().matches("false")){
-                                            if(document.getData().get("預約中").toString().matches("true")){
-                                                txt_is_finish = "\t預約中\t";
-                                            }
+                                        if(document.getData().get("訂單取消").toString().matches("true")){
+                                            txt_press_finish = "\t訂單已取消\t";
+                                            txt_is_using = "\t車輛未進場\t\t";
+                                            txt_is_finish = "\t預約結束\t\t";
+                                            show_diff_time = "未進場";
+                                        }else {
+                                            if(document.getData().get("訂單完成").toString().matches("false")){
+                                                if(document.getData().get("預約中").toString().matches("true")){
+                                                    txt_is_finish = "\t預約中\t";
+                                                }
 
+                                                if(diff_time_m <= 15){
+                                                    if(document.getData().get("使用中") != null) {
+                                                        if(document.getData().get("使用中").toString().matches("true")){
+                                                            txt_is_using = "\t車輛已進場\t\t";
+                                                            txt_press_finish = "\t車輛出場時將自動扣款完成訂單\t";
+                                                            show_diff_time = day + "天" + hour + "小時" + min + "分鐘";
+                                                        }else {
+                                                            txt_is_using = "\t車輛未進場\t\t";
+                                                            txt_press_finish = "\t請於預約時間後15分內進場\t";
+                                                            show_diff_time = "0";
+                                                        }
+                                                    }
+                                                }else if(diff_time_m > 15 && diff_time_m <= 30){
+                                                    if(document.getData().get("使用中") != null) {
+                                                        if(document.getData().get("使用中").toString().matches("true")){
+                                                            txt_is_using = "\t車輛已進場\t\t";
+                                                            txt_press_finish = "\t車輛出場時將自動扣款完成訂單\t";
+                                                            show_diff_time = day + "天" + hour + "小時" + min + "分鐘";
+                                                        }else {
+                                                            txt_is_using = "\t車輛未進場\t\t";
+                                                            txt_press_finish = "\t請於預約時間後30分內進場\t\n否則將自動取消訂單";
+                                                            show_diff_time = "因15分內未進場，\n已向您收取最低費用";
+                                                        }
+                                                    }
+                                                }else {
+                                                    if(document.getData().get("使用中") != null) {
+                                                        if(document.getData().get("使用中").toString().matches("true")){
+                                                            txt_is_using = "\t車輛已進場\t\t";
+                                                            txt_press_finish = "\t車輛出場時將自動扣款完成訂單\t";
+                                                            show_diff_time = day + "天" + hour + "小時" + min + "分鐘";
+                                                        }else {
+                                                            txt_press_finish = "\t訂單已取消\t";
+                                                            txt_is_using = "\t30分內未進場\t\t";
+                                                            txt_is_finish = "\t自動取消預約\t\t";
+                                                            show_diff_time = "未進場";
+                                                        }
+                                                    }
+                                                }
+/*
                                             if(document.getData().get("使用中") != null){
                                                 if(document.getData().get("使用中").toString().matches("true")){
                                                     txt_is_using = "\t車輛已進場\t\t";
@@ -172,7 +220,7 @@ public class RecordFragment extends Fragment {
                                                 }else {
                                                     if(diff_time_m >= 15){
 
-                                                        txt_press_finish = "\t訂單已完成\t";
+                                                        txt_press_finish = "\t訂單已取消\t";
                                                         txt_is_using = "\t15分內未進場\t\t";
                                                         txt_is_finish = "\t自動取消預約\t\t";
                                                         show_diff_time = "未進場";
@@ -184,12 +232,16 @@ public class RecordFragment extends Fragment {
                                                     }
                                                 }
                                             }
-                                        }else {
-                                            txt_press_finish = "\t訂單已完成\t";
-                                            txt_is_using = "\t車輛已出場\t\t";
-                                            txt_is_finish = "\t預約結束\t\t";
-                                            show_diff_time = "樹梅派FIREBSEul4";
+
+ */
+                                            }else {
+                                                txt_press_finish = "\t訂單已完成\t";
+                                                txt_is_using = "\t車輛已出場\t\t";
+                                                txt_is_finish = "\t預約結束\t\t";
+                                                show_diff_time = "樹梅派FIREBSEul4";
+                                            }
                                         }
+
 
 
                                         items_order_number.add(string_order_number);
@@ -204,10 +256,6 @@ public class RecordFragment extends Fragment {
                                         items_txt_press_finish.add(txt_press_finish);
                                         items_should_pay.add(string_should_pay);
                                         items_show_diff_time.add(show_diff_time);
-
-
-
-
 
                                     }
                                     Toast.makeText(getActivity(),"共有"+ count+ "筆資料", Toast.LENGTH_SHORT).show();
@@ -285,7 +333,8 @@ public class RecordFragment extends Fragment {
                 if(position!=-1) {
 
                     if((items_txt_is_using.get(position).matches("\t車輛未進場\t\t")) &&
-                            !(items_txt_press_finish.get(position).matches("\t訂單已完成\t"))){
+                            !(items_txt_press_finish.get(position).matches("\t訂單已完成\t")) &&
+                            !(items_txt_press_finish.get(position).matches("\t訂單已取消\t"))){
 
                         Toast.makeText(getActivity(), items_record_parkinglot_name.get(position), Toast.LENGTH_SHORT).show();
 
@@ -410,8 +459,9 @@ public class RecordFragment extends Fragment {
                                 Map<String, String> user_record_string = new HashMap<>();
                                 user_record.put("付費時間", timestamp_pay_time);
                                 user_record_boolean.put("按下結束按鈕", true);
-                                user_record_boolean.put("是否重新計費", false);
+                                //user_record_boolean.put("是否重新計費", false);
                                 user_record_boolean.put("訂單完成", true);
+                                user_record_boolean.put("訂單取消", true);
                                 user_record_string.put("應付金額",final_string_should_pay);
                                 firestore.collection("users").document(string_uid).collection("record").document(order_number).set(user_record, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -448,6 +498,21 @@ public class RecordFragment extends Fragment {
                                     }
                                 });
 
+                                firestore.collection("reservatable parkinglot").document(parkinglot_name).collection("parking grid").document(car_license)
+                                        .delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w(TAG, "Error deleting document", e);
+                                            }
+                                        });
+                                /*
                                 firestore.collection("reservatable parkinglot").document(parkinglot_name).collection("parking grid").document(car_license).set(user_record, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -459,6 +524,8 @@ public class RecordFragment extends Fragment {
                                         Log.e(TAG, "Error writing document", e);
                                     }
                                 });
+
+                                 */
                             }
                         });
                         dialog_finish_pay.show();

@@ -46,6 +46,7 @@ import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -74,8 +75,10 @@ public class ParkinglotActivity extends AppCompatActivity {
     private TextView space_temp;
 
     private String string_name, string_phone, string_email, string_uid, string_license,
-            string_reservate_time, full_description, simple_description, parkinglot_price_number, string_parkinglot_address, parkinglot_phone;
+            string_reservate_time, full_description, simple_description, parkinglot_price_number, string_parkinglot_address, parkinglot_phone,
+            parkinglot_all_user_id;
     private String parkinglot_total_space;
+    private ArrayList<String> list_parkinglot_all_user_id = new ArrayList<>();
     private Double string_wallet_remaining;
     private Long parkinglot_remain_space, number_wallet_remaining;
 
@@ -134,6 +137,37 @@ public class ParkinglotActivity extends AppCompatActivity {
         if (user != null) {
             string_email = user.getEmail();//抓取使用者email
             string_uid = user.getUid();     //抓取使用者UID
+
+            firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("parking grid")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                int count = 0;
+                                for (DocumentSnapshot document : task.getResult()) {
+                                    count++;
+
+                                    parkinglot_all_user_id = document.getData().get("User_uid").toString();
+                                    list_parkinglot_all_user_id.add(parkinglot_all_user_id);
+                                }
+
+                                if(list_parkinglot_all_user_id.toString().contains(string_uid)){
+
+                                    gotoreservation.setText("已預約過此停車場");
+                                    gotoreservation.setClickable(false);
+                                    gotoreservation.setEnabled(false);
+                                    Drawable img = getResources().getDrawable(R.drawable.ic_close_black_24dp);
+                                    img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
+                                    gotoreservation.setCompoundDrawables(img, null, null, null);
+
+                                }
+
+                            } else {
+                                Log.d("record", "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
         }
         final DocumentReference docRef_user = firestore.collection("users").document(string_uid);
 
@@ -155,7 +189,7 @@ public class ParkinglotActivity extends AppCompatActivity {
                             string_parkinglot_address = (String) document.get("地址");
                             parkinglot_phone = (String) document.get("電話");
 
-                            if (parkinglot_remain_space == 0) {
+                            if (parkinglot_remain_space <= 0) {
                                 show_parkinglot_remain.setText("車位已滿");
                                 gotoreservation.setText("車位已滿");
                                 gotoreservation.setClickable(false);
@@ -357,9 +391,10 @@ public class ParkinglotActivity extends AppCompatActivity {
                     AlertDialog.Builder dialog_reservate_send = new AlertDialog.Builder(ParkinglotActivity.this);
                     dialog_reservate_send.setTitle("確定預約");
                     dialog_reservate_send.setMessage("(一)車輛請於預約時間之後15分鐘內進場。" +
-                            "\n(二)若預約時數逾15分鐘內車輛未進場，將自動取消訂單。" +
-                            "\n(三)確定預約後，預約車牌將無法變動。" +
-                            "\n(四)車輛出場時，將自動扣款，完成訂單。" +
+                            "\n(二)若預約時數逾15分鐘至30分鐘內車輛未進場，將保留訂單，並自動扣款最低費用(依照停車場最低費率收費)。" +
+                            "\n(三)若預約時數逾30分鐘內車輛未進場，將自動取消訂單。" +
+                            "\n(四)確定預約後，預約車牌將無法變動。" +
+                            "\n(五)車輛出場時，將自動扣款，完成訂單。" +
                             "\n\n確定送出後則無法更改內容");
 
                     dialog_reservate_send.setPositiveButton("是", new DialogInterface.OnClickListener() {
@@ -424,6 +459,7 @@ public class ParkinglotActivity extends AppCompatActivity {
                             A1_record_boolean.put("按下結束按鈕", false);
                             A1_record_boolean.put("是否重新計費", false);
                             A1_record_boolean.put("訂單完成", false);
+                            A1_record_boolean.put("訂單取消", false);
                             A1_record_boolean.put("預約中", true);
                             A1_record_boolean.put("使用中", false);
                             A1_record_string.put("停車場", parkinglot_name.getText().toString());
@@ -487,10 +523,14 @@ public class ParkinglotActivity extends AppCompatActivity {
                             NotificationCompat.InboxStyle inboxStyle =
                                     new NotificationCompat.InboxStyle();
 
-                            String[] events = {"您已成功預約\t-\t" + parkinglot_name.getText().toString(),
-                                    "請在15分鐘內進場", "若有疑問可聯絡該停車場客服電話，尋求協助。"};
+                            String[] events = {
+                                    "(一)車輛請於預約時間之後15分鐘內進場。",
+                                    "(二)若預約時數逾15分鐘至30分鐘內車輛未進場，","將保留訂單，並自動扣款最低費用",
+                                    "(三)若預約時數逾30分鐘內車輛未進場，將自動取消訂單。",
+                                    "(四)車輛出場時，將自動扣款，完成訂單。"};
+
                             // Sets a title for the Inbox in expanded layout
-                            inboxStyle.setBigContentTitle("您已成功預約:");
+                            inboxStyle.setBigContentTitle("您已成功預約\t-\t" + parkinglot_name.getText().toString());
                             // Moves events into the expanded layout
                             for (int i = 0; i < events.length; i++) {
                                 inboxStyle.addLine(events[i]);
