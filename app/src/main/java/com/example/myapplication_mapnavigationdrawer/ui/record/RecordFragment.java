@@ -102,7 +102,7 @@ public class RecordFragment extends Fragment {
     private ArrayList<String> items_show_diff_time = new ArrayList<>();
 
     private Timestamp timestamp_resevate_time, timestamp_pay_time;
-    private Long should_pay;
+    private Long should_pay, parking_total_sec;
     private String string_should_pay;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -235,10 +235,17 @@ public class RecordFragment extends Fragment {
 
  */
                                             }else {
+                                                if (document.getData().get("parking_total_sec") != null) {
+                                                    parking_total_sec = document.getLong("parking_total_sec");
+                                                    long parking_day = parking_total_sec / 86400;             //86400為一天的秒數，總秒數除以一天的秒數取整為天數
+                                                    long parking_hour = (parking_total_sec % 86400) / 3600;   //總秒數除以一天的秒數後的餘數除以3600s為小時數
+                                                    long parking_mins = (parking_total_sec % 86400) % 3600;   //總秒數除以一天的秒數後的餘數除以3600s後的餘數為剩下的總分鐘數
+                                                    long parking_min = parking_mins / 60;                   //總分鐘數除以60s的取整為分鐘數
+                                                    show_diff_time = parking_day + "天" + parking_hour + "小時" + parking_min + "分鐘";
+                                                }
                                                 txt_press_finish = "\t訂單已完成\t";
                                                 txt_is_using = "\t車輛已出場\t\t";
                                                 txt_is_finish = "\t預約結束\t\t";
-                                                show_diff_time = "樹梅派FIREBSEul4";
                                             }
                                         }
 

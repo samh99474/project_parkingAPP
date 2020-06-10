@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
                     if(mViewModel.getIsSigningIn()){
                         logout.setText("登出");
                         Firbase_GetUserData();
+                        nav_header_name.setText("登入成功 歡迎使用!");
                         Log.e("signin_OK","signin_OK");return;
                     }
 
@@ -236,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
 
         startActivityForResult(intent, RC_SIGN_IN);
         mViewModel.setIsSigningIn(true);//設定成已登入
+
     }
 
     public void Firbase_GetUserData(){

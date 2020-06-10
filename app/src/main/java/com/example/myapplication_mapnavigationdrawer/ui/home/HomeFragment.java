@@ -133,11 +133,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         public void onReceive(Context context, Intent intent) {
             final MyGsonData mygsondata = new Gson().fromJson(intent.getExtras().getString("json"), MyGsonData.class);
 
-            //setUpClusterer();
+            setUpClusterer();
             for (int i = 0; i < mygsondata.data.parkinglots.length - 1; i++) {
                 //Log.e("res", mygsondata.data.parkinglots[i].id+"");
-                //MyItem offsetItem = new MyItem(mygsondata.data.parkinglots[i].lat, mygsondata.data.parkinglots[i].lng);
-                //mClusterManager.addItem(offsetItem);
+                MyItem offsetItem = new MyItem(mygsondata.data.parkinglots[i].lat, mygsondata.data.parkinglots[i].lng);
+                mClusterManager.addItem(offsetItem);
 
                 final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
                 final DocumentReference docRef_parkinglot_info = firestore.collection("reservatable parkinglot").document("北科大APP特約停車場").collection("info").document("detail_info");
@@ -164,6 +164,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                                     reservatable = (Boolean) document.get("reservatable");
                                     parkinglot_lat = (Double) document.get("lat");
                                     parkinglot_lng = (Double) document.get("lng");
+
 
                                     BitmapDrawable bitmapdraw2 = (BitmapDrawable) getResources().getDrawable(R.mipmap.loticon_reservatable);
                                     Bitmap b2 = bitmapdraw2.getBitmap();
@@ -261,8 +262,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
                 //m1.icon(BitmapDescriptorFactory.fromResource(smallMarker));
                 m1.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-
-
+                mymap.addMarker(m1);
+/*
                 if (zoomLevel > 13) {
                     mymap.addMarker(m1);
                 }
@@ -277,6 +278,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     mymap.clear();
                     mymap.addMarker(m1);
                 }
+
+ */
 
 
             }

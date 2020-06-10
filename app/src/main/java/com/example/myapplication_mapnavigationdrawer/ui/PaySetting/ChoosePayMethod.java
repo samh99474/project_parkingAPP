@@ -87,7 +87,7 @@ public class ChoosePayMethod extends AppCompatActivity {
 
 
             //資料更新時，刷新頁面
-            user_db.collection("users").document(string_uid).collection("record")
+            user_db.collection("users")
                     .addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot querySnapshot,
