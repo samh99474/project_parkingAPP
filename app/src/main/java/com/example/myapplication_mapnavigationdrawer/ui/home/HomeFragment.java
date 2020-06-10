@@ -65,6 +65,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -107,6 +108,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     // private AppCompatActivity;
     private final static int REQUEST_PERMISSIONS = 1;
 
+    private ClusterManager<MyItem> mClusterManager;
+
 
 
     @Override
@@ -133,11 +136,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         public void onReceive(Context context, Intent intent) {
             final MyGsonData mygsondata = new Gson().fromJson(intent.getExtras().getString("json"), MyGsonData.class);
 
-            setUpClusterer();
+
             for (int i = 0; i < mygsondata.data.parkinglots.length - 1; i++) {
                 //Log.e("res", mygsondata.data.parkinglots[i].id+"");
-                MyItem offsetItem = new MyItem(mygsondata.data.parkinglots[i].lat, mygsondata.data.parkinglots[i].lng);
-                mClusterManager.addItem(offsetItem);
+                //MyItem offsetItem = new MyItem(mygsondata.data.parkinglots[i].lat, mygsondata.data.parkinglots[i].lng);
+                //mClusterManager.addItem(offsetItem);
 
                 final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
                 final DocumentReference docRef_parkinglot_info = firestore.collection("reservatable parkinglot").document("北科大APP特約停車場").collection("info").document("detail_info");
@@ -262,8 +265,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
                 //m1.icon(BitmapDescriptorFactory.fromResource(smallMarker));
                 m1.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-                mymap.addMarker(m1);
-/*
+
+
                 if (zoomLevel > 13) {
                     mymap.addMarker(m1);
                 }
@@ -278,11 +281,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     mymap.clear();
                     mymap.addMarker(m1);
                 }
-
- */
-
-
             }
+            //mClusterManager.cluster();
         }
         private void setUpClusterer() {
             // Position the map.
@@ -520,6 +520,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         mymap = map;
         mymap.setMyLocationEnabled ( true );
         mymap.getUiSettings().setMyLocationButtonEnabled(false);    // delete default button(my location button)
+        //setUpClusterer();
+        //mClusterManager.setRenderer(new MarkerClusterRenderer(getActivity(), mymap, mClusterManager));
 
         final MarkerOptions m1 = new MarkerOptions ();
 
@@ -559,6 +561,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 CameraPosition test = mymap.getCameraPosition();
                 onActivityCreated(null,test.target.latitude,test.target.longitude);
                 zoomLevel = map.getCameraPosition().zoom;
+
+                if (zoomLevel <= 13) {
+                    Toast.makeText(getActivity(), "放大地圖顯示停車場", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -697,6 +703,27 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+/*
+    public class MarkerClusterRenderer extends DefaultClusterRenderer<MyItem> {
 
+        public MarkerClusterRenderer(Context context, GoogleMap map,
+                                     ClusterManager<MyItem> clusterManager) {
+            super(context, map, clusterManager);
+        }
+
+        @Override
+        protected void onBeforeClusterItemRendered(MyItem item, MarkerOptions markerOptions) {
+            // use this to make your change to the marker option
+            // for the marker before it gets render on the map
+            int height = 120;
+            int width = 120;
+            BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.mipmap.loticon);
+            Bitmap b=bitmapdraw.getBitmap();
+            Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+        }
+    }
+
+ */
 
 }
