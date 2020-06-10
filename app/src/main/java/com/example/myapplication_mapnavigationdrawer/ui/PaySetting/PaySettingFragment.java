@@ -80,7 +80,7 @@ public class PaySettingFragment extends Fragment {
                                 }else {
                                     wallet_remaining = Long.valueOf(0);
                                     Map<String, Object> user_wallet = new HashMap<>();
-                                    user_wallet.put("錢包","0");
+                                    user_wallet.put("錢包",0);
                                     user_db.collection("users").document(string_uid).set(user_wallet, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {//固定文件ID
 
                                         @Override

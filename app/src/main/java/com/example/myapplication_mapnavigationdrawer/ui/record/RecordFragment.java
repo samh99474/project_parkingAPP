@@ -169,13 +169,13 @@ public class RecordFragment extends Fragment {
                                             show_diff_time = "未進場";
                                         }else {
                                             if(document.getData().get("訂單完成").toString().matches("false")){
-                                                if(document.getData().get("預約中").toString().matches("true")){
+                                                if(document.getData().get("reservating").toString().matches("true")){
                                                     txt_is_finish = "\t預約中\t";
                                                 }
 
                                                 if(diff_time_m <= 15){
-                                                    if(document.getData().get("使用中") != null) {
-                                                        if(document.getData().get("使用中").toString().matches("true")){
+                                                    if(document.getData().get("using") != null) {
+                                                        if(document.getData().get("using").toString().matches("true")){
                                                             txt_is_using = "\t車輛已進場\t\t";
                                                             txt_press_finish = "\t車輛出場時將自動扣款完成訂單\t";
                                                             show_diff_time = day + "天" + hour + "小時" + min + "分鐘";
@@ -186,8 +186,8 @@ public class RecordFragment extends Fragment {
                                                         }
                                                     }
                                                 }else if(diff_time_m > 15 && diff_time_m <= 30){
-                                                    if(document.getData().get("使用中") != null) {
-                                                        if(document.getData().get("使用中").toString().matches("true")){
+                                                    if(document.getData().get("using") != null) {
+                                                        if(document.getData().get("using").toString().matches("true")){
                                                             txt_is_using = "\t車輛已進場\t\t";
                                                             txt_press_finish = "\t車輛出場時將自動扣款完成訂單\t";
                                                             show_diff_time = day + "天" + hour + "小時" + min + "分鐘";
@@ -198,8 +198,8 @@ public class RecordFragment extends Fragment {
                                                         }
                                                     }
                                                 }else {
-                                                    if(document.getData().get("使用中") != null) {
-                                                        if(document.getData().get("使用中").toString().matches("true")){
+                                                    if(document.getData().get("using") != null) {
+                                                        if(document.getData().get("using").toString().matches("true")){
                                                             txt_is_using = "\t車輛已進場\t\t";
                                                             txt_press_finish = "\t車輛出場時將自動扣款完成訂單\t";
                                                             show_diff_time = day + "天" + hour + "小時" + min + "分鐘";

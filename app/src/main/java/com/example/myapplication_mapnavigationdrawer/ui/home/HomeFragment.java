@@ -63,6 +63,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
+import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -105,6 +107,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     // private AppCompatActivity;
     private final static int REQUEST_PERMISSIONS = 1;
 
+
+
     @Override
     public void onRequestPermissionsResult(int requsetCode, String
             permissions[], int[] grantResults) {
@@ -124,17 +128,21 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public BroadcastReceiver receiver = new BroadcastReceiver() {
+        private ClusterManager<MyItem> mClusterManager;
         @Override
         public void onReceive(Context context, Intent intent) {
             final MyGsonData mygsondata = new Gson().fromJson(intent.getExtras().getString("json"), MyGsonData.class);
 
+            //setUpClusterer();
             for (int i = 0; i < mygsondata.data.parkinglots.length - 1; i++) {
                 //Log.e("res", mygsondata.data.parkinglots[i].id+"");
+                //MyItem offsetItem = new MyItem(mygsondata.data.parkinglots[i].lat, mygsondata.data.parkinglots[i].lng);
+                //mClusterManager.addItem(offsetItem);
 
                 final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
                 final DocumentReference docRef_parkinglot_info = firestore.collection("reservatable parkinglot").document("北科大APP特約停車場").collection("info").document("detail_info");
 
-                if(docRef_parkinglot_info != null){
+                if(docRef_parkinglot_info != null) {
                     docRef_parkinglot_info.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {  //抓取parking grid/A1 是否使用中或已被預約
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -164,19 +172,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                                     MarkerOptions m2 = new MarkerOptions();
                                     m2.position(new LatLng(parkinglot_lat, parkinglot_lng));
                                     m2.title("北科大APP特約停車場");
-                                    m2.snippet(parkinglot_total_space + ","+
-                                            parkinglot_remain_space + ","+
-                                            simple_description + ","+
-                                            full_description + ","+
-                                            String.valueOf(is_opening) + ","+
-                                            today_service_time + ","+
-                                            parkinglot_address + ","+
-                                            parkinglot_phone + ","+
-                                            String.valueOf(parkinglot_lat)+ ","+
-                                            String.valueOf(parkinglot_lng)+ ","+
-                                            API_id+ ","+
-                                            more_detail_info+ ","+
-                                            String.valueOf(reservatable)+ ",");
+                                    m2.snippet(parkinglot_total_space + "," +
+                                            parkinglot_remain_space + "," +
+                                            simple_description + "," +
+                                            full_description + "," +
+                                            String.valueOf(is_opening) + "," +
+                                            today_service_time + "," +
+                                            parkinglot_address + "," +
+                                            parkinglot_phone + "," +
+                                            String.valueOf(parkinglot_lat) + "," +
+                                            String.valueOf(parkinglot_lng) + "," +
+                                            API_id + "," +
+                                            more_detail_info + "," +
+                                            String.valueOf(reservatable) + ",");
                                     m2.draggable(true);
                                     m2.icon(BitmapDescriptorFactory.fromBitmap(smallMarker2));
                                     mymap.addMarker(m2);
@@ -226,6 +234,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 }
 
 
+
 /*
                 if(mygsondata.data.parkinglots[i].total_lots == -1){
                         m1.snippet("●總車位:  無資訊");
@@ -253,6 +262,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 //m1.icon(BitmapDescriptorFactory.fromResource(smallMarker));
                 m1.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
 
+
                 if (zoomLevel > 13) {
                     mymap.addMarker(m1);
                 }
@@ -265,17 +275,35 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 }else {
                     number = 0;
                     mymap.clear();
+                    mymap.addMarker(m1);
                 }
+
+
             }
         }
+        private void setUpClusterer() {
+            // Position the map.
+            //mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
+
+            // Initialize the manager with the context and the map.
+            // (Activity extends context, so we can pass 'this' in the constructor.)
+            mClusterManager = new ClusterManager<MyItem>(getActivity(), mymap);
+
+            // Point the map's listeners at the listeners implemented by the cluster
+            // manager.
+            mymap.setOnCameraIdleListener(mClusterManager);
+            mymap.setOnMarkerClickListener(mClusterManager);
+
+            // Add cluster items (markers) to the cluster manager.
+
+        }
+
     };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getActivity() != null)
-            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver,
-                    new IntentFilter("MyMessage"));
+
         zoomLevel = 7;
 
     }
@@ -350,7 +378,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
+        if (getActivity() != null)
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver,
+                    new IntentFilter("MyMessage"));
         homeViewModel =
                 ViewModelProviders.of(getActivity()).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.activity_main2, container, false);
@@ -632,4 +662,38 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         super.onDestroy();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
     }
+
+    public class MyItem implements ClusterItem {
+        private final LatLng mPosition;
+        private String mTitle;
+        private String mSnippet;
+
+        public MyItem(double lat, double lng) {
+            mPosition = new LatLng(lat, lng);
+        }
+
+        public MyItem(double lat, double lng, String title, String snippet) {
+            mPosition = new LatLng(lat, lng);
+            mTitle = title;
+            mSnippet = snippet;
+        }
+
+        @Override
+        public LatLng getPosition() {
+            return mPosition;
+        }
+
+        @Override
+        public String getTitle() {
+            return mTitle;
+        }
+
+        @Override
+        public String getSnippet() {
+            return mSnippet;
+        }
+    }
+
+
+
 }

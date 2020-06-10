@@ -406,8 +406,8 @@ public class ParkinglotActivity extends AppCompatActivity {
                             Map<String, Timestamp> A1info_timestamp = new HashMap<>();
                             A1info_timestamp.put("預約日期時間", timestamp);
 
-                            A1info_boolean.put("預約中", true);
-                            A1info_boolean.put("使用中", false);
+                            A1info_boolean.put("reservating", true);
+                            A1info_boolean.put("using", false);
                             A1info_string.put("姓名", Text_name.getText().toString());
                             A1info_string.put("手機", Text_phone.getText().toString());
                             A1info_string.put("User_uid", string_uid);
@@ -452,16 +452,18 @@ public class ParkinglotActivity extends AppCompatActivity {
 
                             ////////寫入user預約紀錄////
                             Map<String, Boolean> A1_record_boolean = new HashMap<>();
+                            Map<String, Object> A1_record_number = new HashMap<>();
                             Map<String, Object> A1_record_string = new HashMap<>();
                             Map<String, Timestamp> A1record_timestamp = new HashMap<>();
                             A1record_timestamp.put("預約日期時間", timestamp);
 
+                            A1_record_number.put("parking_total_sec",0);
                             A1_record_boolean.put("按下結束按鈕", false);
                             A1_record_boolean.put("是否重新計費", false);
                             A1_record_boolean.put("訂單完成", false);
                             A1_record_boolean.put("訂單取消", false);
-                            A1_record_boolean.put("預約中", true);
-                            A1_record_boolean.put("使用中", false);
+                            A1_record_boolean.put("reservating", true);
+                            A1_record_boolean.put("using", false);
                             A1_record_string.put("停車場", parkinglot_name.getText().toString());
                             A1_record_string.put("費率", parkinglot_price.getText().toString());
                             A1_record_string.put("地址", parkinglot_address.getText().toString());
@@ -471,6 +473,19 @@ public class ParkinglotActivity extends AppCompatActivity {
                             A1_record_string.put("應付金額", "0");
                             //A1info_string.put("結束時間日期","");
                             //A1info_string.put("應付金額","");
+                            firestore.collection("users").document(string_uid).collection("record").document(string_order_number).set(A1_record_number, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.e(TAG, "successfully write to user record!");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e(TAG, "Error writing document", e);
+                                }
+                            });
+
+
                             firestore.collection("users").document(string_uid).collection("record").document(string_order_number).set(A1_record_boolean, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
