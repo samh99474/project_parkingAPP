@@ -390,11 +390,10 @@ public class ParkinglotActivity extends AppCompatActivity {
 
                     AlertDialog.Builder dialog_reservate_send = new AlertDialog.Builder(ParkinglotActivity.this);
                     dialog_reservate_send.setTitle("確定預約");
-                    dialog_reservate_send.setMessage("(一)車輛請於預約時間之後15分鐘內進場。" +
-                            "\n(二)若預約時數逾15分鐘至30分鐘內車輛未進場，將保留訂單，並自動扣款最低費用(依照停車場最低費率收費)。" +
-                            "\n(三)若預約時數逾30分鐘內車輛未進場，將自動取消訂單。" +
-                            "\n(四)確定預約後，預約車牌將無法變動。" +
-                            "\n(五)車輛出場時，將自動扣款，完成訂單。" +
+                    dialog_reservate_send.setMessage("(一)車輛請於預約時間之後30分鐘內進場。" +
+                            "\n(二)若預約時數逾30分鐘內車輛未進場，將自動取消訂單。" +
+                            "\n(三)確定預約後，預約車牌將無法變動。" +
+                            "\n(四)車輛出場時，將自動扣款，完成訂單。" +
                             "\n\n確定送出後則無法更改內容");
 
                     dialog_reservate_send.setPositiveButton("是", new DialogInterface.OnClickListener() {
@@ -464,6 +463,7 @@ public class ParkinglotActivity extends AppCompatActivity {
                             A1_record_boolean.put("訂單取消", false);
                             A1_record_boolean.put("reservating", true);
                             A1_record_boolean.put("using", false);
+                            A1_record_boolean.put("overtime_thirty", false);
                             A1_record_string.put("停車場", parkinglot_name.getText().toString());
                             A1_record_string.put("費率", parkinglot_price.getText().toString());
                             A1_record_string.put("地址", parkinglot_address.getText().toString());
@@ -539,10 +539,9 @@ public class ParkinglotActivity extends AppCompatActivity {
                                     new NotificationCompat.InboxStyle();
 
                             String[] events = {
-                                    "(一)車輛請於預約時間之後15分鐘內進場。",
-                                    "(二)若預約時數逾15分鐘至30分鐘內車輛未進場，","將保留訂單，並自動扣款最低費用",
-                                    "(三)若預約時數逾30分鐘內車輛未進場，將自動取消訂單。",
-                                    "(四)車輛出場時，將自動扣款，完成訂單。"};
+                                    "(一)車輛請於預約時間之後30分鐘內進場。",
+                                    "(二)若預約時數逾30分鐘內車輛未進場，將自動取消訂單。",
+                                    "(三)車輛出場時，將自動扣款，完成訂單。"};
 
                             // Sets a title for the Inbox in expanded layout
                             inboxStyle.setBigContentTitle("您已成功預約\t-\t" + parkinglot_name.getText().toString());
@@ -554,7 +553,7 @@ public class ParkinglotActivity extends AppCompatActivity {
                             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), channelId)
                                     .setSmallIcon(R.mipmap.loticon)//R.mipmap.ic_launcher
                                     .setContentTitle("您已成功預約:")
-                                    .setContentText("您已成功預約\t-\t" + parkinglot_name.getText().toString() + "\t請在15分鐘內進場，若有疑問可聯絡該停車場客服電話，尋求協助。")
+                                    .setContentText("您已成功預約\t-\t" + parkinglot_name.getText().toString() + "\t請在30分鐘內進場，若有疑問可聯絡該停車場客服電話，尋求協助。")
                                     .setStyle(inboxStyle)
                                     .setVibrate(new long[]{100, 250})
                                     .setLights(Color.YELLOW, 500, 5000)

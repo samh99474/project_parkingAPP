@@ -163,16 +163,38 @@ public class RecordFragment extends Fragment {
                                         //long second = mins % 60;                //總分鐘數除以60s的餘數為剩下的秒數
 
                                         if(document.getData().get("訂單取消").toString().matches("true")){
-                                            txt_press_finish = "\t訂單已取消\t";
-                                            txt_is_using = "\t車輛未進場\t\t";
-                                            txt_is_finish = "\t預約結束\t\t";
-                                            show_diff_time = "未進場";
+                                            if(document.getData().get("overtime_thirty").toString().matches("true")){
+                                                txt_is_using = "\t30分內未進場\t\t";
+                                                txt_press_finish = "\t訂單已取消\t";
+                                                txt_is_finish = "\t自動取消預約\t\t";
+                                                show_diff_time = "30分內未進場";
+                                            }else {
+                                                txt_press_finish = "\t訂單已取消\t";
+                                                txt_is_using = "\t車輛未進場\t\t";
+                                                txt_is_finish = "\t預約結束\t\t";
+                                                show_diff_time = "未進場";
+                                            }
+
                                         }else {
                                             if(document.getData().get("訂單完成").toString().matches("false")){
                                                 if(document.getData().get("reservating").toString().matches("true")){
                                                     txt_is_finish = "\t預約中\t";
                                                 }
 
+                                                if(document.getData().get("using") != null) {
+                                                    if(document.getData().get("using").toString().matches("true")){
+                                                        txt_is_using = "\t車輛已進場\t\t";
+                                                        txt_press_finish = "\t車輛出場時將自動扣款完成訂單\t";
+                                                        show_diff_time = day + "天" + hour + "小時" + min + "分鐘";
+                                                    }else {
+                                                        txt_is_using = "\t車輛未進場\t\t";
+                                                        txt_press_finish = "\t請於預約時間後30分內進場\t\n否則將自動取消訂單";
+                                                        show_diff_time = "進場後，將開始計時";
+                                                    }
+                                                }
+
+
+/*
                                                 if(diff_time_m <= 15){
                                                     if(document.getData().get("using") != null) {
                                                         if(document.getData().get("using").toString().matches("true")){
@@ -211,6 +233,8 @@ public class RecordFragment extends Fragment {
                                                         }
                                                     }
                                                 }
+
+ */
 /*
                                             if(document.getData().get("使用中") != null){
                                                 if(document.getData().get("使用中").toString().matches("true")){
