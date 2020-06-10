@@ -463,7 +463,8 @@ public class ParkinglotActivity extends AppCompatActivity {
                             A1_record_boolean.put("訂單取消", false);
                             A1_record_boolean.put("reservating", true);
                             A1_record_boolean.put("using", false);
-                            A1_record_boolean.put("overtime_thirty", false);
+                            A1_record_boolean.put("had_notified_car_in", false);
+                            A1_record_boolean.put("had_notified_car_out", false);
                             A1_record_string.put("停車場", parkinglot_name.getText().toString());
                             A1_record_string.put("費率", parkinglot_price.getText().toString());
                             A1_record_string.put("地址", parkinglot_address.getText().toString());

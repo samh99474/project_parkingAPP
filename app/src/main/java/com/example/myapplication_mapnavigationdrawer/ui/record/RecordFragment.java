@@ -186,6 +186,68 @@ public class RecordFragment extends Fragment {
                                                         txt_is_using = "\t車輛已進場\t\t";
                                                         txt_press_finish = "\t車輛出場時將自動扣款完成訂單\t";
                                                         show_diff_time = day + "天" + hour + "小時" + min + "分鐘";
+
+                                                        //曾經沒接收過進場通知
+                                                        if(document.getData().get("had_notified_car_in").toString().matches("false")){
+                                                            //更改值firebase
+                                                            Map<String, Boolean> user_record_notify_car_in_boolean = new HashMap<>();
+                                                            user_record_notify_car_in_boolean.put("had_notified_car_in", true);
+
+                                                            firestore.collection("users").document(string_uid).collection("record").document(string_order_number).set(user_record_notify_car_in_boolean, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Log.e(TAG, "successfully write to user record!");
+                                                                }
+                                                            }).addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Log.e(TAG, "Error writing document", e);
+                                                                }
+                                                            });
+
+                                                            //跳通知已進場
+                                                            NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                                                            int notificationId = createID();
+                                                            String channelId = "channel-id";
+                                                            String channelName = "停車場預約APP";
+                                                            int importance = NotificationManager.IMPORTANCE_HIGH;
+
+                                                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                                                NotificationChannel mChannel = new NotificationChannel(
+                                                                        channelId, channelName, importance);
+                                                                notificationManager.createNotificationChannel(mChannel);
+                                                            }
+
+                                                            NotificationCompat.InboxStyle inboxStyle =
+                                                                    new NotificationCompat.InboxStyle();
+
+                                                            String[] events = {"車輛已進場，車輛出場時將自動扣款完成訂單"};
+                                                            // Sets a title for the Inbox in expanded layout
+                                                            inboxStyle.setBigContentTitle("車輛已進場:");
+                                                            // Moves events into the expanded layout
+                                                            for (int i=0; i < events.length; i++) {
+                                                                inboxStyle.addLine(events[i]);
+                                                            }
+
+                                                            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(root.getContext(), channelId)
+                                                                    .setSmallIcon(R.mipmap.loticon)//R.mipmap.ic_launcher
+                                                                    .setContentTitle("車輛已進場:")
+                                                                    .setContentText("車輛已進場，車輛出場時將自動扣款完成訂單")
+                                                                    .setStyle(inboxStyle)
+                                                                    .setVibrate(new long[]{100, 250})
+                                                                    .setLights(Color.YELLOW, 500, 5000)
+                                                                    .setAutoCancel(true)
+                                                                    .setColor(ContextCompat.getColor(root.getContext(), R.color.colorPrimary));
+
+                                                            TaskStackBuilder stackBuilder = TaskStackBuilder.create(root.getContext());
+                                                            stackBuilder.addNextIntent(new Intent(getActivity(), MainActivity.class));
+                                                            Intent myintent = new Intent(getActivity(), MainActivity.class);
+                                                            PendingIntent contentIntent = PendingIntent.getActivity(getActivity(), 0,
+                                                                    myintent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                                            mBuilder.setContentIntent(contentIntent);
+
+                                                            notificationManager.notify(notificationId, mBuilder.build());
+                                                        }
                                                     }else {
                                                         txt_is_using = "\t車輛未進場\t\t";
                                                         txt_press_finish = "\t請於預約時間後30分內進場\t\n否則將自動取消訂單";
@@ -270,6 +332,68 @@ public class RecordFragment extends Fragment {
                                                 txt_press_finish = "\t訂單已完成\t";
                                                 txt_is_using = "\t車輛已出場\t\t";
                                                 txt_is_finish = "\t預約結束\t\t";
+
+                                                //曾經沒接收過出場通知
+                                                if(document.getData().get("had_notified_car_out").toString().matches("false")){
+                                                    //更改值firebase
+                                                    Map<String, Boolean> user_record_notify_car_out_boolean = new HashMap<>();
+                                                    user_record_notify_car_out_boolean.put("had_notified_car_out", true);
+
+                                                    firestore.collection("users").document(string_uid).collection("record").document(string_order_number).set(user_record_notify_car_out_boolean, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            Log.e(TAG, "successfully write to user record!");
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.e(TAG, "Error writing document", e);
+                                                        }
+                                                    });
+
+                                                    //跳通知已出場
+                                                    NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                                                    int notificationId = createID();
+                                                    String channelId = "channel-id";
+                                                    String channelName = "停車場預約APP";
+                                                    int importance = NotificationManager.IMPORTANCE_HIGH;
+
+                                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                                        NotificationChannel mChannel = new NotificationChannel(
+                                                                channelId, channelName, importance);
+                                                        notificationManager.createNotificationChannel(mChannel);
+                                                    }
+
+                                                    NotificationCompat.InboxStyle inboxStyle =
+                                                            new NotificationCompat.InboxStyle();
+
+                                                    String[] events = {"車輛已出場，已自動扣款完成訂單"};
+                                                    // Sets a title for the Inbox in expanded layout
+                                                    inboxStyle.setBigContentTitle("車輛已出場:");
+                                                    // Moves events into the expanded layout
+                                                    for (int i=0; i < events.length; i++) {
+                                                        inboxStyle.addLine(events[i]);
+                                                    }
+
+                                                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(root.getContext(), channelId)
+                                                            .setSmallIcon(R.mipmap.loticon)//R.mipmap.ic_launcher
+                                                            .setContentTitle("車輛已出場:")
+                                                            .setContentText("車輛已出場，已自動扣款完成訂單")
+                                                            .setStyle(inboxStyle)
+                                                            .setVibrate(new long[]{100, 250})
+                                                            .setLights(Color.YELLOW, 500, 5000)
+                                                            .setAutoCancel(true)
+                                                            .setColor(ContextCompat.getColor(root.getContext(), R.color.colorPrimary));
+
+                                                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(root.getContext());
+                                                    stackBuilder.addNextIntent(new Intent(getActivity(), MainActivity.class));
+                                                    Intent myintent = new Intent(getActivity(), MainActivity.class);
+                                                    PendingIntent contentIntent = PendingIntent.getActivity(getActivity(), 0,
+                                                            myintent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                                    mBuilder.setContentIntent(contentIntent);
+
+                                                    notificationManager.notify(notificationId, mBuilder.build());
+                                            }
                                             }
                                         }
 
@@ -289,7 +413,7 @@ public class RecordFragment extends Fragment {
                                         items_show_diff_time.add(show_diff_time);
 
                                     }
-                                    Toast.makeText(getActivity(),"共有"+ count+ "筆資料", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getActivity(),"共有"+ count+ "筆資料", Toast.LENGTH_SHORT).show();
 
                                     RecordAdapter recordAdapter = new
                                             RecordAdapter(getActivity(), items_order_number, items_record_parkinglot_time, items_txt_is_finish, items_txt_is_using, items_record_parkinglot_name,
