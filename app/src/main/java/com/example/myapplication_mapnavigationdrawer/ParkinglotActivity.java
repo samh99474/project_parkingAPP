@@ -592,6 +592,7 @@ public class ParkinglotActivity extends AppCompatActivity {
 
                         }
                     });
+                    dialog_reservate_send.show();
                 }
             }
         });
