@@ -221,9 +221,10 @@ public class RecordFragment extends Fragment {
                                                             NotificationCompat.InboxStyle inboxStyle =
                                                                     new NotificationCompat.InboxStyle();
 
-                                                            String[] events = {"車輛已進場，車輛出場時將自動扣款完成訂單"};
+                                                            String[] events = {record_parkinglot_name+"\t-\t" + record_license,
+                                                                    "車輛已進場，車輛出場時將自動扣款完成訂單"};
                                                             // Sets a title for the Inbox in expanded layout
-                                                            inboxStyle.setBigContentTitle("車輛已進場:");
+                                                            inboxStyle.setBigContentTitle(record_parkinglot_name+"\t-\t" + record_license+"車輛已進場:");
                                                             // Moves events into the expanded layout
                                                             for (int i=0; i < events.length; i++) {
                                                                 inboxStyle.addLine(events[i]);
@@ -231,8 +232,8 @@ public class RecordFragment extends Fragment {
 
                                                             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(root.getContext(), channelId)
                                                                     .setSmallIcon(R.mipmap.loticon)//R.mipmap.ic_launcher
-                                                                    .setContentTitle("車輛已進場:")
-                                                                    .setContentText("車輛已進場，車輛出場時將自動扣款完成訂單")
+                                                                    .setContentTitle(record_parkinglot_name+"\t-\t" + record_license+"車輛已進場:")
+                                                                    .setContentText(record_parkinglot_name+"\t-\t" + record_license+"車輛已進場，車輛出場時將自動扣款完成訂單")
                                                                     .setStyle(inboxStyle)
                                                                     .setVibrate(new long[]{100, 250})
                                                                     .setLights(Color.YELLOW, 500, 5000)
@@ -367,9 +368,10 @@ public class RecordFragment extends Fragment {
                                                     NotificationCompat.InboxStyle inboxStyle =
                                                             new NotificationCompat.InboxStyle();
 
-                                                    String[] events = {"車輛已出場，已自動扣款完成訂單"};
+                                                    String[] events = {record_parkinglot_name+"\t-\t" + record_license,
+                                                            "車輛已出場，已自動扣款完成訂單"};
                                                     // Sets a title for the Inbox in expanded layout
-                                                    inboxStyle.setBigContentTitle("車輛已出場:");
+                                                    inboxStyle.setBigContentTitle(record_parkinglot_name+"\t-\t" + record_license+"車輛已出場:");
                                                     // Moves events into the expanded layout
                                                     for (int i=0; i < events.length; i++) {
                                                         inboxStyle.addLine(events[i]);
@@ -377,8 +379,8 @@ public class RecordFragment extends Fragment {
 
                                                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(root.getContext(), channelId)
                                                             .setSmallIcon(R.mipmap.loticon)//R.mipmap.ic_launcher
-                                                            .setContentTitle("車輛已出場:")
-                                                            .setContentText("車輛已出場，已自動扣款完成訂單")
+                                                            .setContentTitle(record_parkinglot_name+"\t-\t" + record_license+"車輛已出場:")
+                                                            .setContentText(record_parkinglot_name+"\t-\t" + record_license+"車輛已出場，已自動扣款完成訂單")
                                                             .setStyle(inboxStyle)
                                                             .setVibrate(new long[]{100, 250})
                                                             .setLights(Color.YELLOW, 500, 5000)
@@ -700,11 +702,16 @@ public class RecordFragment extends Fragment {
     }
 
     private void reflash_rocord_fragment() {
-        RecordFragment recordFragment = new RecordFragment();
-        getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.nav_host_fragment, recordFragment)
-                .addToBackStack("TAG_TO_FRAGMENT").commit();
+        try {
+            RecordFragment recordFragment = new RecordFragment();
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.nav_host_fragment, recordFragment)
+                    .addToBackStack("TAG_TO_FRAGMENT").commit();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     private void createNotificationChannel(){

@@ -39,6 +39,7 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -132,14 +133,19 @@ public class PaySettingFragment extends Fragment {
 
                                 switch (change.getType()){
                                     case MODIFIED:
-                                        //Toast.makeText(getActivity(),"資料修改更新"+id+"\nold:"+oldIndex+"\nnew:"+newIndex, Toast.LENGTH_SHORT).show();
+                                        try {
+                                            //Toast.makeText(getActivity(),"資料修改更新"+id+"\nold:"+oldIndex+"\nnew:"+newIndex, Toast.LENGTH_SHORT).show();
 
-                                        //刷新refresh Fragment
-                                        PaySettingFragment paySettingFragment = new PaySettingFragment();
-                                        getFragmentManager()
-                                                .beginTransaction()
-                                                .replace(R.id.nav_host_fragment, paySettingFragment)
-                                                .addToBackStack("TAG_TO_FRAGMENT").commit();
+                                            //刷新refresh Fragment
+                                            PaySettingFragment paySettingFragment = new PaySettingFragment();
+                                            getFragmentManager()
+                                                    .beginTransaction()
+                                                    .replace(R.id.nav_host_fragment, paySettingFragment)
+                                                    .addToBackStack("TAG_TO_FRAGMENT").commit();
+                                        }catch (Exception e0){
+                                            e0.printStackTrace();
+                                        }
+
 
                                         break;
                                         /*
@@ -154,6 +160,7 @@ public class PaySettingFragment extends Fragment {
                             }
                         }
                     });
+
         }
 
         btn_setting_wallet.setOnClickListener(new View.OnClickListener() {

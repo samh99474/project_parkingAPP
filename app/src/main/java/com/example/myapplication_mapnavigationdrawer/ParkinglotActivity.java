@@ -463,6 +463,7 @@ public class ParkinglotActivity extends AppCompatActivity {
                             A1_record_boolean.put("訂單取消", false);
                             A1_record_boolean.put("reservating", true);
                             A1_record_boolean.put("using", false);
+                            A1_record_boolean.put("overtime_thirty", false);
                             A1_record_boolean.put("had_notified_car_in", false);
                             A1_record_boolean.put("had_notified_car_out", false);
                             A1_record_string.put("停車場", parkinglot_name.getText().toString());
@@ -591,7 +592,6 @@ public class ParkinglotActivity extends AppCompatActivity {
 
                         }
                     });
-                    dialog_reservate_send.show();
                 }
             }
         });
@@ -631,15 +631,19 @@ public class ParkinglotActivity extends AppCompatActivity {
 
                             switch (change.getType()) {
                                 case MODIFIED:
-                                    //Toast.makeText(getActivity(),"資料修改更新"+id+"\nold:"+oldIndex+"\nnew:"+newIndex, Toast.LENGTH_SHORT).show();
+                                    try {
+                                        //Toast.makeText(getActivity(),"資料修改更新"+id+"\nold:"+oldIndex+"\nnew:"+newIndex, Toast.LENGTH_SHORT).show();
+                                        //刷新refresh Activity
+                                        Intent intent = new Intent(ParkinglotActivity.this,
+                                                ParkinglotActivity.class);
+                                        Bundle b = new Bundle();    //資訊放入Bundle
+                                        b.putString("string_parkinglot_name",parkinglot_name.getText().toString());
+                                        intent.putExtras(b);
+                                        startActivity(intent);
 
-                                    //刷新refresh Activity
-                                    Intent intent = new Intent(ParkinglotActivity.this,
-                                            ParkinglotActivity.class);
-                                    Bundle b = new Bundle();    //資訊放入Bundle
-                                    b.putString("string_parkinglot_name",parkinglot_name.getText().toString());
-                                    intent.putExtras(b);
-                                    startActivity(intent);
+                                    }catch (Exception e1){
+                                        e1.printStackTrace();
+                                    }
 
                                     break;
                                 /*
@@ -654,7 +658,6 @@ public class ParkinglotActivity extends AppCompatActivity {
                         }
                     }
                 });
-
 
 
     }

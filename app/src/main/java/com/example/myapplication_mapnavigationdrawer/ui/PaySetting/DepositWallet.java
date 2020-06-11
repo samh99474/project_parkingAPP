@@ -142,6 +142,7 @@ public class DepositWallet extends AppCompatActivity {
                                     btb_deposit.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
+                                            Toast.makeText(DepositWallet.this, "您已成功加值"+choose_price+"\n"+choose_method, Toast.LENGTH_LONG).show();
                                             wallet_after_add = wallet_remaining.intValue()+Integer.parseInt(choose_price);
                                             Map<String, Object> user_wallet = new HashMap<>();
                                             user_wallet.put("錢包",wallet_after_add);
@@ -158,11 +159,9 @@ public class DepositWallet extends AppCompatActivity {
                                                 }
                                             });
 
-                                            Toast.makeText(DepositWallet.this, "您已成功加值"+choose_price+"\n"+choose_method, Toast.LENGTH_LONG).show();
-
-                                            Intent intent = new Intent(DepositWallet.this,
+                                            Intent intent_deposit = new Intent(DepositWallet.this,
                                                     MainActivity.class);
-                                            startActivity(intent);
+                                            startActivity(intent_deposit);
                                         }
                                     });
                                 }
