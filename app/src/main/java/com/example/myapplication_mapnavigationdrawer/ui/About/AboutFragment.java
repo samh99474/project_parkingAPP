@@ -20,6 +20,7 @@ public class AboutFragment extends Fragment {
         sendViewModel =
                 ViewModelProviders.of(this).get(SendViewModel.class);
         View root = inflater.inflate(R.layout.about_members, container, false);
+
         /*
         final TextView textView = root.findViewById(R.id.text_about);
         sendViewModel.getText().observe(this, new Observer<String>() {

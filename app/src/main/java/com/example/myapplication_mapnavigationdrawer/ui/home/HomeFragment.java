@@ -43,6 +43,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.myapplication_mapnavigationdrawer.MainActivity;
 import com.example.myapplication_mapnavigationdrawer.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -53,6 +54,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -86,6 +88,7 @@ import static com.example.myapplication_mapnavigationdrawer.FilterDialogFragment
 import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 
+
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     private HomeViewModel homeViewModel;
@@ -94,7 +97,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private String string_parkinglot_snippet;
     private String string_favorite_lat;
     private String string_favorite_lng;
-    private String full_description, simple_description, parkinglot_total_space,
+    private String title_parkinglot_name,full_description, simple_description, parkinglot_total_space,
             parkinglot_price_number, API_id, more_detail_info, today_service_time, parkinglot_address, parkinglot_phone;
     private Boolean is_opening, reservatable;
     private Double parkinglot_lat, parkinglot_lng;
@@ -107,8 +110,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     // private AppCompatActivity;
     private final static int REQUEST_PERMISSIONS = 1;
-
-    private ClusterManager<MyItem> mClusterManager;
 
 
 
@@ -143,7 +144,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 //mClusterManager.addItem(offsetItem);
 
                 final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-                final DocumentReference docRef_parkinglot_info = firestore.collection("reservatable parkinglot").document("北科大APP特約停車場").collection("info").document("detail_info");
+                final DocumentReference docRef_parkinglot_info = firestore.collection("reservatable parkinglot").document("APP特約停車場").collection("info").document("detail_info");
 
                 if(docRef_parkinglot_info != null) {
                     docRef_parkinglot_info.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {  //抓取parking grid/A1 是否使用中或已被預約
@@ -153,6 +154,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                                 DocumentSnapshot document = task.getResult();
                                 if (document.exists()) {
                                     Log.e(TAG, "DocumentSnapshot data: " + document.getData());
+                                    title_parkinglot_name = (String) document.get("停車場名稱");
                                     full_description = (String) document.get("full_description");
                                     simple_description = (String) document.get("simple_description");
                                     parkinglot_remain_space = (Long) document.get("剩餘車位");
@@ -175,7 +177,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
                                     MarkerOptions m2 = new MarkerOptions();
                                     m2.position(new LatLng(parkinglot_lat, parkinglot_lng));
-                                    m2.title("北科大APP特約停車場");
+                                    m2.title(title_parkinglot_name);
                                     m2.snippet(parkinglot_total_space + "," +
                                             parkinglot_remain_space + "," +
                                             simple_description + "," +
@@ -407,13 +409,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         btn_mylocation.setOnClickListener(new View.OnClickListener() {      //my current location button
             @Override
             public void onClick(View view) {
-                //設定抓取使用者當前位置
-                LocationManager locationManager =
-                        (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-                Criteria criteria = new Criteria();
-                String provider = locationManager.getBestProvider(criteria, true);
-//        locationManager.requestLocationUpdates(provider, 10000, 10, (LocationListener) this);
                 if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
@@ -424,6 +420,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
+
+                //設定抓取使用者當前位置
+                LocationManager locationManager =
+                        (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+                Criteria criteria = new Criteria();
+                String provider = locationManager.getBestProvider(criteria, true);
+//        locationManager.requestLocationUpdates(provider, 10000, 10, (LocationListener) this);
+
                 locationManager.requestLocationUpdates
                         (LocationManager.NETWORK_PROVIDER, 1, 0.1f, LocationChange);
 
@@ -485,6 +490,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
+
     @Override
     public void onMapReady(final GoogleMap map){
         if (ActivityCompat.checkSelfPermission ( getActivity(),
@@ -542,8 +548,29 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             mymap.animateCamera(CameraUpdateFactory.zoomTo(19), 10, null);
 
         }else{
-            mymap.moveCamera ( CameraUpdateFactory.newLatLngZoom (
-                    new LatLng ( 25.034,121.545 ), 13 ) );
+
+            //設定抓取使用者當前位置
+            LocationManager locationManager =
+                    (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+            Criteria criteria = new Criteria();
+            String provider = locationManager.getBestProvider(criteria, true);
+//        locationManager.requestLocationUpdates(provider, 10000, 10, (LocationListener) this);
+
+            locationManager.requestLocationUpdates
+                    (LocationManager.NETWORK_PROVIDER, 1, 0.1f, LocationChange);
+
+            final Location location = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
+
+            if(location != null){
+                mymap.animateCamera(CameraUpdateFactory.newLatLngZoom(new   //畫面移動並放大到使用者當前位置
+                        LatLng(location.getLatitude(),
+                        location.getLongitude()), 17));
+            }else {
+                mymap.moveCamera ( CameraUpdateFactory.newLatLngZoom (
+                        new LatLng ( 25.047702,121.516193 ), 13 ) );
+            }
+
         }
 
         //Toast

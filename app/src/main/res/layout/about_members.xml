@@ -87,11 +87,12 @@
                 android:id="@+id/imageView15"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toTopOf="@+id/textView28"
+                app:layout_constraintBottom_toTopOf="@+id/textView23"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textView19"
+                app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/custom_background_block" />
 
             <TextView
@@ -99,221 +100,43 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="TEAM MEMBERS"
+                android:text="作品動機"
                 android:textColor="#18395A"
                 android:textSize="23dp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/imageView3"
-                app:layout_constraintTop_toBottomOf="@+id/imageView12" />
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="94dp"
-                android:layout_height="101dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView20"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textView4"
-                app:srcCompat="@mipmap/samh" />
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="16dp"
-                android:text="謝尚泓"
-                android:textColor="@color/browser_actions_text_color"
-                android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/imageView3"
-                app:layout_constraintTop_toBottomOf="@+id/textView19" />
+                app:layout_constraintTop_toBottomOf="@+id/imageView12" />
 
             <TextView
                 android:id="@+id/textView20"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="國立台北科技大學 電子工程系\n興趣為唱歌
-                \n\n只有熱愛生命，善於動腦的人，\n才算得上真正擁有生命"
+                android:layout_height="0dp"
+                android:layout_marginTop="24dp"
+                android:text="本作品透過⼿機進⾏線上預約，透過車牌辨識的⽅式保留車位，消費者的
+⼿機頁面會顯示車輛預約成功，在應用程式中每位車主所填寫之基本資訊及車牌號碼
+都會上傳⾄雲端資料庫，不必擔⼼車位上限⽽無法⼊場的問題，且可減少找尋車位時
+間。\n\n領車前，車主只須查看應用程式中的「預約記錄」中的付費並完成⼿機線上付費，
+即可不需排隊⼊場，也不必排隊繳費離場，享受本設計欲帶給⼤家的便利性。"
                 android:textColor="@color/colorBlue"
-                app:layout_constraintStart_toStartOf="@+id/textView4"
-                app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-            <ImageView
-                android:id="@+id/imageView5"
-                android:layout_width="94dp"
-                android:layout_height="96dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView23"
-                app:layout_constraintStart_toStartOf="@+id/imageView3"
-                app:layout_constraintTop_toTopOf="@+id/textView22"
-                app:srcCompat="@mipmap/gd" />
-
-            <TextView
-                android:id="@+id/textView22"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="黃佑恩"
-                android:textColor="@color/browser_actions_text_color"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/textView20"
-                app:layout_constraintTop_toBottomOf="@+id/textView20" />
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeMaxTextSize="100sp"
+                app:autoSizeStepGranularity="2sp"
+                app:layout_constraintEnd_toEndOf="@+id/imageView15"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView19" />
 
             <TextView
                 android:id="@+id/textView23"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="國立台北科技大學 電子工程系\n興趣為打籃球
-                \n\n人生要活得多采多姿，要學習享受"
-                android:textColor="@color/colorBlue"
-                app:layout_constraintStart_toStartOf="@+id/textView22"
-                app:layout_constraintTop_toBottomOf="@+id/textView22" />
-
-            <ImageView
-                android:id="@+id/imageView6"
-                android:layout_width="100dp"
-                android:layout_height="92dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView25"
-                app:layout_constraintStart_toStartOf="@+id/imageView5"
-                app:layout_constraintTop_toTopOf="@+id/textView24"
-                app:srcCompat="@mipmap/cat2" />
-
-            <TextView
-                android:id="@+id/textView24"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="謝佳丞"
-                android:textColor="@color/browser_actions_text_color"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/textView23"
-                app:layout_constraintTop_toBottomOf="@+id/textView23" />
-
-            <TextView
-                android:id="@+id/textView25"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="國立台北科技大學 電子工程系\n興趣為打桌球
-                \n\n天才就是無止盡刻苦勤奮的能力"
-                android:textColor="@color/colorBlue"
-                app:layout_constraintStart_toStartOf="@+id/textView24"
-                app:layout_constraintTop_toBottomOf="@+id/textView24" />
-
-            <ImageView
-                android:id="@+id/imageView7"
-                android:layout_width="95dp"
-                android:layout_height="106dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView27"
-                app:layout_constraintStart_toStartOf="@+id/imageView6"
-                app:layout_constraintTop_toTopOf="@+id/textView26"
-                app:srcCompat="@mipmap/ting" />
-
-            <TextView
-                android:id="@+id/textView26"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="吳孟庭"
-                android:textColor="@color/browser_actions_text_color"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/textView25"
-                app:layout_constraintTop_toBottomOf="@+id/textView25" />
-
-            <TextView
-                android:id="@+id/textView27"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="國立台北科技大學 電子工程系\n興趣為數學
-                \n\n青春，一旦典當，則不能贖"
-                android:textColor="@color/colorBlue"
-                app:layout_constraintStart_toStartOf="@+id/textView26"
-                app:layout_constraintTop_toBottomOf="@+id/textView26" />
-
-            <ImageView
-                android:id="@+id/imageView16"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textView28"
-                app:srcCompat="@drawable/custom_background_block" />
-
-            <TextView
-                android:id="@+id/textView28"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="ADVISOR"
-                android:textColor="#18395A"
-                android:textSize="23dp"
-                android:textStyle="bold"
+                android:text="智慧停車場預約系統"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+                app:layout_constraintTop_toBottomOf="@+id/textView20" />
 
-            <ImageView
-                android:id="@+id/imageView9"
-                android:layout_width="94dp"
-                android:layout_height="106dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView30"
-                app:layout_constraintStart_toStartOf="@+id/imageView7"
-                app:layout_constraintTop_toTopOf="@+id/textView29"
-                app:srcCompat="@mipmap/lee" />
-
-            <TextView
-                android:id="@+id/textView29"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="16dp"
-                android:text="李宗演 教授"
-                android:textColor="@color/browser_actions_text_color"
-                android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/imageView9"
-                app:layout_constraintTop_toBottomOf="@+id/textView28" />
-
-            <TextView
-                android:id="@+id/textView30"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Prof. Trong-Yen Lee\n專題指導教授\n\n教育出好筍，好筍出好竹，好師出好徒"
-                android:textColor="@color/colorBlue"
-                app:layout_constraintStart_toStartOf="@+id/textView29"
-                app:layout_constraintTop_toBottomOf="@+id/textView29" />
-
-            <ImageView
-                android:id="@+id/imageView11"
-                android:layout_width="94dp"
-                android:layout_height="106dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView32"
-                app:layout_constraintStart_toStartOf="@+id/imageView9"
-                app:layout_constraintTop_toTopOf="@+id/textView31"
-                app:srcCompat="@mipmap/chris" />
-
-            <TextView
-                android:id="@+id/textView31"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="張宇鈞 學長"
-                android:textColor="@color/browser_actions_text_color"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/textView30"
-                app:layout_constraintTop_toBottomOf="@+id/textView30" />
-
-            <TextView
-                android:id="@+id/textView32"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="專題指導學長\n\n做對的事情，把事情做對"
-                android:textColor="@color/colorBlue"
-                app:layout_constraintStart_toStartOf="@+id/textView31"
-                app:layout_constraintTop_toBottomOf="@+id/textView31" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
