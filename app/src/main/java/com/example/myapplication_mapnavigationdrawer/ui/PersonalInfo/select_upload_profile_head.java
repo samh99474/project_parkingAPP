@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.inappmessaging.MessagesProto;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
@@ -126,7 +127,8 @@ public class select_upload_profile_head extends AppCompatActivity {
                 && data != null && data.getData() != null) {
             mImageUri = data.getData();
 
-            Picasso.with(select_upload_profile_head.this).load(mImageUri).fit().centerCrop().into(mImageView);
+            Picasso.get().load(mImageUri).fit().centerCrop().into(mImageView);
+
         }
     }
 

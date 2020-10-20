@@ -32,7 +32,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
     implementation 'com.google.firebase:firebase-database:19.2.0'
 
-    implementation 'com.squareup.picasso:picasso:2.5.2'
+    //implementation 'com.squareup.picasso:picasso:2.5.2'   //此Piczsso版本與Firebase In-App Messaging 有衝突
+    implementation 'com.squareup.picasso:picasso:2.71828'
     //other Firebase/Play service deps
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
@@ -40,6 +41,14 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:6.2.0'
 
     implementation 'com.mikhaellopez:circularimageview:3.2.0'
+
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:25.12.0')
+
+    // Declare the dependencies for the In-App Messaging and Analytics libraries
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-inappmessaging-display'
+    implementation 'com.google.firebase:firebase-analytics'
 
     // Support Libs
     implementation 'androidx.appcompat:appcompat:1.1.0'
