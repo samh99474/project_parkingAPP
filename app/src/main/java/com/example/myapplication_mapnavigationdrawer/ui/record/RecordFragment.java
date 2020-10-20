@@ -701,6 +701,7 @@ public class RecordFragment extends Fragment {
         return id;
     }
 
+    //刷新Fragment頁面
     private void reflash_rocord_fragment() {
         try {
             RecordFragment recordFragment = new RecordFragment();

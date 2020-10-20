@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.webkit.PermissionRequest;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -37,13 +38,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.PermissionChecker;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.myapplication_mapnavigationdrawer.MainActivity;
 import com.example.myapplication_mapnavigationdrawer.R;
+import com.example.myapplication_mapnavigationdrawer.ui.record.RecordFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -88,29 +92,29 @@ import static com.example.myapplication_mapnavigationdrawer.FilterDialogFragment
 import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 
-
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     private HomeViewModel homeViewModel;
     private GoogleMap mymap;
+    private SupportMapFragment map;
+    private FusedLocationProviderClient client;
     private String string_parkinglot_name;
     private String string_parkinglot_snippet;
     private String string_favorite_lat;
     private String string_favorite_lng;
-    private String title_parkinglot_name,full_description, simple_description, parkinglot_total_space,
+    private String title_parkinglot_name, full_description, simple_description, parkinglot_total_space,
             parkinglot_price_number, API_id, more_detail_info, today_service_time, parkinglot_address, parkinglot_phone;
     private Boolean is_opening, reservatable;
     private Double parkinglot_lat, parkinglot_lng;
     private Long parkinglot_remain_space;
     public float zoomLevel;
-    private int number ;
+    private int number;
 
     private EditText mSearchText;
     private ImageButton btn_mylocation;
 
     // private AppCompatActivity;
     private final static int REQUEST_PERMISSIONS = 1;
-
 
 
     @Override
@@ -125,6 +129,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                         SupportMapFragment map =
                                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
                         map.getMapAsync(this);
+                        getCurrentLocation();
                     }
                 }
                 break;
@@ -133,10 +138,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     public BroadcastReceiver receiver = new BroadcastReceiver() {
         private ClusterManager<MyItem> mClusterManager;
+
         @Override
         public void onReceive(Context context, Intent intent) {
             final MyGsonData mygsondata = new Gson().fromJson(intent.getExtras().getString("json"), MyGsonData.class);
-
 
             for (int i = 0; i < mygsondata.data.parkinglots.length - 1; i++) {
                 //Log.e("res", mygsondata.data.parkinglots[i].id+"");
@@ -146,67 +151,71 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
                 final DocumentReference docRef_parkinglot_info = firestore.collection("reservatable parkinglot").document("APP特約停車場").collection("info").document("detail_info");
 
-                if(docRef_parkinglot_info != null) {
-                    docRef_parkinglot_info.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {  //抓取parking grid/A1 是否使用中或已被預約
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                if (document.exists()) {
-                                    Log.e(TAG, "DocumentSnapshot data: " + document.getData());
-                                    title_parkinglot_name = (String) document.get("停車場名稱");
-                                    full_description = (String) document.get("full_description");
-                                    simple_description = (String) document.get("simple_description");
-                                    parkinglot_remain_space = (Long) document.get("剩餘車位");
-                                    parkinglot_total_space = (String) document.get("總車位");
-                                    parkinglot_price_number = (String) document.get("費率");
-                                    API_id = (String) document.get("API_id");
-                                    more_detail_info = (String) document.get("more_detail_info");
-                                    today_service_time = (String) document.get("today_service_time");
-                                    parkinglot_address = (String) document.get("地址");
-                                    parkinglot_phone = (String) document.get("電話");
-                                    is_opening = (Boolean) document.get("is_opening");
-                                    reservatable = (Boolean) document.get("reservatable");
-                                    parkinglot_lat = (Double) document.get("lat");
-                                    parkinglot_lng = (Double) document.get("lng");
+                try {
+                    if (docRef_parkinglot_info != null) {
+                        docRef_parkinglot_info.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {  //抓取parking grid/A1 是否使用中或已被預約
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        Log.e(TAG, "DocumentSnapshot data: " + document.getData());
+                                        title_parkinglot_name = (String) document.get("停車場名稱");
+                                        full_description = (String) document.get("full_description");
+                                        simple_description = (String) document.get("simple_description");
+                                        parkinglot_remain_space = (Long) document.get("剩餘車位");
+                                        parkinglot_total_space = (String) document.get("總車位");
+                                        parkinglot_price_number = (String) document.get("費率");
+                                        API_id = (String) document.get("API_id");
+                                        more_detail_info = (String) document.get("more_detail_info");
+                                        today_service_time = (String) document.get("today_service_time");
+                                        parkinglot_address = (String) document.get("地址");
+                                        parkinglot_phone = (String) document.get("電話");
+                                        is_opening = (Boolean) document.get("is_opening");
+                                        reservatable = (Boolean) document.get("reservatable");
+                                        parkinglot_lat = (Double) document.get("lat");
+                                        parkinglot_lng = (Double) document.get("lng");
 
 
-                                    BitmapDrawable bitmapdraw2 = (BitmapDrawable) getResources().getDrawable(R.mipmap.loticon_reservatable);
-                                    Bitmap b2 = bitmapdraw2.getBitmap();
-                                    Bitmap smallMarker2 = Bitmap.createScaledBitmap(b2, 115, 115, false);
+                                        BitmapDrawable bitmapdraw2 = (BitmapDrawable) getResources().getDrawable(R.mipmap.loticon_reservatable);
+                                        Bitmap b2 = bitmapdraw2.getBitmap();
+                                        Bitmap smallMarker2 = Bitmap.createScaledBitmap(b2, 115, 115, false);
 
-                                    MarkerOptions m2 = new MarkerOptions();
-                                    m2.position(new LatLng(parkinglot_lat, parkinglot_lng));
-                                    m2.title(title_parkinglot_name);
-                                    m2.snippet(parkinglot_total_space + "," +
-                                            parkinglot_remain_space + "," +
-                                            simple_description + "," +
-                                            full_description + "," +
-                                            String.valueOf(is_opening) + "," +
-                                            today_service_time + "," +
-                                            parkinglot_address + "," +
-                                            parkinglot_phone + "," +
-                                            String.valueOf(parkinglot_lat) + "," +
-                                            String.valueOf(parkinglot_lng) + "," +
-                                            API_id + "," +
-                                            more_detail_info + "," +
-                                            String.valueOf(reservatable) + ",");
-                                    m2.draggable(true);
-                                    m2.icon(BitmapDescriptorFactory.fromBitmap(smallMarker2));
-                                    mymap.addMarker(m2);
-
-                                    if (zoomLevel > 13) {
+                                        MarkerOptions m2 = new MarkerOptions();
+                                        m2.position(new LatLng(parkinglot_lat, parkinglot_lng));
+                                        m2.title(title_parkinglot_name);
+                                        m2.snippet(parkinglot_total_space + "," +
+                                                parkinglot_remain_space + "," +
+                                                simple_description + "," +
+                                                full_description + "," +
+                                                String.valueOf(is_opening) + "," +
+                                                today_service_time + "," +
+                                                parkinglot_address + "," +
+                                                parkinglot_phone + "," +
+                                                String.valueOf(parkinglot_lat) + "," +
+                                                String.valueOf(parkinglot_lng) + "," +
+                                                API_id + "," +
+                                                more_detail_info + "," +
+                                                String.valueOf(reservatable) + ",");
+                                        m2.draggable(true);
+                                        m2.icon(BitmapDescriptorFactory.fromBitmap(smallMarker2));
                                         mymap.addMarker(m2);
-                                    }
 
+                                        if (zoomLevel > 13) {
+                                            mymap.addMarker(m2);
+                                        }
+
+                                    } else {
+                                        Log.e(TAG, "No such document");
+                                    }
                                 } else {
-                                    Log.e(TAG, "No such document");
+                                    Log.e(TAG, "get failed with ", task.getException());
                                 }
-                            } else {
-                                Log.e(TAG, "get failed with ", task.getException());
                             }
-                        }
-                    });
+                        });
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
 
                 MarkerOptions m1 = new MarkerOptions();
@@ -236,7 +245,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                             + mygsondata.data.parkinglots[i].id + ","
                             + mygsondata.data.parkinglots[i].detail_info[3][0]
                             + mygsondata.data.parkinglots[i].detail_info[3][1] + "\n" + ","
-                            + "false"+",");
+                            + "false" + ",");
                 }
 
 
@@ -268,7 +277,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 //m1.icon(BitmapDescriptorFactory.fromResource(smallMarker));
                 m1.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
 
-
+            try {
                 if (zoomLevel > 13) {
                     mymap.addMarker(m1);
                 }
@@ -276,16 +285,20 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     mymap.clear();
                 }
 
-                if(number <= 400){  //載入太多API的話，清除mymap
-                    number = number+1;
-                }else {
+                if (number <= 400) {  //載入太多API的話，清除mymap
+                    number = number + 1;
+                } else {
                     number = 0;
                     mymap.clear();
                     mymap.addMarker(m1);
                 }
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
             }
             //mClusterManager.cluster();
         }
+
         private void setUpClusterer() {
             // Position the map.
             //mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
@@ -392,14 +405,28 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         if (ActivityCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_COARSE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED)
+                PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(getActivity(), new
                             String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_PERMISSIONS);
+            Toast.makeText(getActivity(), "無法讀取您的位置，請檢查是否開啟定位，或者稍後再試", Toast.LENGTH_SHORT).show();
+        }
         else {
-            SupportMapFragment map =
+            map =
                     (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
             map.getMapAsync(this);
+
+            client = LocationServices.getFusedLocationProviderClient(getActivity());
+
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                getCurrentLocation();
+            }else {
+                //when permission denied
+                //Request permission
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},44);
+            }
         }
 
         mSearchText = (EditText) root.findViewById(R.id.input_search);
@@ -409,7 +436,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         btn_mylocation.setOnClickListener(new View.OnClickListener() {      //my current location button
             @Override
             public void onClick(View view) {
-
+                getCurrentLocation();
+/*
                 if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
@@ -434,14 +462,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
                 final Location location = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
 
-                if(location != null){
+                if (location != null) {
                     mymap.animateCamera(CameraUpdateFactory.newLatLngZoom(new   //畫面移動並放大到使用者當前位置
                             LatLng(location.getLatitude(),
                             location.getLongitude()), 17));
-                }else {
+                } else {
 
                     Toast.makeText(getActivity(), "無法讀取您的位置，請檢查是否開啟定位，或者稍後再試", Toast.LENGTH_SHORT).show();
                 }
+
+ */
 
             }
         });
@@ -462,13 +492,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-    public void onActivityCreated(@Nullable Bundle savedInstanceState,Double lat,Double lng) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState, Double lat, Double lng) {
         super.onActivityCreated(savedInstanceState);
         String str = null;
-        Log.e("GET",lat.toString());
+        Log.e("GET", lat.toString());
         Log.e("GET", lng.toString());
 
-        str = String.format("https://api.parkinglotapp.com/v2/pois/nearest?lat=%s&lng=%s",lat,lng);
+        str = String.format("https://api.parkinglotapp.com/v2/pois/nearest?lat=%s&lng=%s", lat, lng);
         Request req = new Request.Builder().url(str).build();
         new OkHttpClient().newCall(req).enqueue(new Callback() {
             @Override
@@ -492,13 +522,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
 
     @Override
-    public void onMapReady(final GoogleMap map){
-        if (ActivityCompat.checkSelfPermission ( getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION)!=
+    public void onMapReady(final GoogleMap map) {
+        if (ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission ( getActivity(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION)!=
-                        PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
             return;
         }
 
@@ -513,10 +543,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "請說您要尋找的地點");
-                try{
-                    startActivityForResult(intent,200);
-                }catch (ActivityNotFoundException a){
-                    Toast.makeText(getApplicationContext(),"Intent problem", Toast.LENGTH_SHORT).show();
+                try {
+                    startActivityForResult(intent, 200);
+                } catch (ActivityNotFoundException a) {
+                    Toast.makeText(getApplicationContext(), "Intent problem", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -524,17 +554,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         Marker mCenterMarker = null;
 
         mymap = map;
-        mymap.setMyLocationEnabled ( true );
+        mymap.setMyLocationEnabled(true);
         mymap.getUiSettings().setMyLocationButtonEnabled(false);    // delete default button(my location button)
         //setUpClusterer();
         //mClusterManager.setRenderer(new MarkerClusterRenderer(getActivity(), mymap, mClusterManager));
 
-        final MarkerOptions m1 = new MarkerOptions ();
+        final MarkerOptions m1 = new MarkerOptions();
 
         int height = 100;
         int width = 100;
-        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.mipmap.loticon);
-        Bitmap b=bitmapdraw.getBitmap();
+        BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.mipmap.loticon);
+        Bitmap b = bitmapdraw.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
 
         Bundle bundle_favorite = getArguments();//當使用者點擊到我的最愛list，取得Favorite的Bundle
@@ -543,12 +573,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             string_favorite_lat = bundle_favorite.getString("string_favorite_lat");
             string_favorite_lng = bundle_favorite.getString("string_favorite_lng");
 
-            mymap.moveCamera ( CameraUpdateFactory.newLatLngZoom (
-                    new LatLng ( Double.parseDouble(string_favorite_lat),Double.parseDouble(string_favorite_lng) ), 13 ) );
+            mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(Double.parseDouble(string_favorite_lat), Double.parseDouble(string_favorite_lng)), 13));
             mymap.animateCamera(CameraUpdateFactory.zoomTo(19), 10, null);
 
-        }else{
-
+        } else {
+            getCurrentLocation();
+/*
             //設定抓取使用者當前位置
             LocationManager locationManager =
                     (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -562,15 +593,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
             final Location location = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
 
-            if(location != null){
+            if (location != null) {
                 mymap.animateCamera(CameraUpdateFactory.newLatLngZoom(new   //畫面移動並放大到使用者當前位置
                         LatLng(location.getLatitude(),
                         location.getLongitude()), 17));
-            }else {
-                mymap.moveCamera ( CameraUpdateFactory.newLatLngZoom (
-                        new LatLng ( 25.047702,121.516193 ), 13 ) );
+            } else {
+                mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(25.047702, 121.516193), 13));
             }
 
+ */
         }
 
         //Toast
@@ -586,7 +618,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onCameraIdle() {
                 CameraPosition test = mymap.getCameraPosition();
-                onActivityCreated(null,test.target.latitude,test.target.longitude);
+                onActivityCreated(null, test.target.latitude, test.target.longitude);
                 zoomLevel = map.getCameraPosition().zoom;
 
                 if (zoomLevel <= 13) {
@@ -611,8 +643,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                         infowindow.class);
 
                 Bundle b = new Bundle();    //資訊放入Bundle
-                b.putString("string_parkinglot_name",string_parkinglot_name);
-                b.putString("string_parkinglot_snippet",string_parkinglot_snippet);
+                b.putString("string_parkinglot_name", string_parkinglot_name);
+                b.putString("string_parkinglot_snippet", string_parkinglot_snippet);
                 intent.putExtras(b);
                 startActivity(intent);
             }
@@ -630,55 +662,73 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 string_parkinglot_name = marker.getTitle();
                 string_parkinglot_snippet = marker.getSnippet();
 
-                View view = getLayoutInflater().inflate(R.layout.activity_marker_window_adapter,null);
-                TextView windowadapter_parkinglot_name = (TextView)view.findViewById(R.id.windowadapter_parkinglot_name);
-                TextView windowadapter_parkinglot_lot = (TextView)view.findViewById(R.id.windowadapter_parkinglot_lot);
+                View view = getLayoutInflater().inflate(R.layout.activity_marker_window_adapter, null);
+                TextView windowadapter_parkinglot_name = (TextView) view.findViewById(R.id.windowadapter_parkinglot_name);
+                TextView windowadapter_parkinglot_lot = (TextView) view.findViewById(R.id.windowadapter_parkinglot_lot);
                 windowadapter_parkinglot_name.setText(string_parkinglot_name);
 
                 String[] split_string_parkinglot_snippet = string_parkinglot_snippet.split(",");//split(指定符號) ，可依指定符號把字串分開成陣列
 
-                if(split_string_parkinglot_snippet[0].equals("-1") == true){
+                if (split_string_parkinglot_snippet[0].equals("-1") == true) {
                     windowadapter_parkinglot_lot.setText("●總車位:  無資訊");
-                }
-                else if (split_string_parkinglot_snippet[1].equals("-1") == true){
-                    windowadapter_parkinglot_lot.setText("●總車位: "+split_string_parkinglot_snippet[0]);
-                }
-                else{
-                    windowadapter_parkinglot_lot.setText("●總車位: "+split_string_parkinglot_snippet[0]+"  ●剩餘車位: "+split_string_parkinglot_snippet[1]);
+                } else if (split_string_parkinglot_snippet[1].equals("-1") == true) {
+                    windowadapter_parkinglot_lot.setText("●總車位: " + split_string_parkinglot_snippet[0]);
+                } else {
+                    windowadapter_parkinglot_lot.setText("●總車位: " + split_string_parkinglot_snippet[0] + "  ●剩餘車位: " + split_string_parkinglot_snippet[1]);
                 }
 
-                windowadapter_parkinglot_lot.setText(windowadapter_parkinglot_lot.getText()+"\n●費率: "+split_string_parkinglot_snippet[2]);
+                windowadapter_parkinglot_lot.setText(windowadapter_parkinglot_lot.getText() + "\n●費率: " + split_string_parkinglot_snippet[2]);
 
 
-                if(split_string_parkinglot_snippet[4].matches("true")){
-                    windowadapter_parkinglot_lot.setText(windowadapter_parkinglot_lot.getText()+"\n●營業中");
-                }else {
-                    windowadapter_parkinglot_lot.setText(windowadapter_parkinglot_lot.getText()+"\n●休息中");
+                if (split_string_parkinglot_snippet[4].matches("true")) {
+                    windowadapter_parkinglot_lot.setText(windowadapter_parkinglot_lot.getText() + "\n●營業中");
+                } else {
+                    windowadapter_parkinglot_lot.setText(windowadapter_parkinglot_lot.getText() + "\n●休息中");
                 }
                 return view;    //どちらかに処理を記述
             }
         });
     }
 
-    //更新定位Listener
-    public LocationListener LocationChange = new LocationListener()
-    {
-        public void onLocationChanged(Location mLocation)
-        {
+    private void getCurrentLocation() {
+        //Initialize task Location
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
         }
 
-        public void onProviderDisabled(String provider)
-        {
+        try{
+            Task<Location> task = client.getLastLocation();
+            task.addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(final Location location) {
+                    //when success
+                    if(location != null){
+                        //sync map
+                        map.getMapAsync(new OnMapReadyCallback() {
+                            @Override
+                            public void onMapReady(GoogleMap googleMap) {
+                                //Initialize lat lng
+                                LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,17));
+                            }
+                        });
+                    }else {
+                        Toast.makeText(getActivity(), "無法讀取您的位置，請檢查是否開啟定位，或者稍後再試", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }catch (Exception e) {
+            reflash_HomeFragment();
+            e.printStackTrace();
         }
-
-        public void onProviderEnabled(String provider)
-        {
-        }
-
-        public void onStatusChanged(String provider, int status,Bundle extras)
-        {
-        }
-    };
+    }
 
     //Google語音讀取Intent resultcode requestcode 來執行，將語音轉文字到mSearchText
     @Override
@@ -729,6 +779,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             return mSnippet;
         }
     }
+    //刷新Fragment頁面
+    private void reflash_HomeFragment() {
+        try {
+            HomeFragment homeFragment = new HomeFragment();
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.nav_host_fragment, homeFragment)
+                    .addToBackStack("TAG_TO_FRAGMENT").commit();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
 
 /*
     public class MarkerClusterRenderer extends DefaultClusterRenderer<MyItem> {
@@ -752,5 +815,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     }
 
  */
+
 
 }
