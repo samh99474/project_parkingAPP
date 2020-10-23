@@ -66,7 +66,7 @@ public class PaySettingFragment extends Fragment {
         if(user != null){
             string_uid = user.getUid();     //抓取使用者UID
 
-            DocumentReference docRef = user_db.collection("users").document(string_uid);
+            final DocumentReference docRef = user_db.collection("users").document(string_uid);
             if(docRef != null){
                 docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -135,13 +135,54 @@ public class PaySettingFragment extends Fragment {
                                     case MODIFIED:
                                         try {
                                             //Toast.makeText(getActivity(),"資料修改更新"+id+"\nold:"+oldIndex+"\nnew:"+newIndex, Toast.LENGTH_SHORT).show();
+                                            if(docRef != null){
+                                                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            DocumentSnapshot document = task.getResult();
+                                                            if (document.exists()) {
+                                                                Log.e(TAG, "DocumentSnapshot data: " + document.getData());
+                                                                if (document.getData().get("錢包") != null) {
+                                                                    wallet_remaining = document.getLong("錢包");
+                                                                }else {
+                                                                    wallet_remaining = Long.valueOf(0);
+                                                                    Map<String, Object> user_wallet = new HashMap<>();
+                                                                    user_wallet.put("錢包",0);
+                                                                    user_db.collection("users").document(string_uid).set(user_wallet, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {//固定文件ID
 
+                                                                        @Override
+                                                                        public void onSuccess(Void aVoid) {
+                                                                            Log.e(TAG, "DocumentSnapshot successfully written!");
+                                                                        }
+                                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            Log.e(TAG, "Error writing document", e);
+                                                                        }
+                                                                    });
+                                                                }
+                                                                show_wallet_remaining.setText(String.valueOf(wallet_remaining));
+                                                            } else {
+                                                                Log.e(TAG, "No such document");
+                                                            }
+                                                        } else {
+                                                            Log.e(TAG, "get failed with ", task.getException());
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                            /*
                                             //刷新refresh Fragment
                                             PaySettingFragment paySettingFragment = new PaySettingFragment();
                                             getFragmentManager()
                                                     .beginTransaction()
                                                     .replace(R.id.nav_host_fragment, paySettingFragment)
                                                     .addToBackStack("TAG_TO_FRAGMENT").commit();
+
+                                             */
+
                                         }catch (Exception e0){
                                             e0.printStackTrace();
                                         }
@@ -184,3 +225,4 @@ public class PaySettingFragment extends Fragment {
         return root;
     }
 }
+

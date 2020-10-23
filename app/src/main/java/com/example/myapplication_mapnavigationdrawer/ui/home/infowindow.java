@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -150,7 +151,7 @@ public class infowindow extends AppCompatActivity {
         }
 
 /*
-        final DocumentReference docRef_parkinglot_info = firestore.collection("reservatable parkinglot").document("北科大APP特約停車場").collection("info").document("detail_info");
+        final DocumentReference docRef_parkinglot_info = firestore.collection("reservatable parkinglot").document("APP特約停車場").collection("info").document("detail_info");
 
         if(docRef_parkinglot_info != null){
             docRef_parkinglot_info.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {  //抓取parking grid/A1 是否使用中或已被預約
@@ -190,6 +191,7 @@ public class infowindow extends AppCompatActivity {
             parkinglot_lot.setText(split_string_parkinglot_snippet[0]+"\t\t/\t\t剩餘車位："+split_string_parkinglot_snippet[1]);
         }
 
+
 /*
         windowadapter_parkinglot_lot.setText(windowadapter_parkinglot_lot.getText()+"\n●費率: "+split_string_parkinglot_snippet[2]);
 */
@@ -214,6 +216,92 @@ public class infowindow extends AppCompatActivity {
 
         parkinglot_detail_info.setText(String.format(split_string_parkinglot_snippet[11]));
         parkinglot_detail_info.setMovementMethod(new ScrollingMovementMethod());
+
+        //資料更新時，刷新頁面
+        firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("info")
+                .addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot querySnapshot,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen error", e);
+                            return;
+                        }
+
+                        for (DocumentChange change : querySnapshot.getDocumentChanges()) {
+                            if (change.getType() == DocumentChange.Type.ADDED) {
+                                Log.d(TAG, "New city:" + change.getDocument().getData());
+                            }
+
+                            String source = querySnapshot.getMetadata().isFromCache() ?
+                                    "local cache" : "server";
+                            Log.d(TAG, "Data fetched from " + source);
+
+                            DocumentSnapshot documentSnapshot = change.getDocument();
+                            String id = documentSnapshot.getId();
+                            int oldIndex = change.getOldIndex();
+                            int newIndex = change.getNewIndex();
+
+                            switch (change.getType()) {
+                                case MODIFIED:
+                                    try {
+                                        final DocumentReference docRef_parkinglot_info = firestore.collection("reservatable parkinglot").document(parkinglot_name.getText().toString()).collection("info").document("detail_info");
+
+                                        if (docRef_parkinglot_info != null) {
+                                            docRef_parkinglot_info.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {  //抓取parking grid/A1 是否使用中或已被預約
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                    if (task.isSuccessful()) {
+                                                        DocumentSnapshot document = task.getResult();
+                                                        if (document.exists()) {
+                                                            Log.e(TAG, "DocumentSnapshot data: " + document.getData());
+                                                            full_description = (String) document.get("full_description");
+                                                            simple_description = (String) document.get("simple_description");
+                                                            parkinglot_remain_space = (Long) document.get("剩餘車位");
+                                                            parkinglot_total_space = (String) document.get("總車位");
+                                                            parkinglot_price_number = (String) document.get("費率");
+                                                            string_parkinglot_address = (String) document.get("地址");
+                                                            parkinglot_phone = (String) document.get("電話");
+
+                                                            parkinglot_simple_description.setText(simple_description);
+                                                            parkinglot_full_description.setText(full_description);
+                                                            parkinglot_address.setText(string_parkinglot_address);
+                                                            parkinglot_tel.setText(parkinglot_phone);
+                                                            parkinglot_lot.setText(String.format(parkinglot_total_space+"\t\t/\t\t剩餘車位："+ parkinglot_remain_space));
+
+
+                                                        } else {
+                                                            Log.e(TAG, "No such document");
+                                                        }
+                                                    } else {
+                                                        Log.e(TAG, "get failed with ", task.getException());
+                                                    }
+                                                }
+                                            });
+                                        }
+
+                                    }catch (Exception e1){
+                                        e1.printStackTrace();
+                                    }
+
+                                    break;
+                                /*
+                            case ADDED:
+                                Toast.makeText(getActivity(),"資料加入"+id+"\nold:"+oldIndex+"\nnew:"+newIndex, Toast.LENGTH_SHORT).show();
+                                break;
+                            case REMOVED:
+                                Toast.makeText(getActivity(),"資料移除"+id+"\nold:"+oldIndex+"\nnew:"+newIndex, Toast.LENGTH_SHORT).show();
+                                break;
+                                 */
+                            }
+                        }
+                    }
+                });
+
+
+
+
+
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -311,7 +399,6 @@ public class infowindow extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
 
     }
 

@@ -634,6 +634,8 @@ public class ParkinglotActivity extends AppCompatActivity {
                                 case MODIFIED:
                                     try {
                                         //Toast.makeText(getActivity(),"資料修改更新"+id+"\nold:"+oldIndex+"\nnew:"+newIndex, Toast.LENGTH_SHORT).show();
+
+                                        /*
                                         //刷新refresh Activity
                                         Intent intent = new Intent(ParkinglotActivity.this,
                                                 ParkinglotActivity.class);
@@ -641,6 +643,51 @@ public class ParkinglotActivity extends AppCompatActivity {
                                         b.putString("string_parkinglot_name",parkinglot_name.getText().toString());
                                         intent.putExtras(b);
                                         startActivity(intent);
+
+                                         */
+                                        if (docRef_parkinglot_info != null) {
+                                            docRef_parkinglot_info.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {  //抓取parking grid/A1 是否使用中或已被預約
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                    if (task.isSuccessful()) {
+                                                        DocumentSnapshot document = task.getResult();
+                                                        if (document.exists()) {
+                                                            Log.e(TAG, "DocumentSnapshot data: " + document.getData());
+                                                            full_description = (String) document.get("full_description");
+                                                            simple_description = (String) document.get("simple_description");
+                                                            parkinglot_remain_space = (Long) document.get("剩餘車位");
+                                                            parkinglot_total_space = (String) document.get("總車位");
+                                                            parkinglot_price_number = (String) document.get("費率");
+                                                            string_parkinglot_address = (String) document.get("地址");
+                                                            parkinglot_phone = (String) document.get("電話");
+
+                                                            if (parkinglot_remain_space <= 0) {
+                                                                show_parkinglot_remain.setText("車位已滿");
+                                                                gotoreservation.setText("車位已滿");
+                                                                gotoreservation.setClickable(false);
+                                                                gotoreservation.setEnabled(false);
+                                                                Drawable img = getResources().getDrawable(R.drawable.ic_close_black_24dp);
+                                                                img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
+                                                                gotoreservation.setCompoundDrawables(img, null, null, null);
+                                                            }else {
+                                                                show_parkinglot_remain.setText("總車位:"+parkinglot_total_space+"\t/\t剩餘車位:"+parkinglot_remain_space);
+                                                            }
+
+                                                            pay_simple_description.setText(simple_description);
+                                                            pay_full_description.setText(full_description);
+                                                            parkinglot_address.setText(string_parkinglot_address);
+                                                            show_parkinglot_phone.setText(parkinglot_phone);
+
+
+                                                        } else {
+                                                            Log.e(TAG, "No such document");
+                                                        }
+                                                    } else {
+                                                        Log.e(TAG, "get failed with ", task.getException());
+                                                    }
+                                                }
+                                            });
+                                        }
 
                                     }catch (Exception e1){
                                         e1.printStackTrace();
@@ -660,8 +707,8 @@ public class ParkinglotActivity extends AppCompatActivity {
                     }
                 });
 
-
     }
+
     public int createID() {
         Date now = new Date();
         int id = Integer.parseInt(new java.text.SimpleDateFormat("ddHHmmss", Locale.FRENCH).format(now));

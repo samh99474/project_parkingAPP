@@ -57,7 +57,7 @@ public class ChoosePayMethod extends AppCompatActivity {
         if(user != null){
             string_uid = user.getUid();     //抓取使用者UID
 
-            DocumentReference docRef = user_db.collection("users").document(string_uid);
+            final DocumentReference docRef = user_db.collection("users").document(string_uid);
             if(docRef != null){
                 docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -114,11 +114,39 @@ public class ChoosePayMethod extends AppCompatActivity {
                                 switch (change.getType()){
                                     case MODIFIED:
                                         //Toast.makeText(getActivity(),"資料修改更新"+id+"\nold:"+oldIndex+"\nnew:"+newIndex, Toast.LENGTH_SHORT).show();
+                                        if(docRef != null){
+                                            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                    if (task.isSuccessful()) {
+                                                        DocumentSnapshot document = task.getResult();
+                                                        if (document.exists()) {
+                                                            Log.e(TAG, "DocumentSnapshot data: " + document.getData());
 
+                                                            if (document.exists()) {
+                                                                Log.e(TAG, "DocumentSnapshot data: " + document.getData());
+                                                                if (document.getData().get("錢包") != null) {
+                                                                    wallet_remaining = document.getLong("錢包");
+                                                                }
+                                                                choose_pay_method_show_wallet_remaining.setText(String.valueOf(wallet_remaining));
+                                                            }
+                                                        } else {
+                                                            Log.e(TAG, "No such document");
+                                                        }
+                                                    } else {
+                                                        Log.e(TAG, "get failed with ", task.getException());
+                                                    }
+                                                }
+                                            });
+                                        }
+                                        /*
                                         //刷新refresh Activity
                                         Intent intent = new Intent(ChoosePayMethod.this,
                                                 ChoosePayMethod.class);
                                         startActivity(intent);
+
+                                         */
 
                                         break;
                                         /*

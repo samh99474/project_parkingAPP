@@ -181,7 +181,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                                         Bitmap b2 = bitmapdraw2.getBitmap();
                                         Bitmap smallMarker2 = Bitmap.createScaledBitmap(b2, 115, 115, false);
 
-                                        MarkerOptions m2 = new MarkerOptions();
+                                        final MarkerOptions m2 = new MarkerOptions();
                                         m2.position(new LatLng(parkinglot_lat, parkinglot_lng));
                                         m2.title(title_parkinglot_name);
                                         m2.snippet(parkinglot_total_space + "," +
@@ -205,6 +205,72 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                                             mymap.addMarker(m2);
                                         }
 
+                                        //資料更新時，刷新頁面
+                                        firestore.collection("reservatable parkinglot").document("APP特約停車場").collection("info")
+                                                .addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onEvent(@Nullable QuerySnapshot querySnapshot,
+                                                                        @Nullable FirebaseFirestoreException e) {
+                                                        if (e != null) {
+                                                            Log.w(TAG, "Listen error", e);
+                                                            return;
+                                                        }
+
+                                                        for (DocumentChange change : querySnapshot.getDocumentChanges()) {
+                                                            if (change.getType() == DocumentChange.Type.ADDED) {
+                                                                Log.d(TAG, "New city:" + change.getDocument().getData());
+                                                            }
+
+                                                            String source = querySnapshot.getMetadata().isFromCache() ?
+                                                                    "local cache" : "server";
+                                                            Log.d(TAG, "Data fetched from " + source);
+
+                                                            DocumentSnapshot documentSnapshot = change.getDocument();
+                                                            String id = documentSnapshot.getId();
+                                                            int oldIndex = change.getOldIndex();
+                                                            int newIndex = change.getNewIndex();
+
+                                                            switch (change.getType()) {
+                                                                case MODIFIED:
+                                                                    try {
+
+                                                                        if (docRef_parkinglot_info != null) {
+                                                                            docRef_parkinglot_info.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {  //抓取parking grid/A1 是否使用中或已被預約
+                                                                                @Override
+                                                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                                    if (task.isSuccessful()) {
+                                                                                        DocumentSnapshot document = task.getResult();
+                                                                                        if (document.exists()) {
+                                                                                            Log.e(TAG, "DocumentSnapshot data: " + document.getData());
+                                                                                            mymap.clear();
+                                                                                        } else {
+                                                                                            Log.e(TAG, "No such document");
+                                                                                        }
+                                                                                    } else {
+                                                                                        Log.e(TAG, "get failed with ", task.getException());
+                                                                                    }
+                                                                                }
+                                                                            });
+                                                                        }
+
+                                                                    }catch (Exception e1){
+                                                                        e1.printStackTrace();
+                                                                    }
+
+                                                                    break;
+                                /*
+                            case ADDED:
+                                Toast.makeText(getActivity(),"資料加入"+id+"\nold:"+oldIndex+"\nnew:"+newIndex, Toast.LENGTH_SHORT).show();
+                                break;
+                            case REMOVED:
+                                Toast.makeText(getActivity(),"資料移除"+id+"\nold:"+oldIndex+"\nnew:"+newIndex, Toast.LENGTH_SHORT).show();
+                                break;
+                                 */
+                                                            }
+                                                        }
+                                                    }
+                                                });
+
                                     } else {
                                         Log.e(TAG, "No such document");
                                     }
@@ -213,7 +279,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                                 }
                             }
                         });
+
                     }
+
                 }catch (Exception e){
                     e.printStackTrace();
                 }
