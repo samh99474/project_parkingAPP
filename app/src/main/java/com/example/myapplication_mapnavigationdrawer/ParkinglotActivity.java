@@ -75,12 +75,12 @@ public class ParkinglotActivity extends AppCompatActivity {
     private TextView space_temp;
 
     private String string_name, string_phone, string_email, string_uid, string_license,
-            string_reservate_time, full_description, simple_description, parkinglot_price_number, string_parkinglot_address, parkinglot_phone,
+            string_reservate_time, full_description, simple_description, string_parkinglot_address, parkinglot_phone,
             parkinglot_all_user_id;
     private String parkinglot_total_space;
     private ArrayList<String> list_parkinglot_all_user_id = new ArrayList<>();
     private Double string_wallet_remaining;
-    private Long parkinglot_remain_space, number_wallet_remaining;
+    private Long parkinglot_remain_space, number_wallet_remaining, parkinglot_price_number;
 
     private TextView Text_name, Text_phone, Text_email, Text_license;
     private int mYear, mMonth, mDay, mHour, mMin;
@@ -124,7 +124,7 @@ public class ParkinglotActivity extends AppCompatActivity {
         //final String string_parkinglot_phone = b.getString("parkinglot_phone");
 
         parkinglot_name.setText(string_parkinglot_name);
-        //parkinglot_price.setText(string_parkinglot_simple_description);
+
         ///////////////////////////////////Step 3，付款資訊/////////////////////////////////////////////
         //pay.append(string_parkinglot_simple_description);  //費率
        // parkinglot_address.setText(string_parkinglot_address);
@@ -185,7 +185,7 @@ public class ParkinglotActivity extends AppCompatActivity {
                             simple_description = (String) document.get("simple_description");
                             parkinglot_remain_space = (Long) document.get("剩餘車位");
                             parkinglot_total_space = (String) document.get("總車位");
-                            parkinglot_price_number = (String) document.get("費率");
+                            parkinglot_price_number = (Long) document.get("費率");
                             string_parkinglot_address = (String) document.get("地址");
                             parkinglot_phone = (String) document.get("電話");
 
@@ -201,6 +201,7 @@ public class ParkinglotActivity extends AppCompatActivity {
                                 show_parkinglot_remain.setText("總車位:"+parkinglot_total_space+"\t/\t剩餘車位:"+parkinglot_remain_space);
                             }
 
+                            parkinglot_price.setText(simple_description);
                             pay_simple_description.setText(simple_description);
                             pay_full_description.setText(full_description);
                             parkinglot_address.setText(string_parkinglot_address);
@@ -457,6 +458,8 @@ public class ParkinglotActivity extends AppCompatActivity {
                             A1record_timestamp.put("預約日期時間", timestamp);
 
                             A1_record_number.put("parking_total_sec",0);
+                            A1_record_number.put("應付金額",0);
+                            A1_record_number.put("費率",parkinglot_price_number);
                             A1_record_boolean.put("按下結束按鈕", false);
                             A1_record_boolean.put("是否重新計費", false);
                             A1_record_boolean.put("訂單完成", false);
@@ -467,12 +470,13 @@ public class ParkinglotActivity extends AppCompatActivity {
                             A1_record_boolean.put("had_notified_car_in", false);
                             A1_record_boolean.put("had_notified_car_out", false);
                             A1_record_string.put("停車場", parkinglot_name.getText().toString());
-                            A1_record_string.put("費率", parkinglot_price.getText().toString());
+                            //A1_record_string.put("費率", parkinglot_price.getText().toString());
                             A1_record_string.put("地址", parkinglot_address.getText().toString());
                             A1_record_string.put("聯絡電話", parkinglot_phone);
                             A1_record_string.put("訂單編號", string_order_number);
                             A1_record_string.put("預約車牌", string_license);
-                            A1_record_string.put("應付金額", "0");
+                            A1_record_string.put("simple_description", simple_description);
+                            //A1_record_string.put("應付金額", "0");
                             //A1info_string.put("結束時間日期","");
                             //A1info_string.put("應付金額","");
                             firestore.collection("users").document(string_uid).collection("record").document(string_order_number).set(A1_record_number, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -656,8 +660,8 @@ public class ParkinglotActivity extends AppCompatActivity {
                                                             full_description = (String) document.get("full_description");
                                                             simple_description = (String) document.get("simple_description");
                                                             parkinglot_remain_space = (Long) document.get("剩餘車位");
+                                                            parkinglot_price_number = (Long) document.get("費率");
                                                             parkinglot_total_space = (String) document.get("總車位");
-                                                            parkinglot_price_number = (String) document.get("費率");
                                                             string_parkinglot_address = (String) document.get("地址");
                                                             parkinglot_phone = (String) document.get("電話");
 

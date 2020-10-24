@@ -103,10 +103,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private String string_favorite_lat;
     private String string_favorite_lng;
     private String title_parkinglot_name, full_description, simple_description, parkinglot_total_space,
-            parkinglot_price_number, API_id, more_detail_info, today_service_time, parkinglot_address, parkinglot_phone;
+             API_id, more_detail_info, today_service_time, parkinglot_address, parkinglot_phone;
     private Boolean is_opening, reservatable;
     private Double parkinglot_lat, parkinglot_lng;
-    private Long parkinglot_remain_space;
+    private Long parkinglot_remain_space, parkinglot_price_number;
     public float zoomLevel;
     private int number;
 
@@ -165,7 +165,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                                         simple_description = (String) document.get("simple_description");
                                         parkinglot_remain_space = (Long) document.get("剩餘車位");
                                         parkinglot_total_space = (String) document.get("總車位");
-                                        parkinglot_price_number = (String) document.get("費率");
+                                        parkinglot_price_number = (Long) document.get("費率");
                                         API_id = (String) document.get("API_id");
                                         more_detail_info = (String) document.get("more_detail_info");
                                         today_service_time = (String) document.get("today_service_time");

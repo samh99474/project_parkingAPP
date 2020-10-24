@@ -41,6 +41,7 @@ import com.example.myapplication_mapnavigationdrawer.MessageFirebaseService;
 import com.example.myapplication_mapnavigationdrawer.R;
 import com.example.myapplication_mapnavigationdrawer.adapter.RecordAdapter;
 import com.example.myapplication_mapnavigationdrawer.ten_min_ReminderBroadcast;
+import com.firebase.ui.auth.ui.email.RegisterEmailFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -84,7 +85,7 @@ public class RecordFragment extends Fragment {
     private ListView listview_record;
 
     public String string_email, string_uid, string_order_number, record_string_parkinglot_time, txt_is_finish, txt_is_using, record_parkinglot_name,
-            parking_total_time, record_parkinglot_address, current_price, firebase_current_price, record_license, show_diff_time,txt_press_finish,
+            parking_total_time, record_parkinglot_address, current_price, simple_description, firebase_current_price, record_license, show_diff_time,txt_press_finish,
             parkinglot_phone;
     private Timestamp record_timestamp_parkinglot_time;
     private ArrayList<String> items_order_number = new ArrayList<>();
@@ -102,7 +103,7 @@ public class RecordFragment extends Fragment {
     private ArrayList<String> items_show_diff_time = new ArrayList<>();
 
     private Timestamp timestamp_resevate_time, timestamp_pay_time;
-    private Long should_pay, parking_total_sec;
+    private Long should_pay, parking_total_sec, wallet_remaining;
     private String string_should_pay;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -115,6 +116,7 @@ public class RecordFragment extends Fragment {
 
         final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
 
         try{
             if(user != null){
@@ -144,7 +146,9 @@ public class RecordFragment extends Fragment {
                                         current_price = document.getData().get("費率").toString();
                                         record_license = document.getData().get("預約車牌").toString();
                                         string_order_number = document.getData().get("訂單編號").toString();
-                                        string_should_pay = document.getData().get("應付金額").toString();
+                                        simple_description = document.getData().get("simple_description").toString();
+                                        should_pay = document.getLong("應付金額");
+                                        //string_should_pay = document.getData().get("應付金額").toString();
 
                                         SimpleDateFormat sdf_now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");    //取得現在日期時間
                                         String currentDateandTime = sdf_now.format(new Date());
@@ -160,7 +164,19 @@ public class RecordFragment extends Fragment {
                                         long hour = (diff_time_s % 86400) / 3600;   //總秒數除以一天的秒數後的餘數除以3600s為小時數
                                         long mins = (diff_time_s % 86400) % 3600;   //總秒數除以一天的秒數後的餘數除以3600s後的餘數為剩下的總分鐘數
                                         long min = mins / 60;                   //總分鐘數除以60s的取整為分鐘數
-                                        //long second = mins % 60;                //總分鐘數除以60s的餘數為剩下的秒數
+                                        //long second = mins % 60;                //總分鐘數除以60s的餘數為剩下的秒數\
+
+
+                                        if(should_pay == 0){
+                                            if(diff_time_h==0){
+                                                should_pay = Long.parseLong(current_price);//最低應付價格
+                                            }else {
+                                                should_pay = diff_time_h*30;
+                                            }
+                                        }else {
+                                            //樹梅派已經有計算推上Firebase的價錢
+                                        }
+
 
                                         if(document.getData().get("訂單取消").toString().matches("true")){
                                             if(document.getData().get("overtime_thirty").toString().matches("true")){
@@ -407,11 +423,11 @@ public class RecordFragment extends Fragment {
                                         items_record_parkinglot_name.add(record_parkinglot_name);
                                         items_record_parkinglot_address.add(record_parkinglot_address);
                                         items_parkinglot_phone.add(parkinglot_phone);
-                                        items_current_price.add(current_price);
+                                        items_current_price.add(simple_description);
                                         items_txt_is_using.add(txt_is_using);
                                         items_record_license.add(record_license);
                                         items_txt_press_finish.add(txt_press_finish);
-                                        items_should_pay.add(string_should_pay);
+                                        items_should_pay.add(String.valueOf(should_pay));
                                         items_show_diff_time.add(show_diff_time);
 
                                     }
@@ -472,6 +488,7 @@ public class RecordFragment extends Fragment {
                                 }
                             }
                         });
+
             }
 
             //ListView加入Head list 頭標
@@ -613,13 +630,15 @@ public class RecordFragment extends Fragment {
                                 //傳送給firebase 按下按鈕的時間
                                 Map<String, Timestamp> user_record = new HashMap<>();
                                 Map<String, Boolean> user_record_boolean = new HashMap<>();
-                                Map<String, String> user_record_string = new HashMap<>();
+                                Map<String, Object> user_record_number = new HashMap<>();
+
+
                                 user_record.put("付費時間", timestamp_pay_time);
                                 user_record_boolean.put("按下結束按鈕", true);
                                 //user_record_boolean.put("是否重新計費", false);
                                 user_record_boolean.put("訂單完成", true);
                                 user_record_boolean.put("訂單取消", true);
-                                user_record_string.put("應付金額",final_string_should_pay);
+                                user_record_number.put("應付金額",Long.parseLong(final_string_should_pay));
                                 firestore.collection("users").document(string_uid).collection("record").document(order_number).set(user_record, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -632,7 +651,7 @@ public class RecordFragment extends Fragment {
                                     }
                                 });
 
-                                firestore.collection("users").document(string_uid).collection("record").document(order_number).set(user_record_string, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                firestore.collection("users").document(string_uid).collection("record").document(order_number).set(user_record_number, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Log.e(TAG, "successfully write to user record!");
@@ -683,6 +702,45 @@ public class RecordFragment extends Fragment {
                                 });
 
                                  */
+                                final DocumentReference docRef = firestore.collection("users").document(string_uid);
+                                if(docRef != null){
+                                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                DocumentSnapshot document = task.getResult();
+                                                if (document.exists()) {
+                                                    Log.e(RegisterEmailFragment.TAG, "DocumentSnapshot data: " + document.getData());
+                                                    if (document.getData().get("錢包") != null) {
+                                                        wallet_remaining = document.getLong("錢包");
+                                                    }
+
+                                                    Map<String, Object> user_wallet = new HashMap<>();
+                                                    user_wallet.put("錢包",(wallet_remaining - should_pay));//取消預約 需扣款最低金額
+                                                    firestore.collection("users").document(string_uid).set(user_wallet, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {//固定文件ID
+
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            Log.e(RegisterEmailFragment.TAG, "DocumentSnapshot successfully written!");
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.e(RegisterEmailFragment.TAG, "Error writing document", e);
+                                                        }
+                                                    });
+
+                                                } else {
+                                                    Log.e(RegisterEmailFragment.TAG, "No such document");
+                                                }
+                                            } else {
+                                                Log.e(RegisterEmailFragment.TAG, "get failed with ", task.getException());
+                                            }
+                                        }
+                                    });
+                                }
+
                             }
                         });
                         dialog_finish_pay.show();

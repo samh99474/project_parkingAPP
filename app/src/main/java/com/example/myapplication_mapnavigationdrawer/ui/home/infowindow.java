@@ -67,10 +67,10 @@ public class infowindow extends AppCompatActivity {
 
     private String string_email, string_uid;
     private String full_description, simple_description, parkinglot_total_space,
-            parkinglot_price_number, API_id, more_detail_info, today_service_time, string_parkinglot_address, parkinglot_phone;
+             API_id, more_detail_info, today_service_time, string_parkinglot_address, parkinglot_phone;
     private Boolean is_opening, reservatable;
     private Double parkinglot_lat, parkinglot_lng;
-    private Long parkinglot_remain_space;
+    private Long parkinglot_remain_space, parkinglot_price_number;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -259,7 +259,7 @@ public class infowindow extends AppCompatActivity {
                                                             simple_description = (String) document.get("simple_description");
                                                             parkinglot_remain_space = (Long) document.get("剩餘車位");
                                                             parkinglot_total_space = (String) document.get("總車位");
-                                                            parkinglot_price_number = (String) document.get("費率");
+                                                            parkinglot_price_number = (Long) document.get("費率");
                                                             string_parkinglot_address = (String) document.get("地址");
                                                             parkinglot_phone = (String) document.get("電話");
 
