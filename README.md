@@ -12,14 +12,13 @@ and enjoy the convenience brought by this system to everyone.
 <img src="samh物聯網系統圖_Socket.png"/>
 
 ## :dart:Navigation Drawer 側選單 列表 ##
-
-<img width="250" height="500" src="navigation.jpg"/>
-
 <br />:dart:1.側選單上方(簡易個人資料)
 ----------------------------
 <br /><p>(1)大頭貼: 由使用者個人資料上傳於Firestorage，抓取下來
 <br />  (2)姓名、Email: 使用者個人資料編輯的姓名及註冊email
 <br />  (3)登入/登出: 使用者登入或登出
+
+ <img width="250" height="500" src="navigation.jpg"/>
 
 <br />:dart:2.個人檔案:
 ---------------------------
