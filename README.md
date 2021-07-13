@@ -1,5 +1,5 @@
 # A Study of Parking Space Reservation System 智慧停車場預約系統APP #
-# :heart: YouTube - Project Presentation and Demo
+# :heart: YouTube - Project Demo
 > 🔗 https://www.youtube.com/watch?v=jlLhBfAJC-M
 ## :dart:系統介紹 ##
 With the advancement of technology, mobile devices and mobile networks are popularized in the society, and the information available makes life more convenient.
