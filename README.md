@@ -1,6 +1,8 @@
 # project_parkingAPP 智慧停車場預約系統APP #
-## :heart:系統介紹 ##
-<br /><p>With the advancement of technology, mobile devices and mobile networks are popularized in the society, and the information available makes life more convenient.
+# :heart: YouTube - Project Presentation and Demo
+> 🔗 https://www.youtube.com/watch?v=jlLhBfAJC-M
+## :dart:系統介紹 ##
+With the advancement of technology, mobile devices and mobile networks are popularized in the society, and the information available makes life more convenient.
 <br /><p>The public can make reservations in advance to know the location of the parking lot and get the nearby parking lot information from the application. To integrate the system by Google Cloud Firebase, when the vehicle reservation is completed, the license plate recognition system can control the problem of unable to enter the parking lot from the reservation,
 reducingthe parking trouble in popular attractions and suburbs.
 <br /><p>Our system uses the mobile phone to reserve a parking space online, upload the basic information and license plate number filled in by each owner to the cloud database in the application, and you can enter the parking lot directly after the reservation is completed. Before picking up the car, the owner only needs to check the "Payment Settings" in the application to see if the wallet is sufficient to pay for the parking fee, without waiting in line to leave the car,
